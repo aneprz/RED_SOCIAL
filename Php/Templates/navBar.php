@@ -52,6 +52,7 @@
       width: 40px;
       height: auto;
       filter: drop-shadow(0 2px 3px black);
+      border-radius: 0.5em;
     }
 
     /* Items */
@@ -140,7 +141,7 @@
     </div>
   </div>
 
-  <!-- ---- SIDEBAR FIJO (DESKTOP) ---- -->
+  <!-- ---- SIDEBAR FIJO ---- -->
   <aside class="sidebar d-none d-md-flex">
 
     <div class="marca">
@@ -148,7 +149,7 @@
       Salsagram
     </div>
 
-    <a href="#" class="nav-item-custom active">
+    <a href="../../index.php" class="nav-item-custom active">
       <!-- INICIO -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -220,7 +221,7 @@
       Crear
     </a>
 
-    <a href="#" class="nav-item-custom">Perfil</a>
+    <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom">Perfil</a>
 
     <div class="mt-auto">
       <a href="#" class="nav-item-custom">Más</a>
