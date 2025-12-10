@@ -2,3 +2,7 @@
 .minusculas{
     text-transform: lowercase;
 }
+
+.textoContraseña{
+    margin: 0;
+}
