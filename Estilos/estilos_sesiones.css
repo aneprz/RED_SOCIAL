@@ -1,0 +1,8 @@
+/*Estos estilos son para inicio_sesion.php y registro_sesion.php*/
+.minusculas{
+    text-transform: lowercase;
+}
+
+.textoContraseña{
+    margin: 0;
+}
