@@ -19,7 +19,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         // Guardar datos del usuario en la sesión
         $_SESSION['id'] = $datos_usuario['id'];
         $_SESSION['username'] = $datos_usuario['username'];
-        $_SESSION['admin'] = $datos_usuario['admin'];
+        $_SESSION['email'] = $datos_usuario['email'];
 
         // Redirigir a la página de bienvenida
         header("location: ../../../index.php");
