@@ -12,12 +12,16 @@ $rowSeguidores = mysqli_fetch_assoc($resultSeguidores);
 $seguidores = $rowSeguidores['total'];
 
 //A CUANTOS SIGO
-$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguido_id = $id");
+$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguidor_id = $id");
 
 $rowSeguidos = mysqli_fetch_assoc($resultSeguidos);
 $seguidos = $rowSeguidos['total'];
 
-echo $id
+//CUANTAS PUBLICACIONES TENGO
+$resultPublicaciones = mysqli_query($conexion, "SELECT COUNT(usuario_id) AS total FROM publicaciones WHERE usuario_id = $id");
+
+$rowPublicaciones = mysqli_fetch_assoc($resultPublicaciones);
+$publicaciones = $rowPublicaciones['total'];
 
 
 ?>
