@@ -23,7 +23,7 @@ $seguidores = [
             <tbody>
                     <?php
                         include '../../BD/conexiones.php';
-                        $query = "SELECT foto_perfil, username FROM usuarios join seguidores on id=seguidor_id where $id = seguido_id";
+                        $query = "SELECT foto_perfil, username FROM usuarios join seguidores on id=seguido_id where $id = seguidor_id";
                         $result = mysqli_query($conexion, $query);
 
                         if ($result && mysqli_num_rows($result) > 0) {
@@ -31,7 +31,7 @@ $seguidores = [
                                 echo "<tr>";
                                 echo "<td>" . htmlspecialchars($row['foto_perfil']) . "</td>";
                                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
-                                echo "<td><button>Seguir</button></td>";
+                                echo "<td><button>Suprimir</button></td>";
                                 echo "</tr>";
                             }
                         }

@@ -23,7 +23,7 @@ $nombreusu = $_SESSION['username'];
                 <div class="stats">
                     <span><strong><?= $publicaciones ?></strong> publicaciones</span>
                     <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
-                    <span><strong><?= $seguidos ?></strong> siguiendo</span>
+                    <a href="tablaSeguidos.php"><span><strong><?= $seguidos ?></strong> siguiendo</span></a>
                 </div>
             </div>
         </div>
