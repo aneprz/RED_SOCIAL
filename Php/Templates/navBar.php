@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: Php/Sesiones/inicio_sesion.php");
+    exit();
+}
+?>
 <!doctype html>
 <html lang="es">
 <head>
