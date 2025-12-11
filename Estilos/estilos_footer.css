@@ -1,0 +1,244 @@
+
+    :root {
+      --sidebar-width: 250px;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #f4f4f4;
+      color: #222;
+    }
+
+    /* ---- SIDEBAR FIJO DESKTOP ---- */
+    .sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: fixed;
+      left: 0;
+      top: 0;
+      padding: 20px;
+      background: linear-gradient(180deg, #e65a36, #c13722);
+      border-right: 6px solid #802015;
+
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+
+      color: #fff3e6;
+      z-index: 1030;
+    }
+
+    /* Marca */
+    .marca {
+      font-size: 24px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .marca img {
+      width: 40px;
+      height: auto;
+      filter: drop-shadow(0 2px 3px black);
+      border-radius: 0.5em;
+    }
+
+    /* Items */
+    .nav-item-custom {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      text-decoration: none;
+      color: #fff;
+      padding: 11px 12px;
+
+      background: rgba(0, 0, 0, 0.15);
+      border: 3px solid rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+
+      transition: background .15s, transform .1s;
+    }
+
+    .nav-item-custom:hover {
+      background: rgba(255, 120, 60, 0.25);
+      transform: translateY(-2px);
+      color: #fff;
+    }
+
+    .nav-item-custom.active {
+      background: rgba(255, 140, 70, 0.35);
+      border-color: rgba(0, 0, 0, 0.35);
+    }
+
+    /* SVG ICONS */
+    .nav-item-custom svg {
+      width: 26px;
+      height: 26px;
+      stroke-width: 2.5;
+      stroke: #fff3e6;
+      filter: drop-shadow(0 1px 1px black);
+      flex-shrink: 0;
+    }
+
+    /* ---- MAIN CONTENT ---- */
+    .main {
+      margin-left: var(--sidebar-width);
+      padding: 30px;
+    }
+
+    /* ---- RESPONSIVE ---- */
+    @media (max-width: 768px) {
+      .sidebar { display:none; }
+      .main { margin-left: 0; padding-top: 80px; }
+    }
+
+    /* Topbar for mobile */
+    .topbar {
+      position: fixed;
+      top:0;
+      left:0;
+      right:0;
+      height: 60px;
+      background: #ffffffdd;
+      backdrop-filter: blur(5px);
+
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 16px;
+
+      z-index: 1040;
+    }
+
+    @media (min-width:768px) {
+      .topbar { display:none; }
+    }
+
+    /* =======================
+   Estilos del modal subir
+   ======================= */
+
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none; /* se muestra con JS */
+    align-items:center;
+    justify-content:center;
+    z-index:1200; /* por encima del sidebar/bootstap */
+  }
+
+  .modal-overlay{
+    position:absolute;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+  }
+
+  .modal-content{
+    position:relative;
+    width: min(760px, 92%);
+    max-width:760px;
+    height: auto;
+    max-height:85vh;
+    background:#1f2937;
+    border-radius:14px;
+    padding:28px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    color:#e5e7eb;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:16px;
+    overflow:auto;
+  }
+
+  /* Close button (X) */
+  .modal-close{
+    position:absolute;
+    right:12px;
+    top:12px;
+    background:transparent;
+    border:none;
+    color:#e5e7eb;
+    font-size:28px;
+    line-height:1;
+    cursor:pointer;
+  }
+
+  /* Título */
+  .modal-title{
+    margin:0;
+    font-size:16px;
+    font-weight:600;
+  }
+
+  /* Zona de subida (sin drag & drop) */
+  .upload-area{
+    width:100%;
+    min-height:320px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:12px;
+    border-radius:10px;
+    background:#111827;
+    padding:28px;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.03);
+  }
+
+  /* Icono/imagen central */
+  .upload-graphics svg{color:#9ca3af}
+
+  /* Texto */
+  .upload-text{
+    margin:0;
+    font-size:18px;
+    color:#cbd5e1;
+  }
+
+  /* Botón seleccionar */
+  .btn-select{
+    display:inline-block;
+    margin-top:6px;
+    padding:10px 16px;
+    background:#5255ff;
+    color:white;
+    border-radius:8px;
+    cursor:pointer;
+    user-select:none;
+    font-weight:600;
+    text-decoration:none;
+  }
+
+  /* Hint pequeño */
+  .upload-hint{font-size:12px;color:#9aa3b2}
+
+  /* Lista de archivos seleccionados (previews simples) */
+  .file-list{
+    width:100%;
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    margin-top:12px;
+  }
+
+  /* Mini-previews */
+  .file-item{
+    width:92px;
+    height:92px;
+    border-radius:8px;
+    overflow:hidden;
+    background:#0b1220;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:#94a3b8;
+    font-size:12px;
+    text-align:center;
+    padding:6px;
+  }
