@@ -13,7 +13,9 @@ if (isset($_SESSION['username'])) {
 ?>
 <!DOCTYPE html>
 <html>
-  <head></head>
+  <head>
+    <link rel="stylesheet" href="/Estilos/estilos.css">
+  </head>
   <body>
     <?php include __DIR__ . '/Php/Templates/navBar.php';?>
     <?php include __DIR__ . '/Php/Templates/footer.php';?>

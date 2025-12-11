@@ -212,7 +212,7 @@
       Notificaciones
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="../../Php/Crear/crear.php" class="nav-item-custom">
       <!-- CREAR -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <path fill="none" stroke-linecap="round" stroke-linejoin="round"
