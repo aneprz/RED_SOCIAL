@@ -21,8 +21,8 @@ $nombreusu = $_SESSION['username'];
                 <h2><?php echo $nombreusu; ?></h2>
                 <p class="bio">Esta es tu biografía. Puedes poner algo sobre ti.</p>
                 <div class="stats">
-                    <span><strong>120</strong> publicaciones</span>
-                    <span><strong><?= $seguidores ?></strong> seguidores</span>
+                    <span><strong><?= $publicaciones ?></strong> publicaciones</span>
+                    <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
                     <span><strong><?= $seguidos ?></strong> siguiendo</span>
                 </div>
             </div>

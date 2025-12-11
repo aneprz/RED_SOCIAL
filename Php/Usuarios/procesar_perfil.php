@@ -8,13 +8,21 @@ $id = intval($_SESSION['id']);
 
 $resultSeguidores = mysqli_query($conexion, "SELECT COUNT(seguidor_id) AS total FROM seguidores WHERE seguido_id = $id");
 
-$row = mysqli_fetch_assoc($resultSeguidores);
-$seguidores = $row['total'];
+$rowSeguidores = mysqli_fetch_assoc($resultSeguidores);
+$seguidores = $rowSeguidores['total'];
 
 //A CUANTOS SIGO
+$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguidor_id = $id");
 
-$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguido_id = $id");
+$rowSeguidos = mysqli_fetch_assoc($resultSeguidos);
+$seguidos = $rowSeguidos['total'];
 
-$row = mysqli_fetch_assoc($resultSeguidos);
-$seguidos = $row['total'];
+//CUANTAS PUBLICACIONES TENGO
+$resultPublicaciones = mysqli_query($conexion, "SELECT COUNT(usuario_id) AS total FROM publicaciones WHERE usuario_id = $id");
+
+$rowPublicaciones = mysqli_fetch_assoc($resultPublicaciones);
+$publicaciones = $rowPublicaciones['total'];
+
+
 ?>
+

@@ -1,15 +1,10 @@
 <?php
 session_start();
 
-$nombreUsu=$_SESSION['username'];
-
-if (isset($_SESSION['username'])) {
-    echo "Hola, " . $_SESSION['username'] . ". Aquí va lo exclusivo para iniciados.";
-} else {
-    echo "Contenido para forasteros. Inicia sesión si quieres ver lo bueno.";
+if (!isset($_SESSION['username'])) {
+    header("Location: Php/Sesiones/inicio_sesion.php");
+    exit();
 }
-
-
 ?>
 <!DOCTYPE html>
 <html>

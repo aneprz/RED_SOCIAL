@@ -62,3 +62,7 @@ body {
 .profile-posts .post img:hover {
     transform: scale(1.05);
 }
+a{
+    text-decoration: none !important;
+    color: inherit !important; 
+}
