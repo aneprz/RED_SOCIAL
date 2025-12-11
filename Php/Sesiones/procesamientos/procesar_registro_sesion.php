@@ -11,27 +11,27 @@ $contraseñaHash = password_hash($contraseña, PASSWORD_DEFAULT);
 
 //Validar que las contraseñas introducidas coincidan
 if ($contraseña != $repetirContraseña){
-    echo "<div class='alert alert-warning shadow rounded'>Error. Las contraseñas no coinciden.</div>";
+    echo "<script>alert('Error. Las contraseñas no coinciden')</script>";
     exit();
 }
 
 //Validar que el formato del correo electrónico sea válido
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo "<div class='alert alert-warning shadow rounded'>Error. Correo electrónico inválido.</div>";
+    echo "<script>alert('Error. Correo electrónico inválido')</script>";
     exit();
 }
 
 //Validar que no exista ya el usuario
 $verificar_usuario = mysqli_query($conexion, "SELECT * FROM usuarios WHERE username='$nombreUsu' ");
 if (mysqli_num_rows($verificar_usuario) > 0){
-    echo "<div class='alert alert-warning shadow rounded'>Este usuario ya está en uso, intenta con uno diferente.</div>";
+    echo "<script>alert('Error. Este usuario ya está en uso')</script>";
     exit();
 }
 
 //Validar que el correo no esté en uso
 $verificar_correo = mysqli_query($conexion, "SELECT * FROM usuarios WHERE email='$email' ");
 if (mysqli_num_rows($verificar_correo) > 0){
-    echo "<div class='alert alert-warning shadow rounded'>Este correo ya está en uso, intenta con uno diferente.</div>";
+    echo "<script>alert('Error. El correo electrónico ya está en uso')</script>";
     exit();
 }
 
