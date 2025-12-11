@@ -8,126 +8,7 @@
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <style>
-    :root {
-      --sidebar-width: 250px;
-    }
-
-    body {
-      margin: 0;
-      font-family: "Poppins", sans-serif;
-      background: #f4f4f4;
-      color: #222;
-    }
-
-    /* ---- SIDEBAR FIJO DESKTOP ---- */
-    .sidebar {
-      width: var(--sidebar-width);
-      height: 100vh;
-      position: fixed;
-      left: 0;
-      top: 0;
-      padding: 20px;
-      background: linear-gradient(180deg, #e65a36, #c13722);
-      border-right: 6px solid #802015;
-
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-
-      color: #fff3e6;
-      z-index: 1030;
-    }
-
-    /* Marca */
-    .marca {
-      font-size: 24px;
-      font-weight: 800;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .marca img {
-      width: 40px;
-      height: auto;
-      filter: drop-shadow(0 2px 3px black);
-      border-radius: 0.5em;
-    }
-
-    /* Items */
-    .nav-item-custom {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-
-      text-decoration: none;
-      color: #fff;
-      padding: 11px 12px;
-
-      background: rgba(0, 0, 0, 0.15);
-      border: 3px solid rgba(0, 0, 0, 0.25);
-      border-radius: 14px;
-
-      transition: background .15s, transform .1s;
-    }
-
-    .nav-item-custom:hover {
-      background: rgba(255, 120, 60, 0.25);
-      transform: translateY(-2px);
-      color: #fff;
-    }
-
-    .nav-item-custom.active {
-      background: rgba(255, 140, 70, 0.35);
-      border-color: rgba(0, 0, 0, 0.35);
-    }
-
-    /* SVG ICONS */
-    .nav-item-custom svg {
-      width: 26px;
-      height: 26px;
-      stroke-width: 2.5;
-      stroke: #fff3e6;
-      filter: drop-shadow(0 1px 1px black);
-      flex-shrink: 0;
-    }
-
-    /* ---- MAIN CONTENT ---- */
-    .main {
-      margin-left: var(--sidebar-width);
-      padding: 30px;
-    }
-
-    /* ---- RESPONSIVE ---- */
-    @media (max-width: 768px) {
-      .sidebar { display:none; }
-      .main { margin-left: 0; padding-top: 80px; }
-    }
-
-    /* Topbar for mobile */
-    .topbar {
-      position: fixed;
-      top:0;
-      left:0;
-      right:0;
-      height: 60px;
-      background: #ffffffdd;
-      backdrop-filter: blur(5px);
-
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 8px 16px;
-
-      z-index: 1040;
-    }
-
-    @media (min-width:768px) {
-      .topbar { display:none; }
-    }
-  </style>
+  <link rel="stylesheet" href="../../Estilos/estilos_footer.css">
 </head>
 
 <body>
@@ -213,16 +94,44 @@
       Notificaciones
     </a>
 
-    <a href="../../Php/Crear/crear.php" class="nav-item-custom">
+    <a href="#" class="nav-item-custom" id="abrirCrear">
       <!-- CREAR -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-        <path fill="none" stroke-linecap="round" stroke-linejoin="round"
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
               d="M5 12h14m-7-7v14"/>
       </svg>
       Crear
     </a>
 
-    <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom">Perfil</a>
+  <!-- Modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="modal-overlay" id="modalOverlay"></div>
+
+    <div class="modal-content" role="document" aria-labelledby="modalTitle" tabindex="-1">
+      <button id="closeModal" class="modal-close" aria-label="Cerrar ventana">&times;</button>
+
+      <h2 id="modalTitle" class="modal-title">Crear nueva publicación</h2>
+
+      <div class="upload-area" id="uploadArea">
+        <div class="upload-graphics" aria-hidden="true">
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+            <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.2"/>
+            <path d="M7 14l3-4 4 5 2-3 3 4" stroke="currentColor" stroke-width="1.2" fill="none"/>
+          </svg>
+        </div>
+
+        <p class="upload-text">Selecciona las fotos y los vídeos que quieras subir</p>
+
+        <label class="btn-select" for="fileInput">Seleccionar del ordenador</label>
+        <input id="fileInput" type="file" accept="image/*,video/*" multiple style="display:none" />
+
+        <div id="fileList" class="file-list" aria-live="polite"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Perfil -->
+  <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom">Perfil</a>
 
     <div class="mt-auto">
       <a href="#" class="nav-item-custom">Más</a>
@@ -256,5 +165,6 @@
   </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="../../Js/Crear/crear.js" defer></script>
 </body>
 </html>
