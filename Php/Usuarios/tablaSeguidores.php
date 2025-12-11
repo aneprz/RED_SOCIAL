@@ -1,13 +1,6 @@
 <?php
     session_start();
     $id = intval($_SESSION['id']);
-// Simulamos algunos seguidores
-$seguidores = [
-    ['username' => 'juan123', 'foto' => 'fotos/juan.jpg'],
-    ['username' => 'maria88', 'foto' => 'fotos/maria.jpg'],
-    ['username' => 'pepe_rock', 'foto' => 'fotos/pepe.jpg'],
-    ['username' => 'luisita', 'foto' => 'fotos/luisita.jpg'],
-];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -23,15 +16,21 @@ $seguidores = [
             <tbody>
                     <?php
                         include '../../BD/conexiones.php';
-                        $query = "SELECT foto_perfil, username FROM usuarios join seguidores on id=seguidor_id where $id = seguido_id";
+                        $query = "SELECT foto_perfil, username, id FROM usuarios join seguidores on id=seguidor_id where $id = seguido_id";
                         $result = mysqli_query($conexion, $query);
 
                         if ($result && mysqli_num_rows($result) > 0) {
                             while ($row = mysqli_fetch_assoc($result)) {
                                 echo "<tr>";
-                                echo "<td>" . htmlspecialchars($row['foto_perfil']) . "</td>";
+                                echo "<td><img src='" . htmlspecialchars($row['foto_perfil']) . "' width='50' alt='Foto de perfil'></td>";
                                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
-                                echo "<td><button>Seguir</button></td>";
+                                echo "<td>
+                                        <form method='post' action='procesarSeguidores.php'>
+                                            <input type='hidden' name='id_usuario' value='" . $row['id'] . "'>
+                                            <input type='hidden' name='accion' value='seguir'>
+                                            <button type='submit'>Seguir</button>
+                                        </form>
+                                    </td>";
                                 echo "</tr>";
                             }
                         }
