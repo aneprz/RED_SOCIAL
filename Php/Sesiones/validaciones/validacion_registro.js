@@ -1,8 +1,11 @@
 function textoValidarContraseña() {
     document.getElementById("requisitosContraseña").style.display="block";
 }
+
 //VALIDACIÓN DE CONTRASEÑA
 let contraseña=document.getElementById("contraseña");
+let repetirContraseña = document.getElementById("repetirContraseña");
+let validado=0;
 
 //Validar que la contraseña tenga mínimo 8 carácteres
 function validarLongitudContraseña() {
@@ -21,6 +24,7 @@ function validarLongitudContraseña() {
             resultadoLongitud.innerHTML=textoOriginal;
         }
     })
+    habilitarBoton();
 }
 
 //Validar que la contraseña tenga al menos una mayúscula
@@ -40,6 +44,7 @@ function validarUnaMayuscula() {
             resultadoMayuscula.innerHTML=textoOriginal;
         }
     })
+    habilitarBoton();
 }
 
 //Validar que la contraseña tenga al menos una minúscula
@@ -59,6 +64,7 @@ function validarUnaMinuscula() {
             resultadoMinuscula.innerHTML=textoOriginal;
         }
     })
+    habilitarBoton();
 }
 
 //Validar que la contraseña tenga al menos un número
@@ -72,12 +78,13 @@ function validarUnNumero() {
         if (esValida) {
             resultadoNumero.style.color="green";
             resultadoNumero.innerHTML=`<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 16.6l7.05-7.05l-1.4-1.4l-5.65 5.65l-2.85-2.85l-1.4 1.4zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg>
-            Al menos un número.`;     
+            Al menos un número.`;
         }else{
             resultadoNumero.style.color="";
             resultadoNumero.innerHTML=textoOriginal;
         }
     })
+    habilitarBoton();
 }
 
 //Validar que la contraseña tenga al menos un carácter especial
@@ -97,12 +104,12 @@ function validarUnCaracterEspecial() {
             resultadoCaracterEspecial.innerHTML=textoOriginal;
         }
     })
+    habilitarBoton();
 }
 
 //Validar que el input de contraseña y de repetir contraseña coinciden
 function validarInputsCoinciden() {
     let resultadoRepetirContraseña=document.getElementById("contraseñasRepetidas");
-    let repetirContraseña=document.getElementById("repetirContraseña");
     let textoOriginal=resultadoRepetirContraseña.innerHTML;
 
     if (contraseña.value==repetirContraseña.value && contraseña.value!=="") {
@@ -110,9 +117,23 @@ function validarInputsCoinciden() {
         resultadoRepetirContraseña.innerHTML= `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 16.6l7.05-7.05l-1.4-1.4l-5.65 5.65l-2.85-2.85l-1.4 1.4zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/>
             </svg> Se repiten las contraseñas.`;
     } else {
-        resultadoRepetirContraseña.style.color = "";
-        resultadoRepetirContraseña.innerHTML= textoOriginal;
+        resultadoRepetirContraseña.style.color="";
+        resultadoRepetirContraseña.innerHTML=textoOriginal;
     }
+    habilitarBoton();
+}
+
+//El botón se habilita cuando se cumplen todas las condiciones
+let botonRegistrarse = document.getElementById("registrarse");
+function habilitarBoton() {
+    let longitudValida=contraseña.value.length>=8;
+    let mayusculaValida=/[A-Z]/.test(contraseña.value);
+    let minusculaValida=/[a-z]/.test(contraseña.value);
+    let numeroValido=/[0-9]/.test(contraseña.value);
+    let caracterEspecialValido=/[._,:;+<>#@¿?!¡=~|º{}\[\]()¨\/-]/.test(contraseña.value);
+    let coinciden=contraseña.value!=""&& contraseña.value==repetirContraseña.value;
+
+    botonRegistrarse.disabled=!(longitudValida && mayusculaValida && minusculaValida && numeroValido && caracterEspecialValido && coinciden);
 }
 
 /*LLAMADA A FUNCIONES*/
@@ -121,5 +142,6 @@ validarUnaMayuscula();
 validarUnaMinuscula();
 validarUnNumero();
 validarUnCaracterEspecial();
+
 contraseña.addEventListener("input", validarInputsCoinciden);
 repetirContraseña.addEventListener("input", validarInputsCoinciden);
