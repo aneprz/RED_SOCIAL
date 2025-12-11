@@ -1,0 +1,15 @@
+body { font-family: Arial; }
+.chat{
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    cursor: pointer;
+}
+.chat:hover {
+    background: #eee;
+}
+.titulo {
+    font-weight: bold;
+}
+.mensaje {
+    color: #555;
+}
