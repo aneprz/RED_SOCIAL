@@ -1,7 +1,13 @@
 <?php
+session_start();
+if (!isset($_SESSION['username'])) {
+header("Location: Php/Sesiones/inicio_sesion.php");
+exit();
+}
 
 //CUANTOS ME SIGUEN
-session_start();
+
+
 include '../../BD/conexiones.php';
 
 $id = intval($_SESSION['id']);

@@ -1,5 +1,13 @@
 <?php
-    session_start();
+    
+session_start();
+
+if (!isset($_SESSION['username'])) {
+    header("Location: Php/Sesiones/inicio_sesion.php");
+    exit();
+}
+
+
     $id = intval($_SESSION['id']);
 ?>
 <!DOCTYPE html>
