@@ -1,0 +1,100 @@
+html,body{
+    height: 100%;
+    margin: 0;
+}
+
+body { 
+    font-family: Arial; 
+    display: flex;
+    flex-direction: column;
+}
+
+main h2{
+    font-family: "Poppins", sans-serif;
+    color: rgb(226, 226, 226);
+}
+
+main{
+    flex: 1; /* Esto empuja el footer hacia abajo */
+    flex-direction: column;
+    background-color: rgb(21, 21, 21);
+}
+
+.volver{
+    padding: 10px;
+    color: #e65a36;
+}
+
+.encabezado{
+    display: flex;
+    padding: 20px;
+    background-color: rgb(21, 21, 21);
+}
+
+.encabezado h2{
+    font-family: "Poppins", sans-serif;
+    color: rgb(226, 226, 226);
+}
+
+.encabezado img{
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 20px;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+#chat-mensajes{
+    flex: 1; /* Ocupa todo el espacio disponible */
+    overflow-y: auto; /* Scroll si hay muchos mensajes */
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow-y: auto;    /* permite scroll vertical */
+    height: 68vh;
+}
+
+.formularioMensajes{
+    display: flex;
+    gap: 5px;
+    margin: 10px;
+}
+
+.formularioMensajes input{
+    flex: 1;
+}
+
+.mensaje { 
+    background-color: #c13722;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 10px;
+    display: table;
+    color: rgb(226, 226, 226);
+    font-size: 20px;
+}
+
+.mensaje.tuyo { 
+    background-color: #732115;
+    margin-left: auto;         /* empuja el div a la derecha */
+}
+
+.escribirMensaje{
+    border-radius: 10px;
+    padding: 5px;
+}
+
+form button{
+    border-radius: 30px;
+    background-color: rgb(255, 118, 60);
+}
+
+form button:hover{
+    background-color: rgb(187, 88, 45);
+}
+
+.fecha{
+    font-style: italic;
+    color: #c9c9c9;
+    font-size: 13px;
+}

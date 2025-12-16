@@ -48,44 +48,48 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Chat</title>
-    <link rel="stylesheet" href="../../../Estilos/estilos_chats.css">
-    <style>
-        .mensaje { margin: 5px 0; }
-        .mensaje.tuyo { font-weight: bold; }
-    </style>
+    <link rel="stylesheet" href="../../../Estilos/estilos_chat.css">
 </head>
 <body>
 
 <?php include __DIR__ . '../../../Php/Templates/navBar.php';?>
 <main>
-
-    <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
-    <h2>
-        <?php 
-            if ($chat['es_grupo']) {
-                echo $chat['nombre_grupo'];
-            } else {
-                echo $otrosUsuarios[0]['username'] ?? "Usuario";
-            }
-        ?>
-    </h2>
+    <div class="encabezado">
+        <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
+        <img src="https://i.scdn.co/image/ab67616d00001e0237ebe5a4594a9569e0821dd3" alt="Foto de perfil"> <!--Esto hay que cambiarlo-->
+        <h2>
+            <?php 
+                if ($chat['es_grupo']) {
+                    echo $chat['nombre_grupo'];
+                } else {
+                    echo $otrosUsuarios[0]['username'] ?? "Usuario";
+                }
+            ?>
+        </h2>
+    </div>
 
     <div id="chat-mensajes">
         <?php foreach ($mensajes as $m): ?>
             <div class="mensaje <?= $m['usuario_id'] == $idUsu ? 'tuyo' : '' ?>">
-                <strong><?= $m['usuario_id'] == $idUsu ? "Tú" : $m['username'] ?>:</strong>
                 <?= htmlspecialchars($m['texto']) ?>
-                <small>(<?= $m['fecha'] ?>)</small>
+                <br>
+                <small class="fecha">(<?= $m['fecha'] ?>)</small>
             </div>
         <?php endforeach; ?>
     </div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const chatMensajes = document.getElementById('chat-mensajes');
+        chatMensajes.scrollTop = chatMensajes.scrollHeight;
+    });
+    </script>
 
     <!-- Formulario para enviar mensajes -->
-    <form action="procesamientos/guardarMensajes.php" method="post">
+    <form class="formularioMensajes" action="procesamientos/guardarMensajes.php" method="post">
         <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
         <input type="hidden" name="usuario_id" value="<?= $idUsu ?>">
-        <input type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
-        <button type="submit">Enviar</button>
+        <input class="escribirMensaje" type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
+        <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 20v-6l8-2l-8-2V4l19 8z"/></svg></button>
     </form>
 </main>
 <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
