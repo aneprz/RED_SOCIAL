@@ -31,7 +31,7 @@ main h2{
 }
 
 .chat{
-    padding: 10px;
+    padding: 15px;
     border-bottom: 1px solid rgb(21, 21, 21);
     cursor: pointer;
     background-color: rgb(34, 34, 34)
@@ -41,6 +41,7 @@ main h2{
 }
 .titulo {
     font-weight: bold;
+    font-size: 20px;
     color: rgb(226, 226, 226);
 }
 .mensaje {
@@ -63,4 +64,14 @@ main{
 
 .btn-nuevo-chat:hover{
     color: #e6451d;
+}
+
+.titulo img{
+    margin-right: 3px;
+    margin-bottom: 3px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
 }

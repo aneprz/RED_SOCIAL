@@ -52,7 +52,11 @@ $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
 
+        <div class="fotoPerfil">
+        </div>
+
         <div class="titulo">
+            <img src="https://i.scdn.co/image/ab67616d00001e0237ebe5a4594a9569e0821dd3" alt="Foto de perfil"> <!--Esto hay que cambiarlo-->
             <?php if ($c['es_grupo'] == 1): ?>
                 <?= $c['nombre_grupo'] ?>
             <?php else: ?>
