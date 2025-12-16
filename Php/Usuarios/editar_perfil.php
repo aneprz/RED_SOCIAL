@@ -1,0 +1,53 @@
+<?php
+session_start();
+if (!isset($_SESSION['username'])) {
+header("Location: Php/Sesiones/inicio_sesion.php");
+exit();
+}
+
+include 'procesar_editar_perfil.php';
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil</title>
+      <link rel="stylesheet" href="../../Estilos/estilos_editar_perfil.css">
+
+</head>
+<body>
+    <div class="profile-container">
+        <h1>Editar perfil</h1>
+
+
+        <form class="profile-form">
+            <div class="profile-photo">
+                <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
+                <input type="file" accept="image/*">
+            </div>
+
+
+            <label>
+                Nombre de usuario
+                <input type="text" placeholder="Nuevo nombre de usuario">
+            </label>
+
+
+            <label>
+                Contraseña
+                <input type="password" placeholder="Nueva contraseña">
+            </label>
+
+
+            <label>
+                Biografía
+                <textarea placeholder="Cuéntanos algo sobre ti..."></textarea>
+            </label>
+
+
+            <button type="submit">Guardar cambios</button>
+        </form>
+        </div>
+</body>
+</html>
