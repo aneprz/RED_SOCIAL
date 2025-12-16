@@ -6,6 +6,7 @@ exit();
 }
 
 include 'procesar_perfil.php';
+include 'procesar_editar_perfil.php';
 
 $nombreusu = $_SESSION['username'];
 ?>
@@ -23,7 +24,7 @@ $nombreusu = $_SESSION['username'];
         <div class="objetos">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="https://i.scdn.co/image/ab67616d00001e0237ebe5a4594a9569e0821dd3" alt="Foto de perfil">
+                    <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
                     <div class="profile-info">
                         <h2><?php echo $nombreusu; ?></h2>
                         <p class="bio">Esta es tu biografía. Puedes poner algo sobre ti.</p>

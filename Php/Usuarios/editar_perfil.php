@@ -21,13 +21,11 @@ include 'procesar_editar_perfil.php';
         <h1>Editar perfil</h1>
 
 
-        <form class="profile-form">
+        <form class="profile-form" action="procesar_editar_perfil.php" method="post">
             <div class="profile-photo">
                 <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
                 <input type="file" accept="image/*">
             </div>
-
-
             <label>
                 Nombre de usuario
                 <input type="text" placeholder="Nuevo nombre de usuario">
