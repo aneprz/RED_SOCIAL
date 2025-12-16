@@ -1,10 +1,9 @@
 <?php
-session_start();
-
-if (!isset($_SESSION['username'])) {
+    session_start();
+    if (!isset($_SESSION['username'])) {
     header("Location: Php/Sesiones/inicio_sesion.php");
     exit();
-}
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -13,6 +12,7 @@ if (!isset($_SESSION['username'])) {
     <link rel="icon" type="image/png" href="/Media/logo.png">
   </head>
   <body>
+    
     <?php include __DIR__ . '/Php/Templates/navBar.php';?>
     <?php include __DIR__ . '/Php/Templates/footer.php';?>
   </body>
