@@ -57,35 +57,37 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
 <body>
 
 <?php include __DIR__ . '../../../Php/Templates/navBar.php';?>
+<main>
 
-<h2>
-    <?php 
-        if ($chat['es_grupo']) {
-            echo $chat['nombre_grupo'];
-        } else {
-            echo $otrosUsuarios[0]['username'] ?? "Usuario";
-        }
-    ?>
-</h2>
+    <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
+    <h2>
+        <?php 
+            if ($chat['es_grupo']) {
+                echo $chat['nombre_grupo'];
+            } else {
+                echo $otrosUsuarios[0]['username'] ?? "Usuario";
+            }
+        ?>
+    </h2>
 
-<div id="chat-mensajes">
-    <?php foreach ($mensajes as $m): ?>
-        <div class="mensaje <?= $m['usuario_id'] == $idUsu ? 'tuyo' : '' ?>">
-            <strong><?= $m['usuario_id'] == $idUsu ? "Tú" : $m['username'] ?>:</strong>
-            <?= htmlspecialchars($m['texto']) ?>
-            <small>(<?= $m['fecha'] ?>)</small>
-        </div>
-    <?php endforeach; ?>
-</div>
+    <div id="chat-mensajes">
+        <?php foreach ($mensajes as $m): ?>
+            <div class="mensaje <?= $m['usuario_id'] == $idUsu ? 'tuyo' : '' ?>">
+                <strong><?= $m['usuario_id'] == $idUsu ? "Tú" : $m['username'] ?>:</strong>
+                <?= htmlspecialchars($m['texto']) ?>
+                <small>(<?= $m['fecha'] ?>)</small>
+            </div>
+        <?php endforeach; ?>
+    </div>
 
-<!-- Formulario para enviar mensajes -->
-<form action="procesamientos/guardarMensajes.php" method="post">
-    <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
-    <input type="hidden" name="usuario_id" value="<?= $idUsu ?>">
-    <input type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
-    <button type="submit">Enviar</button>
-</form>
-
+    <!-- Formulario para enviar mensajes -->
+    <form action="procesamientos/guardarMensajes.php" method="post">
+        <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
+        <input type="hidden" name="usuario_id" value="<?= $idUsu ?>">
+        <input type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
+        <button type="submit">Enviar</button>
+    </form>
+</main>
 <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
 </html>

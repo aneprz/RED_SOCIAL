@@ -1,3 +1,11 @@
+html,body{
+    height: 100%;
+    margin: 0;
+}
+
+main{
+    flex: 1; /* Esto empuja el footer hacia abajo */
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #fafafa;
@@ -5,15 +13,18 @@ body {
     padding: 0;
     margin-left: 250px ;
     background: linear-gradient(180deg, #e65a36, #c13722);
+    display: flex;
+    flex-direction: column;
 }
 
 .profile-container {
     max-width: 800px;
     margin: 20px auto;
-    background-color: #fff;
+    background: linear-gradient(180deg, #e65a36, #c13722);
     border: 1px solid #ddd;
     padding: 20px;
     border-radius: 8px;
+    box-shadow: 10px 10px 20px;
 }
 
 .profile-header {
@@ -34,11 +45,12 @@ body {
 .profile-info h2 {
     margin: 0;
     font-size: 28px;
+    color: rgb(226, 226, 226);
 }
 
 .profile-info .bio {
     margin: 5px 0 10px 0;
-    color: #555;
+    color: #c9c9c9;
 }
 
 .profile-info .stats {
@@ -48,10 +60,18 @@ body {
     color: #333;
 }
 
+.stats span{
+    color: rgb(226, 226, 226);
+}
+
 .profile-posts {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 10px;
+}
+
+.post{
+    color: rgb(226, 226, 226);
 }
 
 .profile-posts .post img {

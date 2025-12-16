@@ -71,7 +71,7 @@
           <rect width="20" height="14" x="2" y="3" rx="2"/>
         </g>
       </svg>
-      Reels
+      Sals
     </a>
 
     <a href="../../Php/Chats/chats.php" class="nav-item-custom">
@@ -153,7 +153,7 @@
       <a href="#" class="nav-item-custom active d-block mb-2">Inicio</a>
       <a href="#" class="nav-item-custom d-block mb-2">Búsqueda</a>
       <a href="#" class="nav-item-custom d-block mb-2">Explorar</a>
-      <a href="#" class="nav-item-custom d-block mb-2">Reels</a>
+      <a href="#" class="nav-item-custom d-block mb-2">Sals</a>
       <a href="#" class="nav-item-custom d-block mb-2">Mensajes</a>
       <a href="#" class="nav-item-custom d-block mb-2">Notificaciones</a>
       <a href="#" class="nav-item-custom d-block mb-2">Crear</a>

@@ -5,7 +5,7 @@
   .site-footer { 
     padding: 20px;
     background: #222;
-    color: #fff;
+    color: #c1c1c1ff;
   }
 
 </style>
