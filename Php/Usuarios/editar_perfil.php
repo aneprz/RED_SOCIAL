@@ -23,12 +23,12 @@ include 'procesar_editar_perfil.php';
 
         <form class="profile-form" action="procesar_editar_perfil.php" method="post">
             <div class="profile-photo">
-                <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
+                <img src="<?= $foto_perfil ?>" alt="Foto de perfil"><br>
                 <input type="file" accept="image/*">
             </div>
             <label>
                 Nombre de usuario
-                <input type="text" placeholder="Nuevo nombre de usuario">
+                <input type="text" placeholder="<?php echo $nombreusu; ?>">
             </label>
 
 

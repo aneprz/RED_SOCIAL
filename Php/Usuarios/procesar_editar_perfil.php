@@ -7,7 +7,7 @@ include '../../BD/conexiones.php';
 
 $id=$_SESSION['id'];
 
-$query = "SELECT foto_perfil FROM usuarios where id = $id";
+$query = "SELECT foto_perfil, username FROM usuarios where id = $id";
 $result = mysqli_query($conexion, $query);
 
 if ($result && mysqli_num_rows($result) > 0) {
