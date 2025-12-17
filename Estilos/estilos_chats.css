@@ -15,7 +15,8 @@ main h2{
 }
 
 .volver{
-    padding: 10px
+    padding: 10px;
+    color: #e65a36;
 }
 
 .encabezado{
@@ -28,6 +29,7 @@ main h2{
 .encabezado h2{
     font-family: "Poppins", sans-serif;
     color: rgb(226, 226, 226);
+    margin: 10px
 }
 
 .chat{
@@ -59,11 +61,11 @@ main{
 
 .btn-nuevo-chat{
     text-decoration: none;
-    color: #e65a36;
+    color: rgb(255, 118, 60);
 }
 
 .btn-nuevo-chat:hover{
-    color: #e6451d;
+    color: rgb(187, 88, 45);
 }
 
 .titulo img{
@@ -74,4 +76,21 @@ main{
     border-radius: 50%;
     border: 2px solid #ddd;
     object-fit: cover;
+}
+
+form label{
+    color: white;
+}
+
+.encabezadoNuevoChat{
+    display: flex;
+    margin: 10px;
+}
+
+.encabezadoNuevoChat h2{
+    margin: 5px;
+}
+
+form{
+    margin: 30px;
 }

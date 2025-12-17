@@ -12,7 +12,8 @@ $sql = $pdo->prepare("
         c.nombre_grupo,
         u.username AS otro_usuario,
         m.texto AS ultimo_mensaje,
-        m.fecha AS fecha_mensaje
+        m.fecha AS fecha_mensaje,
+        c.fecha_creacion
     FROM chats c
     JOIN usuarios_chat cu ON cu.chat_id = c.id AND cu.usuario_id = :idUsu
     LEFT JOIN usuarios_chat cu2 ON cu2.chat_id = c.id AND cu2.usuario_id != :idUsu
@@ -24,7 +25,7 @@ $sql = $pdo->prepare("
         ORDER BY fecha DESC 
         LIMIT 1
     )
-    ORDER BY m.fecha DESC
+    ORDER BY COALESCE(m.fecha, c.fecha_creacion) DESC
 ");
 
 $sql->execute(["idUsu" => $idUsu]);
