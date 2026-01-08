@@ -20,7 +20,7 @@ body {
 .profile-container {
     max-width: 800px;
     margin: 20px auto;
-    background: linear-gradient(180deg, #e65a36, #c13722);
+    background-color: #FFF8F5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 5px 5px 30px rgb(40, 40, 40);
@@ -44,12 +44,12 @@ body {
 .profile-info h2 {
     margin: 0;
     font-size: 28px;
-    color: rgb(226, 226, 226);
+    color: #2E2E2E;
 }
 
 .profile-info .bio {
     margin: 5px 0 10px 0;
-    color: #c9c9c9;
+    color: #6B6B6B;
 }
 
 .profile-info .stats {
@@ -60,7 +60,7 @@ body {
 }
 
 .stats span{
-    color: rgb(226, 226, 226);
+    color: #6B6B6B;
 }
 
 .profile-posts {
@@ -70,7 +70,7 @@ body {
 }
 
 .post{
-    color: rgb(226, 226, 226);
+    color: #6B6B6B;
 }
 
 .profile-posts .post img {
@@ -90,7 +90,7 @@ a{
 
 .cerrarSesion {
     padding: 8px 16px;
-    background-color: #ff4d4d;
+    background-color: #D62828;
     color: white;
     border: none;
     border-radius: 5px;
@@ -99,7 +99,7 @@ a{
 }
 
 .cerrarSesion:hover {
-    background-color: #e60000;
+    background-color: #B71C1C;
 }
 
 .objetos{
@@ -109,4 +109,9 @@ a{
 .formCerrarSesion{
     justify-content: right;
     margin: 20px;
+}
+
+.botonEditarPerfil{
+    background-color: #E94B3C;
+    margin: 5px;
 }

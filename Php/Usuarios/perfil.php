@@ -36,7 +36,7 @@ $nombreusu = $_SESSION['username'];
                     </div>
                 </div>
 
-                <div><a href="editar_perfil.php"><button>Editar perfil</button></a></div>
+                <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
                 <div class="profile-posts">
                     <div class="post"><img src="../../Imagenes/post1.jpg" alt="Post 1"></div>
                     <div class="post"><img src="../../Imagenes/post2.jpg" alt="Post 2"></div>

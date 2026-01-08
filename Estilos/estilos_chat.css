@@ -22,7 +22,7 @@ main{
 
 .volver{
     padding: 10px;
-    color: #e65a36;
+    color: #E94B3C;
 }
 
 .encabezado{
@@ -86,11 +86,11 @@ main{
 
 form button{
     border-radius: 30px;
-    background-color: rgb(255, 118, 60);
+    background-color: #E94B3C;
 }
 
 form button:hover{
-    background-color: rgb(187, 88, 45);
+    background-color: #b43a2f;
 }
 
 .fecha{
