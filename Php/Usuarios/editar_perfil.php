@@ -19,30 +19,30 @@ include 'procesar_editar_perfil.php';
 <body>
     <div class="profile-container">
         <h1>Editar perfil</h1>
+        <form class="profile-form" 
+            action="procesar_editar_perfil.php" 
+            method="post" 
+            enctype="multipart/form-data">
 
-
-        <form class="profile-form" action="procesar_editar_perfil.php" method="post">
             <div class="profile-photo">
                 <img src="<?= $foto_perfil ?>" alt="Foto de perfil"><br>
-                <input type="file" accept="image/*">
+                <input type="file" name="foto_perfil" accept="image/*">
             </div>
+
             <label>
                 Nombre de usuario
-                <input type="text" placeholder="<?php echo $nombreusu; ?>">
+                <input type="text" name="nuevousu" placeholder="<?php echo $nombreusu; ?>">
             </label>
-
 
             <label>
                 Contraseña
-                <input type="password" placeholder="Nueva contraseña">
+                <input type="password" name="contrasena" placeholder="Nueva contraseña">
             </label>
-
 
             <label>
                 Biografía
-                <textarea placeholder="Cuéntanos algo sobre ti..."></textarea>
+                <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..."></textarea>
             </label>
-
 
             <button type="submit">Guardar cambios</button>
         </form>
