@@ -16,7 +16,7 @@ main h2{
 
 .volver{
     padding: 10px;
-    color: #e65a36;
+    color: #E94B3C;
 }
 
 .encabezado{
@@ -61,11 +61,11 @@ main{
 
 .btn-nuevo-chat{
     text-decoration: none;
-    color: rgb(255, 118, 60);
+    color: #E94B3C;
 }
 
 .btn-nuevo-chat:hover{
-    color: rgb(187, 88, 45);
+    color: #b83b2f;
 }
 
 .titulo img{
