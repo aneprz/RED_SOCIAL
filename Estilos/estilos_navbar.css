@@ -241,3 +241,37 @@
     text-align:center;
     padding:6px;
   }
+
+/* Preview y marcadores */
+.media-wrapper{ width:100%; max-width:720px; background:#000; border-radius:10px; overflow:hidden; position:relative; margin:0 auto 6px; }
+.media-wrapper img, .media-wrapper video{ display:block; width:100%; height:auto; cursor:pointer; }
+
+/* marcador visible sobre la imagen */
+.tag-marker{
+  position:absolute;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:rgba(82,85,255,0.95);
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transform:translate(-50%,-50%);
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.4);
+  font-size:12px;
+}
+
+/* fila de tag en la lista */
+.tag-row{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  background:rgba(255,255,255,0.03);
+  padding:8px;
+  border-radius:8px;
+  color:#e6eef6;
+}
+.tag-row .remove{ margin-left:auto; color:#ff9494; cursor:pointer; }
+
