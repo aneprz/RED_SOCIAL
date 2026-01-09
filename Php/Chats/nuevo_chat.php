@@ -1,5 +1,5 @@
 <?php
-require "procesamientos/conexionBBDD.php";
+require "../../BD/conexiones.php";
 session_start();
 
 $idUsu = $_SESSION['id'];

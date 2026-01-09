@@ -14,7 +14,7 @@
 
   <!-- TOPBAR (solo móvil) -->
   <div class="topbar d-flex d-md-none">
-    <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
+    <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
       ☰
     </button>
     <div class="d-flex align-items-center gap-2 fw-bold">
