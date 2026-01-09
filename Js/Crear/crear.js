@@ -49,8 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showPreview(file);
     formFields.style.display = "block";
     previewContainer.style.display = "block";
-    // scroll al formulario si quieres:
-    // postForm.scrollIntoView({behavior:'smooth', block:'center'});
   });
 
   function clearMediaWrapper(){ mediaWrapper.innerHTML = ''; }

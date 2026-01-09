@@ -112,7 +112,7 @@
     <h2 id="modalTitle" class="modal-title">Crear nueva publicación</h2>
 
     <!-- FORM: envia todo a PHP -->
-    <form id="postForm" action="/upload.php" method="post" enctype="multipart/form-data" style="width:100%;max-width:760px; display:flex; flex-direction:column; gap:12px;">
+    <form id="postForm" action="../../Php/Crear/upload.php" method="post" enctype="multipart/form-data" style="width:100%;max-width:760px; display:flex; flex-direction:column; gap:12px;">
       <!-- 1) selector de archivo -->
       <div id="uploadArea">
         <label class="btn-select" for="fileInput">Seleccionar foto o vídeo</label>
@@ -132,6 +132,12 @@
           Pie de foto
           <textarea name="caption" id="caption" rows="3" style="width:100%;padding:8px;border-radius:8px;"></textarea>
         </label>
+
+        <label>
+          Ubicación
+          <input type="text" name="ubicacion" placeholder="Ciudad, país..." />
+        </label>
+
 
         <!-- Etiquetas añadidas por click se muestran aquí como lista (y contienen inputs ocultos para PHP) -->
         <div id="tagsArea">

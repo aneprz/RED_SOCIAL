@@ -4,8 +4,8 @@ if (!isset($_SESSION['username'])) {
 header("Location: Php/Sesiones/inicio_sesion.php");
 exit();
 }
-
-include 'procesar_editar_perfil.php';
+$nombreusu = $_SESSION['username'];
+$foto_perfil=$_SESSION['foto_perfil'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,19 +26,13 @@ include 'procesar_editar_perfil.php';
 
             <div class="profile-photo">
                 <img src="<?= $foto_perfil ?>" alt="Foto de perfil"><br>
-                <input type="file" name="foto_perfil" accept="image/*">
+                <input type="text" name="foto_perfil" placeholder="Url de la imagen">
             </div>
 
             <label>
                 Nombre de usuario
                 <input type="text" name="nuevousu" placeholder="<?php echo $nombreusu; ?>">
             </label>
-
-            <label>
-                Contraseña
-                <input type="password" name="contrasena" placeholder="Nueva contraseña">
-            </label>
-
             <label>
                 Biografía
                 <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..."></textarea>
