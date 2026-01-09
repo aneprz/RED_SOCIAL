@@ -6,9 +6,9 @@ exit();
 }
 
 include 'procesar_perfil.php';
-$foto_perfil=$_SESSION['foto_perfil'];
+$foto_perfil=$_SESSION['foto_perfil']?? 'https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg';
 $nombreusu = $_SESSION['username'];
-$biografia = $_SESSION['biografia'];
+$biografia = $_SESSION['biografia']?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
