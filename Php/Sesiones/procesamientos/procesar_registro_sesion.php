@@ -44,7 +44,7 @@ $ejecutar = mysqli_query($conexion, $query);
 if ($ejecutar){
     echo "<script>
             alert('Usuario creado correctamente');
-            window.location.href = '../registro_sesion.php';
+            window.location.href = '../inicio_sesion.php';
           </script>";
 
 } else {
