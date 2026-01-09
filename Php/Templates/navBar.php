@@ -93,20 +93,20 @@
       Notificaciones
     </a>
 
-    <a href="#" class="nav-item-custom" id="abrirCrear">
-      <!-- CREAR -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-        <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-              d="M5 12h14m-7-7v14"/>
-      </svg>
-      Crear
-    </a>
+<a href="#" class="nav-item-custom" id="abrirCrear" role="button" aria-haspopup="dialog" aria-controls="modal">
+  <!-- CREAR -->
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+    <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+          d="M5 12h14m-7-7v14"/>
+  </svg>
+  Crear
+</a>
 
-  <!-- Modal (formulario que envía a upload.php) -->
-<div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+<!-- Modal -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1">
   <div class="modal-overlay" id="modalOverlay"></div>
 
-  <div class="modal-content" role="document" aria-labelledby="modalTitle" tabindex="-1">
+  <div class="modal-content" role="document" aria-labelledby="modalTitle">
     <button id="closeModal" class="modal-close" aria-label="Cerrar ventana">&times;</button>
 
     <h2 id="modalTitle" class="modal-title">Crear nueva publicación</h2>
@@ -127,37 +127,35 @@
       </div>
 
       <!-- 3) Campos del formulario (ocultos hasta seleccionar) -->
-      <div id="formFields" style="display:none; margin-top:6px;">
-        <label>
-          Pie de foto
-          <textarea name="caption" id="caption" rows="3" style="width:100%;padding:8px;border-radius:8px;"></textarea>
-        </label>
+<div id="formFields" style="display:none; margin-top:6px; flex-direction:column; gap:12px;">
 
-        <label>
-          Ubicación
-          <input type="text" name="ubicacion" placeholder="Ciudad, país..." />
-        </label>
+  <!-- Campos -->
+  <label>Pie de foto
+    <textarea name="caption" id="caption" rows="3" style="width:100%;padding:8px;border-radius:8px;"></textarea>
+  </label>
+  <label>Ubicación
+    <input type="text" name="ubicacion" placeholder="Ciudad, país..." />
+  </label>
 
+  <!-- Etiquetas -->
+  <div id="tagsArea">
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
+      <input id="manualTagInput" type="text" placeholder="Etiquetar usuario manualmente" style="flex:1;padding:8px;border-radius:6px;" />
+      <button id="addManualTag" type="button" class="btn small">Añadir etiqueta</button>
+    </div>
+    <div id="tagsList" class="tags-list" style="max-height:180px; overflow-y:auto;">
+      <div class="tag-item" style="color:#cbd5e1;">No hay etiquetas añadidas.</div>
+    </div>
+  </div>
 
-        <!-- Etiquetas añadidas por click se muestran aquí como lista (y contienen inputs ocultos para PHP) -->
-        <div id="tagsArea">
-          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
-            <input id="manualTagInput" type="text" placeholder="Etiquetar usuario manualmente (sin @)" style="padding:8px;border-radius:6px;flex:1" />
-            <button id="addManualTag" type="button" class="btn small">Añadir etiqueta</button>
-          </div>
+  <!-- BOTONES -->
+  <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+    <button id="cancelUpload" type="button" class="btn btn-ghost">Cancelar</button>
+    <button id="btnSubmitFile" type="button" class="btn primary">Subir Archivo</button>
+  </div>
 
-          <div id="tagsList" class="tags-list" style="display:flex;flex-direction:column;gap:6px;">
-            <!-- aquí se insertan filas .tag-item con un botón eliminar -->
-            <div class="tag-item" style="color:#cbd5e1;">No hay etiquetas añadidas.</div>
-          </div>
-        </div>
+</div>
 
-        <!-- Botones -->
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
-          <button id="cancelUpload" type="button" class="btn btn-ghost">Cancelar</button>
-          <button id="submitBtn" type="submit" class="btn primary">Subir publicación</button>
-        </div>
-      </div>
 
       <!-- hidden placeholders for tags (se rellenan dinámicamente) -->
       <div id="hiddenTagInputs"></div>

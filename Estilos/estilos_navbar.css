@@ -145,7 +145,7 @@
     max-height:85vh;
     background:#1f2937;
     border-radius:14px;
-    padding:28px;
+    padding: 28px 28px 48px 28px; /* bottom extra para botones */
     box-shadow:0 10px 30px rgba(0,0,0,0.5);
     color:#e5e7eb;
     display:flex;
@@ -276,4 +276,60 @@
   color:#e6eef6;
 }
 .tag-row .remove{ margin-left:auto; color:#ff9494; cursor:pointer; }
+
+.tags-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 180px; /* Ajusta según tu modal */
+  overflow-y: auto;
+}
+
+/* ----------------------------
+   Botones dentro del modal
+   ---------------------------- */
+
+/* Todos los botones del formulario */
+#formFields .btn {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s, color 0.2s;
+}
+
+/* Botón principal: Subir Archivo / Subir Publicación */
+#formFields .btn.primary {
+  background-color: #5255ff; /* azul llamativo */
+  color: #fff;
+}
+
+#formFields .btn.primary:hover {
+  background-color: #4143cc;
+}
+
+/* Botón secundario: Cancelar */
+#formFields .btn.btn-ghost {
+  background-color: #e5e7eb; /* claro */
+  color: #1f2937;
+}
+
+#formFields .btn.btn-ghost:hover {
+  background-color: #d1d5db;
+}
+
+/* Botón pequeño: Añadir etiqueta */
+#formFields .btn.small {
+  background-color: #34d399; /* verde suave */
+  color: #fff;
+  padding: 6px 10px;
+  font-size: 0.875rem;
+}
+
+#formFields .btn.small:hover {
+  background-color: #22c55e;
+}
+
+
 
