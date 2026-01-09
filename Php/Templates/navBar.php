@@ -16,7 +16,7 @@ if (!isset($_SESSION['username'])) {
 
   <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="../../Estilos/estilos_footer.css">
+  <link rel="stylesheet" href="../../Estilos/estilos_navbar.css">
 </head>
 
 <body>
@@ -111,32 +111,63 @@ if (!isset($_SESSION['username'])) {
       Crear
     </a>
 
-  <!-- Modal -->
-  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
-    <div class="modal-overlay" id="modalOverlay"></div>
+  <!-- Modal (formulario que envía a upload.php) -->
+<div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-overlay" id="modalOverlay"></div>
 
-    <div class="modal-content" role="document" aria-labelledby="modalTitle" tabindex="-1">
-      <button id="closeModal" class="modal-close" aria-label="Cerrar ventana">&times;</button>
+  <div class="modal-content" role="document" aria-labelledby="modalTitle" tabindex="-1">
+    <button id="closeModal" class="modal-close" aria-label="Cerrar ventana">&times;</button>
 
-      <h2 id="modalTitle" class="modal-title">Crear nueva publicación</h2>
+    <h2 id="modalTitle" class="modal-title">Crear nueva publicación</h2>
 
-      <div class="upload-area" id="uploadArea">
-        <div class="upload-graphics" aria-hidden="true">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
-            <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" stroke-width="1.2"/>
-            <path d="M7 14l3-4 4 5 2-3 3 4" stroke="currentColor" stroke-width="1.2" fill="none"/>
-          </svg>
+    <!-- FORM: envia todo a PHP -->
+    <form id="postForm" action="/upload.php" method="post" enctype="multipart/form-data" style="width:100%;max-width:760px; display:flex; flex-direction:column; gap:12px;">
+      <!-- 1) selector de archivo -->
+      <div id="uploadArea">
+        <label class="btn-select" for="fileInput">Seleccionar foto o vídeo</label>
+        <input id="fileInput" name="file" type="file" accept="image/*,video/*" style="display:none" />
+        <p class="upload-hint">Elige un archivo. Tras seleccionarlo verás la previsualización y los campos.</p>
+      </div>
+
+      <!-- 2) PREVIEW grande (oculto hasta seleccionar) -->
+      <div id="previewContainer" style="display:none;">
+        <div id="mediaWrapper" class="media-wrapper"></div>
+        <small style="color: #cbd5e1;">Haz clic en la imagen/video para añadir una etiqueta (nombre de usuario).</small>
+      </div>
+
+      <!-- 3) Campos del formulario (ocultos hasta seleccionar) -->
+      <div id="formFields" style="display:none; margin-top:6px;">
+        <label>
+          Pie de foto
+          <textarea name="caption" id="caption" rows="3" style="width:100%;padding:8px;border-radius:8px;"></textarea>
+        </label>
+
+        <!-- Etiquetas añadidas por click se muestran aquí como lista (y contienen inputs ocultos para PHP) -->
+        <div id="tagsArea">
+          <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;">
+            <input id="manualTagInput" type="text" placeholder="Etiquetar usuario manualmente (sin @)" style="padding:8px;border-radius:6px;flex:1" />
+            <button id="addManualTag" type="button" class="btn small">Añadir etiqueta</button>
+          </div>
+
+          <div id="tagsList" class="tags-list" style="display:flex;flex-direction:column;gap:6px;">
+            <!-- aquí se insertan filas .tag-item con un botón eliminar -->
+            <div class="tag-item" style="color:#cbd5e1;">No hay etiquetas añadidas.</div>
+          </div>
         </div>
 
-        <p class="upload-text">Selecciona las fotos y los vídeos que quieras subir</p>
-
-        <label class="btn-select" for="fileInput">Seleccionar del ordenador</label>
-        <input id="fileInput" type="file" accept="image/*,video/*" multiple style="display:none" />
-
-        <div id="fileList" class="file-list" aria-live="polite"></div>
+        <!-- Botones -->
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px;">
+          <button id="cancelUpload" type="button" class="btn btn-ghost">Cancelar</button>
+          <button id="submitBtn" type="submit" class="btn primary">Subir publicación</button>
+        </div>
       </div>
-    </div>
+
+      <!-- hidden placeholders for tags (se rellenan dinámicamente) -->
+      <div id="hiddenTagInputs"></div>
+    </form>
   </div>
+</div>
+
 
   <!-- Perfil -->
   <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom">Perfil</a>
