@@ -6,7 +6,6 @@ exit();
 }
 
 include 'procesar_perfil.php';
-include 'procesar_editar_perfil.php';
 
 $nombreusu = $_SESSION['username'];
 ?>
