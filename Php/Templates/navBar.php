@@ -1,11 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['username'])) {
-    header("Location: Php/Sesiones/inicio_sesion.php");
-    exit();
-}
-?>
 <!doctype html>
 <html lang="es">
 <head>
@@ -18,7 +10,6 @@ if (!isset($_SESSION['username'])) {
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Estilos/estilos_navbar.css">
 </head>
-
 <body>
 
   <!-- TOPBAR (solo móvil) -->
@@ -79,7 +70,7 @@ if (!isset($_SESSION['username'])) {
           <rect width="20" height="14" x="2" y="3" rx="2"/>
         </g>
       </svg>
-      Reels
+      Sals
     </a>
 
     <a href="../../Php/Chats/chats.php" class="nav-item-custom">
@@ -192,7 +183,7 @@ if (!isset($_SESSION['username'])) {
       <a href="#" class="nav-item-custom active d-block mb-2">Inicio</a>
       <a href="#" class="nav-item-custom d-block mb-2">Búsqueda</a>
       <a href="#" class="nav-item-custom d-block mb-2">Explorar</a>
-      <a href="#" class="nav-item-custom d-block mb-2">Reels</a>
+      <a href="#" class="nav-item-custom d-block mb-2">Sals</a>
       <a href="#" class="nav-item-custom d-block mb-2">Mensajes</a>
       <a href="#" class="nav-item-custom d-block mb-2">Notificaciones</a>
       <a href="#" class="nav-item-custom d-block mb-2">Crear</a>

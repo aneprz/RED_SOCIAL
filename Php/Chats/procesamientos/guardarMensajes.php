@@ -12,5 +12,6 @@ $sql = $pdo->prepare("
 
 $sql->execute([$chat_id, $usuario_id, $mensaje]);
 
-echo "OK";
+header("Location: ../chat.php?chat_id=" . urlencode($chat_id));
+exit(); // Siempre usar exit() después de header()
 ?>

@@ -1,15 +1,96 @@
-body { font-family: Arial; }
-.chat{
+html,body{
+    height: 100%;
+    margin: 0;
+}
+
+body { 
+    font-family: Arial; 
+    display: flex;
+    flex-direction: column;
+}
+
+main h2{
+    font-family: "Poppins", sans-serif;
+    color: rgb(226, 226, 226);
+}
+
+.volver{
     padding: 10px;
-    border-bottom: 1px solid #ccc;
+    color: #E94B3C;
+}
+
+.encabezado{
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+    background-color: rgb(21, 21, 21);
+}
+
+.encabezado h2{
+    font-family: "Poppins", sans-serif;
+    color: rgb(226, 226, 226);
+    margin: 10px
+}
+
+.chat{
+    padding: 15px;
+    border-bottom: 1px solid rgb(21, 21, 21);
     cursor: pointer;
+    background-color: rgb(34, 34, 34)
 }
 .chat:hover {
-    background: #eee;
+    background-color: rgb(47, 47, 47);
 }
 .titulo {
     font-weight: bold;
+    font-size: 20px;
+    color: rgb(226, 226, 226);
 }
 .mensaje {
-    color: #555;
+    color: #c9c9c9;
+}
+
+.fecha{
+    color: rgb(226, 226, 226);
+}
+
+main{
+    flex: 1; /* Esto empuja el footer hacia abajo */
+    background-color: rgb(21, 21, 21);
+}
+
+.btn-nuevo-chat{
+    text-decoration: none;
+    color: #E94B3C;
+}
+
+.btn-nuevo-chat:hover{
+    color: #b83b2f;
+}
+
+.titulo img{
+    margin-right: 3px;
+    margin-bottom: 3px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    object-fit: cover;
+}
+
+form label{
+    color: white;
+}
+
+.encabezadoNuevoChat{
+    display: flex;
+    margin: 10px;
+}
+
+.encabezadoNuevoChat h2{
+    margin: 5px;
+}
+
+form{
+    margin: 30px;
 }
