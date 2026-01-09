@@ -2,37 +2,36 @@
 session_start();
 include '../../BD/conexiones.php';
 
-$nuevousu   = $_POST['nuevousu'] ?? '';
-$contrasena = $_POST['contrasena'] ?? '';
-$biografia  = $_POST['biografia'] ?? '';
-$id = $_SESSION['id'] ?? '';
-
-if (!$id) {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     return;
 }
 
-/* ---------- CONTRASEÑA ---------- */
-if (!empty($contrasena)) {
-    $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
-    mysqli_query(
-        $conexion,  
-        "UPDATE usuarios SET password_hash = '$contrasenaHash' WHERE id = $id"
-    );
+$id = $_SESSION['id'] ?? '';
+if (!$id) {
+    return;
 }
+$foto_perfil = $_POST['foto_perfil'] ?? '';
+$nuevousu  = $_POST['nuevousu'] ?? '';
+$biografia = $_POST['biografia'] ?? '';
 
-/* ---------- USERNAME ---------- */
 if (!empty($nuevousu)) {
-    mysqli_query(
-        $conexion,
-        "UPDATE usuarios SET username = '$nuevousu' WHERE id = $id"
+    mysqli_query($conexion,
+        "UPDATE usuarios SET username='$nuevousu' WHERE id=$id"
     );
     $_SESSION['username'] = $nuevousu;
 }
 
-/* ---------- BIOGRAFÍA ---------- */
 if (!empty($biografia)) {
-    mysqli_query(
-        $conexion,
-        "UPDATE usuarios SET bio = '$biografia' WHERE id = $id"
+    mysqli_query($conexion,
+        "UPDATE usuarios SET bio='$biografia' WHERE id=$id"
     );
+    $_SESSION['biografia'] = $biografia;
 }
+
+if (!empty($foto_perfil) && filter_var($foto_perfil, FILTER_VALIDATE_URL)) {
+    $foto_perfil = mysqli_real_escape_string($conexion, $foto_perfil);
+    mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil' WHERE id=$id");
+    $_SESSION['foto_perfil'] = $foto_perfil;
+}
+header("Location: perfil.php");
+exit;
