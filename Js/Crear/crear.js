@@ -49,11 +49,10 @@ document.addEventListener("DOMContentLoaded", () => {
     showPreview(file);
 
     // Mostrar formulario y botones
-    formFields.style.display = "flex"; // o "block"
-    formFields.style.flexDirection = "column"; // si quieres mantener la columna
+    formFields.style.display = "flex";
+    formFields.style.flexDirection = "column";
     previewContainer.style.display = "block";
   });
-
 
   function clearMediaWrapper(){ mediaWrapper.innerHTML = ''; }
 
@@ -69,7 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const reader = new FileReader();
       reader.onload = (ev) => img.src = ev.target.result;
       reader.readAsDataURL(file);
-      img.addEventListener("click", onMediaClick);
+
     } else if (file.type.startsWith("video/")) {
       const video = document.createElement("video");
       video.controls = true;
@@ -78,24 +77,10 @@ document.addEventListener("DOMContentLoaded", () => {
       const reader = new FileReader();
       reader.onload = (ev) => { video.src = ev.target.result; };
       reader.readAsDataURL(file);
-      video.addEventListener("click", onMediaClick);
+
     } else {
       mediaWrapper.textContent = "Tipo de archivo no soportado.";
     }
-  }
-
-  /* Clic sobre media -> pedir nombre y crear tag */
-  function onMediaClick(e){
-    // calcular coords relativas
-    const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    let name = prompt("Usuario a etiquetar (sin @):");
-    if (!name) return;
-    name = name.replace(/\s+/g,'');
-    if (name.length === 0) return;
-    addTag(name.startsWith('@') ? name : '@' + name, x, y);
   }
 
   /* Añadir etiqueta manual (sin coords) */
@@ -120,48 +105,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* Render lista visible y hidden inputs para PHP */
   function renderTags(){
-  tagsList.innerHTML = '';
-  hiddenTagInputs.innerHTML = '';
+    tagsList.innerHTML = '';
+    hiddenTagInputs.innerHTML = '';
 
-  if (tags.length === 0) {
-    const placeholder = document.createElement('div');
-    placeholder.className = 'tag-row';
-    placeholder.textContent = 'No hay etiquetas añadidas.';
-    tagsList.appendChild(placeholder);
+    if (tags.length === 0) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'tag-row';
+      placeholder.textContent = 'No hay etiquetas añadidas.';
+      tagsList.appendChild(placeholder);
+    }
+
+    tags.forEach(t => {
+      const row = document.createElement('div');
+      row.className = 'tag-row';
+      row.innerHTML = `<strong>${t.name}</strong> ${t.x!==null ? `— ${Math.round(t.x*100)}%, ${Math.round(t.y*100)}%` : ''}`;
+      const rem = document.createElement('span');
+      rem.className = 'remove';
+      rem.textContent = 'Eliminar';
+      rem.addEventListener('click', () => removeTag(t.id));
+      row.appendChild(rem);
+      tagsList.appendChild(row);
+
+      // inputs ocultos para PHP
+      const inName = document.createElement('input');
+      inName.type = 'hidden'; inName.name = 'tags_names[]'; inName.value = t.name;
+      hiddenTagInputs.appendChild(inName);
+
+      const inX = document.createElement('input');
+      inX.type = 'hidden'; inX.name = 'tags_x[]'; inX.value = t.x===null ? '' : t.x;
+      hiddenTagInputs.appendChild(inX);
+
+      const inY = document.createElement('input');
+      inY.type = 'hidden'; inY.name = 'tags_y[]'; inY.value = t.y===null ? '' : t.y;
+      hiddenTagInputs.appendChild(inY);
+
+      if (t.x !== null && t.y !== null){
+        placeMarker(t);
+      }
+    });
   }
 
-  tags.forEach(t => {
-    const row = document.createElement('div');
-    row.className = 'tag-row';
-    row.innerHTML = `<strong>${t.name}</strong> ${t.x!==null ? `— ${Math.round(t.x*100)}%, ${Math.round(t.y*100)}%` : ''}`;
-    const rem = document.createElement('span');
-    rem.className = 'remove';
-    rem.textContent = 'Eliminar';
-    rem.addEventListener('click', () => removeTag(t.id));
-    row.appendChild(rem);
-    tagsList.appendChild(row);
-
-    // inputs ocultos para PHP
-    const inName = document.createElement('input');
-    inName.type = 'hidden'; inName.name = 'tags_names[]'; inName.value = t.name;
-    hiddenTagInputs.appendChild(inName);
-
-    const inX = document.createElement('input');
-    inX.type = 'hidden'; inX.name = 'tags_x[]'; inX.value = t.x===null ? '' : t.x;
-    hiddenTagInputs.appendChild(inX);
-
-    const inY = document.createElement('input');
-    inY.type = 'hidden'; inY.name = 'tags_y[]'; inY.value = t.y===null ? '' : t.y;
-    hiddenTagInputs.appendChild(inY);
-
-    if (t.x !== null && t.y !== null){
-      placeMarker(t);
-    }
-  });
-}
-
   function placeMarker(tag){
-    // eliminamos marcador con ese id si existe
     const existing = mediaWrapper.querySelectorAll(`.tag-marker[data-id="${tag.id}"]`);
     existing.forEach(n=>n.remove());
 
@@ -194,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
     mediaWrapper.innerHTML = '';
   }
 
-  /* Optional: antes de enviar, puedes validar que haya archivo */
+  /* Validación antes de enviar */
   postForm.addEventListener('submit', (e) => {
     if (!fileInput.files || fileInput.files.length===0) {
       e.preventDefault();
@@ -209,12 +193,16 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    // Validación mínima de tags
     if(tags.some(t => !t.name)){
       e.preventDefault();
       alert('Hay etiquetas sin nombre.');
       return false;
     }
+  });
+    // Enviar formulario al hacer clic en "Subir Archivo"
+  const btnSubmitFile = document.getElementById("btnSubmitFile");
+  btnSubmitFile.addEventListener("click", () => {
+    postForm.requestSubmit(); // dispara el submit del formulario
   });
 
 });

@@ -123,7 +123,6 @@
       <!-- 2) PREVIEW grande (oculto hasta seleccionar) -->
       <div id="previewContainer" style="display:none;">
         <div id="mediaWrapper" class="media-wrapper"></div>
-        <small style="color: #cbd5e1;">Haz clic en la imagen/video para añadir una etiqueta (nombre de usuario).</small>
       </div>
 
       <!-- 3) Campos del formulario (ocultos hasta seleccionar) -->
