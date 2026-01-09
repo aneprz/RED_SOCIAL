@@ -6,7 +6,7 @@ exit();
 }
 
 include 'procesar_perfil.php';
-$foto_perfil=$_SESSION['foto_perfil']?? 'https://images.vexels.com/media/users/3/271222/isolated/preview/a05636f8a6af3dbe8bf21a419c9f183d-icono-de-muslo-de-pollo.png';
+$foto_perfil=$_SESSION['foto_perfil'];
 $nombreusu = $_SESSION['username'];
 $biografia = $_SESSION['biografia']?? '';
 ?>

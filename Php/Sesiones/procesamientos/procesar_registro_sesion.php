@@ -52,6 +52,6 @@ if ($ejecutar){
             Error al insertar usuario: " . mysqli_error($conexion) . "
           </div>";
 }
-
+$_SESSION['foto_perfil'] = 'https://images.vexels.com/media/users/3/271222/isolated/preview/a05636f8a6af3dbe8bf21a419c9f183d-icono-de-muslo-de-pollo.png';;
 mysqli_close($conexion);
 ?>
