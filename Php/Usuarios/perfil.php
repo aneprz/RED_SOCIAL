@@ -38,16 +38,21 @@ $biografia = $_SESSION['biografia']?? '';
 
                 <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
                 <div class="profile-posts">
-                    <div class="post"><img src="../../Imagenes/post1.jpg" alt="Post 1"></div>
-                    <div class="post"><img src="../../Imagenes/post2.jpg" alt="Post 2"></div>
-                    <div class="post"><img src="../../Imagenes/post3.jpg" alt="Post 3"></div>
+                    <?php if (!empty($publicacionesArray)): ?>
+                        <?php foreach($publicacionesArray as $post): ?>
+                            <div class="post">
+                                <img src="<?= $post ?>" alt="Post">
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay publicaciones todavía</p>
+                    <?php endif; ?>
                 </div>
-            </div>
             <!-- Botón de cerrar sesión -->
-            <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
-                <button type="submit" class="cerrarSesion">Cerrar sesión</button>
-            </form>
         </div>
+        <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
+        <button type="submit" class="cerrarSesion">Cerrar sesión</button>
+        </form>
     </main>
     <?php include __DIR__ . '/../Templates/footer.php';?>
 </body>

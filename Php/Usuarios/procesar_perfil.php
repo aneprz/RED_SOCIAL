@@ -28,6 +28,14 @@ $resultPublicaciones = mysqli_query($conexion, "SELECT COUNT(usuario_id) AS tota
 $rowPublicaciones = mysqli_fetch_assoc($resultPublicaciones);
 $publicaciones = $rowPublicaciones['total'];
 
+//POST
+$resultPost = mysqli_query($conexion, "SELECT imagen_url AS post FROM publicaciones WHERE usuario_id = $id");
+$publicacionesArray = [];
+if ($resultPost && mysqli_num_rows($resultPost) > 0) {
+    while ($rowPost = mysqli_fetch_assoc($resultPost)) {
+        $publicacionesArray[] = $rowPost['post'];
+    }
+}
 
 ?>
 
