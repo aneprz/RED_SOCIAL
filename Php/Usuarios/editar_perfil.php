@@ -32,10 +32,6 @@ $nombreusu = $_SESSION['username'];
                 Nombre de usuario
                 <input type="text" name="nuevousu" placeholder="<?php echo $nombreusu; ?>">
             </label>
-            <!-- <label>
-                Contraseña
-                <input type="password" name="contrasena" placeholder="Nueva contraseña">
-            </label> -->
             <label>
                 Biografía
                 <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..."></textarea>
