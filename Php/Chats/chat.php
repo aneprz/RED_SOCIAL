@@ -1,5 +1,5 @@
 <?php
-require "procesamientos/conexionBBDD.php";
+require "../../BD/conexiones.php";
 session_start();
 
 if (!isset($_GET['chat_id'])) {

@@ -7,8 +7,8 @@ exit();
 
 include 'procesar_perfil.php';
 $foto_perfil=$_SESSION['foto_perfil'];
-$nombreusu = $_SESSION['username'];
-$biografia = $_SESSION['biografia'];
+$nombreusu = $_SESSION['username']?? '';
+$biografia = $_SESSION['biografia']?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">

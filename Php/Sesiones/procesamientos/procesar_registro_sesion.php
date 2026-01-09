@@ -52,6 +52,6 @@ if ($ejecutar){
             Error al insertar usuario: " . mysqli_error($conexion) . "
           </div>";
 }
-
+$_SESSION['foto_perfil'] = '../../../Media/foto_default.png';
 mysqli_close($conexion);
 ?>

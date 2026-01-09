@@ -28,10 +28,18 @@ if (!empty($biografia)) {
     $_SESSION['biografia'] = $biografia;
 }
 
-if (!empty($foto_perfil) && filter_var($foto_perfil, FILTER_VALIDATE_URL)) {
-    $foto_perfil = mysqli_real_escape_string($conexion, $foto_perfil);
-    mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil' WHERE id=$id");
-    $_SESSION['foto_perfil'] = $foto_perfil;
+if (!empty($foto_perfil)) {
+    if (filter_var($foto_perfil, FILTER_VALIDATE_URL)) {
+        $foto_perfil = mysqli_real_escape_string($conexion, $foto_perfil);
+        mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil' WHERE id=$id");
+        $_SESSION['foto_perfil'] = $foto_perfil;
+    } else {
+        echo "<script>
+            alert('Imagen no válida');
+            history.back();
+        </script>";
+        exit;
+    }
 }
 header("Location: perfil.php");
 exit;

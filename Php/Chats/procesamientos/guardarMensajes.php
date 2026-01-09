@@ -1,5 +1,5 @@
 <?php
-require "conexionBBDD.php";
+require "../../../BD/conexiones.php";
 
 $chat_id = $_POST['chat_id'];
 $usuario_id = $_POST['usuario_id'];

@@ -1,5 +1,5 @@
 <?php
-require "conexionBBDD.php";
+require "../../../BD/conexiones.php";
 
 $chat_id = $_GET['chat_id'];
 

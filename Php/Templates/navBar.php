@@ -14,7 +14,7 @@
 
   <!-- TOPBAR (solo móvil) -->
   <div class="topbar d-flex d-md-none">
-    <button class="btn btn-outline-dark" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
+    <button class="btn btn-outline-light" data-bs-toggle="offcanvas" data-bs-target="#menuMovil">
       ☰
     </button>
     <div class="d-flex align-items-center gap-2 fw-bold">
@@ -51,7 +51,7 @@
       Búsqueda
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="../../Php/Explorar/explorar.php" class="nav-item-custom">
       <!-- EXPLORAR -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke-linecap="round" stroke-linejoin="round">
