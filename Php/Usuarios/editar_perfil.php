@@ -4,8 +4,7 @@ if (!isset($_SESSION['username'])) {
 header("Location: Php/Sesiones/inicio_sesion.php");
 exit();
 }
-
-include 'procesar_editar_perfil.php';
+$nombreusu = $_SESSION['username'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -33,12 +32,10 @@ include 'procesar_editar_perfil.php';
                 Nombre de usuario
                 <input type="text" name="nuevousu" placeholder="<?php echo $nombreusu; ?>">
             </label>
-
-            <label>
+            <!-- <label>
                 Contraseña
                 <input type="password" name="contrasena" placeholder="Nueva contraseña">
-            </label>
-
+            </label> -->
             <label>
                 Biografía
                 <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..."></textarea>

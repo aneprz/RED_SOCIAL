@@ -8,6 +8,7 @@ exit();
 include 'procesar_perfil.php';
 
 $nombreusu = $_SESSION['username'];
+$biografia = $_SESSION['biografia'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +27,7 @@ $nombreusu = $_SESSION['username'];
                     <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
                     <div class="profile-info">
                         <h2><?php echo $nombreusu; ?></h2>
-                        <p class="bio">Esta es tu biografía. Puedes poner algo sobre ti.</p>
+                        <p class="bio"><?php echo $biografia; ?></p>
                         <div class="stats">
                             <span><strong><?= $publicaciones ?></strong> publicaciones</span>
                             <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
