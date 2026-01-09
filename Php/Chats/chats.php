@@ -12,6 +12,7 @@ $sql = $pdo->prepare("
         c.es_grupo,
         c.nombre_grupo,
         u.username AS otro_usuario,
+        u.foto_perfil AS foto_perfil,
         m.texto AS ultimo_mensaje,
         m.fecha AS fecha_mensaje,
         c.fecha_creacion
@@ -37,6 +38,10 @@ $sql->execute([
 
 $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<pre>
+<?php print_r($chats); ?>
+</pre>
+
 
 <!DOCTYPE html>
 <html>
@@ -59,27 +64,29 @@ $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <?php foreach ($chats as $c): ?>
+    <?php
+        if ($c['es_grupo']) {
+            $nombreChat = $c['nombre_grupo'] ?: "Grupo sin nombre";
+            $fotoPerfil = '../../../Media/foto_default.png'; // grupo
+        } else {
+            $nombreChat = $c['otro_usuario'] ?: "Usuario desconocido";
+
+            // Obtener la foto de perfil del otro usuario usando la función
+            // NOTA: necesitamos el ID del otro usuario
+            $fotoPerfil = isset($c['otro_usuario_id']) ? obtenerFotoPerfil($c['otro_usuario_id']) : '../../../Media/foto_default.png';
+        }
+    ?>
     <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
 
         <div class="fotoPerfil">
-            <!-- Aquí podrías poner la foto de perfil si la tienes -->
+            <img src="<?= htmlspecialchars($fotoPerfil) ?>" 
+                alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
+                style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
         </div>
 
-        <div class="titulo">
-            <?php 
-                $nombre = $c['es_grupo'] ? $c['nombre_grupo'] : $c['otro_usuario'];
-            ?>
-            <?= htmlspecialchars($nombre) ?>
-        </div>
-
-        <div class="mensaje">
-            <?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?>
-        </div>
-
-        <div class="fecha">
-            <?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?>
-        </div>
-
+        <div class="titulo"><?= htmlspecialchars($nombreChat) ?></div>
+        <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
+        <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
     </div>
     <?php endforeach; ?>
 
