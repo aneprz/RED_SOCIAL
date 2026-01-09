@@ -5,6 +5,7 @@ header("Location: Php/Sesiones/inicio_sesion.php");
 exit();
 }
 $nombreusu = $_SESSION['username'];
+$foto_perfil=$_SESSION['foto_perfil'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -25,7 +26,7 @@ $nombreusu = $_SESSION['username'];
 
             <div class="profile-photo">
                 <img src="<?= $foto_perfil ?>" alt="Foto de perfil"><br>
-                <input type="file" name="foto_perfil" accept="image/*">
+                <input type="text" name="foto_perfil" placeholder="Url de la imagen">
             </div>
 
             <label>

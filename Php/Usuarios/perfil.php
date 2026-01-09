@@ -6,7 +6,7 @@ exit();
 }
 
 include 'procesar_perfil.php';
-
+$foto_perfil=$_SESSION['foto_perfil'];
 $nombreusu = $_SESSION['username'];
 $biografia = $_SESSION['biografia'];
 ?>
