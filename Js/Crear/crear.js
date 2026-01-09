@@ -47,9 +47,13 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!files || files.length === 0) return;
     const file = files[0];
     showPreview(file);
-    formFields.style.display = "block";
+
+    // Mostrar formulario y botones
+    formFields.style.display = "flex"; // o "block"
+    formFields.style.flexDirection = "column"; // si quieres mantener la columna
     previewContainer.style.display = "block";
   });
+
 
   function clearMediaWrapper(){ mediaWrapper.innerHTML = ''; }
 
@@ -116,47 +120,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* Render lista visible y hidden inputs para PHP */
   function renderTags(){
-    // visible list
-    tagsList.innerHTML = '';
-    hiddenTagInputs.innerHTML = '';
-    if (tags.length === 0) {
-      const placeholder = document.createElement('div');
-      placeholder.className = 'tag-row';
-      placeholder.textContent = 'No hay etiquetas añadidas.';
-      tagsList.appendChild(placeholder);
-      return;
-    }
+  tagsList.innerHTML = '';
+  hiddenTagInputs.innerHTML = '';
 
-    tags.forEach(t => {
-      const row = document.createElement('div');
-      row.className = 'tag-row';
-      row.innerHTML = `<strong>${t.name}</strong> ${t.x!==null ? `— ${Math.round(t.x*100)}%, ${Math.round(t.y*100)}%` : ''}`;
-      const rem = document.createElement('span');
-      rem.className = 'remove';
-      rem.textContent = 'Eliminar';
-      rem.addEventListener('click', () => removeTag(t.id));
-      row.appendChild(rem);
-      tagsList.appendChild(row);
-
-      // inputs ocultos para PHP: tags_names[], tags_x[], tags_y[]
-      const inName = document.createElement('input');
-      inName.type = 'hidden'; inName.name = 'tags_names[]'; inName.value = t.name;
-      hiddenTagInputs.appendChild(inName);
-
-      const inX = document.createElement('input');
-      inX.type = 'hidden'; inX.name = 'tags_x[]'; inX.value = t.x===null ? '' : t.x;
-      hiddenTagInputs.appendChild(inX);
-
-      const inY = document.createElement('input');
-      inY.type = 'hidden'; inY.name = 'tags_y[]'; inY.value = t.y===null ? '' : t.y;
-      hiddenTagInputs.appendChild(inY);
-
-      // marker visual sobre la imagen si tiene coords
-      if (t.x !== null && t.y !== null){
-        placeMarker(t);
-      }
-    });
+  if (tags.length === 0) {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'tag-row';
+    placeholder.textContent = 'No hay etiquetas añadidas.';
+    tagsList.appendChild(placeholder);
   }
+
+  tags.forEach(t => {
+    const row = document.createElement('div');
+    row.className = 'tag-row';
+    row.innerHTML = `<strong>${t.name}</strong> ${t.x!==null ? `— ${Math.round(t.x*100)}%, ${Math.round(t.y*100)}%` : ''}`;
+    const rem = document.createElement('span');
+    rem.className = 'remove';
+    rem.textContent = 'Eliminar';
+    rem.addEventListener('click', () => removeTag(t.id));
+    row.appendChild(rem);
+    tagsList.appendChild(row);
+
+    // inputs ocultos para PHP
+    const inName = document.createElement('input');
+    inName.type = 'hidden'; inName.name = 'tags_names[]'; inName.value = t.name;
+    hiddenTagInputs.appendChild(inName);
+
+    const inX = document.createElement('input');
+    inX.type = 'hidden'; inX.name = 'tags_x[]'; inX.value = t.x===null ? '' : t.x;
+    hiddenTagInputs.appendChild(inX);
+
+    const inY = document.createElement('input');
+    inY.type = 'hidden'; inY.name = 'tags_y[]'; inY.value = t.y===null ? '' : t.y;
+    hiddenTagInputs.appendChild(inY);
+
+    if (t.x !== null && t.y !== null){
+      placeMarker(t);
+    }
+  });
+}
 
   function placeMarker(tag){
     // eliminamos marcador con ese id si existe
@@ -199,6 +201,20 @@ document.addEventListener("DOMContentLoaded", () => {
       alert('Selecciona un archivo antes de subir.');
       return false;
     }
-    // el resto lo procesa PHP
+
+    const caption = document.getElementById('caption').value.trim();
+    if(caption.length > 2200){
+      e.preventDefault();
+      alert('El pie de foto no puede exceder 2200 caracteres.');
+      return false;
+    }
+
+    // Validación mínima de tags
+    if(tags.some(t => !t.name)){
+      e.preventDefault();
+      alert('Hay etiquetas sin nombre.');
+      return false;
+    }
   });
+
 });
