@@ -23,23 +23,19 @@ include '../../BD/conexiones.php';
 
             <form action="procesamientos/procesar_registro_sesion.php" method="post">
                 <div class="mb-3">
-                    <label for="nombre_usuario" class="form-label">Nombre de Usuario:</label>
-                    <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control minusculas" placeholder="ane.perez" required>
+                    <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control minusculas" placeholder="Nombre de usuario" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="email" class="form-label">Correo electrónico:</label>
-                    <input type="text" id="email" name="email" class="form-control" placeholder="ane.perez@gmail.com" required>
+                    <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="contraseña" class="form-label">Contraseña:</label>
-                    <input type="password" id="contraseña" name="contraseña" class="form-control" onclick="textoValidarContraseña()" required>
+                    <input placeholder="Contraseña" type="password" id="contraseña" name="contraseña" class="form-control" onclick="textoValidarContraseña()" required>
                 </div>
 
                 <div class="mb-3">
-                    <label for="repetirContraseña" class="form-label">Repita la contraseña:</label>
-                    <input type="password" id="repetirContraseña" name="repetirContraseña" class="form-control" onclick="textoValidarContraseña()" required>
+                    <input placeholder="Repetir contraseña" type="password" id="repetirContraseña" name="repetirContraseña" class="form-control" onclick="textoValidarContraseña()" required>
                 </div>
                 
                 <!--Esto solo se muestra si se hace click en los inputs de contraseña-->

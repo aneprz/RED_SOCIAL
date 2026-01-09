@@ -37,4 +37,3 @@ $usuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
     <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
 </html>
-
