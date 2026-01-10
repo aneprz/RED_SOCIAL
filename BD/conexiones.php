@@ -27,8 +27,6 @@ if (!isset($pdo) && !isset($conexion)) {
         ]);
     } catch (PDOException $e) {
         die("❌ Error de conexión PDO a la base de datos");
-        // En desarrollo podrías usar:
-        // die("Error PDO: " . $e->getMessage());
     }
 
     // ----------------------
@@ -39,6 +37,24 @@ if (!isset($pdo) && !isset($conexion)) {
     if (!$conexion) {
         die("❌ Error de conexión MySQLi: " . mysqli_connect_error());
     }
+}
 
+// ----------------------
+// Función utilitaria
+// ----------------------
+if (!function_exists('obtenerFotoPerfil')) {
+    function obtenerFotoPerfil($usuarioId) {
+        global $pdo;
+
+        $stmt = $pdo->prepare("SELECT foto_perfil FROM usuarios WHERE id = :id");
+        $stmt->execute(['id' => $usuarioId]);
+        $row = $stmt->fetch();
+
+        if ($row && !empty($row['foto_perfil'])) {
+            return $row['foto_perfil'];
+        } else {
+            return '/Media/foto_default.png'; // ruta por defecto
+        }
+    }
 }
 ?>
