@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 require '../../BD/conexiones.php';
 session_start();
 
-$usuario_id = $_SESSION['usuario_id'] ?? null;
+$usuario_id = $_SESSION['id'] ?? null;
 if (!$usuario_id) die("Debes estar logueado.");
 
 $uploadDir = 'uploads/';
@@ -97,6 +97,6 @@ foreach($tags_usernames as $username){
     }
 }
 
-header("Location: ../../RED_SOCIAL/Php/Explorar/explorar.php?msg=ok");
+header("Location: ../../Php/Explorar/explorar.php");
 exit;
 ?>
