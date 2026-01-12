@@ -24,7 +24,7 @@ if (!$chat) {
 
 // 2️⃣ Obtener los participantes (solo para mostrar nombres en chats 1 a 1)
 $sql = $pdo->prepare("
-    SELECT u.id, u.username
+    SELECT u.id, u.username, u.foto_perfil
     FROM usuarios_chat uc
     JOIN usuarios u ON u.id = uc.usuario_id
     WHERE uc.chat_id = :chat_id AND u.id != :idUsu
@@ -54,18 +54,29 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 <?php include __DIR__ . '../../../Php/Templates/navBar.php';?>
 <main>
+    <?php
+    if ($chat['es_grupo']) {
+        $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
+        $fotoPerfil = '../../../Media/foto_default.png'; // siempre por defecto para grupos
+    } else {
+        $nombreChat = $otrosUsuarios[0]['username'] ?? "Usuario";
+
+        // Si la URL existe y no está vacía, la usamos; si no, la por defecto
+        $fotoPerfil = (!empty($otrosUsuarios[0]['foto_perfil']) && trim($otrosUsuarios[0]['foto_perfil']) !== '')
+                    ? $otrosUsuarios[0]['foto_perfil']
+                    : '../../../Media/foto_default.png';
+    }
+    ?>
+
     <div class="encabezado">
         <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
-        <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
-        <h2>
-            <?php 
-                if ($chat['es_grupo']) {
-                    echo $chat['nombre_grupo'];
-                } else {
-                    echo $otrosUsuarios[0]['username'] ?? "Usuario";
-                }
-            ?>
-        </h2>
+
+        <img src="<?= htmlspecialchars($fotoPerfil) ?>" 
+        alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
+        onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
+        style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+
+        <h2><?= htmlspecialchars($nombreChat) ?></h2>
     </div>
 
     <div id="chat-mensajes">
