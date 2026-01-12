@@ -29,13 +29,21 @@ $rowPublicaciones = mysqli_fetch_assoc($resultPublicaciones);
 $publicaciones = $rowPublicaciones['total'];
 
 //POST
-$resultPost = mysqli_query($conexion, "SELECT imagen_url AS post FROM publicaciones WHERE usuario_id = $id");
 $publicacionesArray = [];
-if ($resultPost && mysqli_num_rows($resultPost) > 0) {
+
+$id = (int)$id;
+
+$resultPost = mysqli_query(
+    $conexion,
+    "SELECT imagen_url FROM publicaciones WHERE usuario_id = $id"
+);
+
+if ($resultPost) {
     while ($rowPost = mysqli_fetch_assoc($resultPost)) {
-        $publicacionesArray[] = $rowPost['post'];
+        $publicacionesArray[] = $rowPost['imagen_url'];
     }
 }
+
 
 ?>
 
