@@ -2,77 +2,70 @@
 session_start();
 require '../../../BD/conexiones.php';
 
-// Validar existencia de campos
-if (
-    empty($_POST['nombre_usuario']) ||
-    empty($_POST['email']) ||
-    empty($_POST['contraseña']) ||
-    empty($_POST['repetirContraseña'])
-) {
-    die("Error: todos los campos son obligatorios");
+function volverConError($mensaje) {
+    $_SESSION['error'] = $mensaje;
+    header("Location: ../registro_sesion.php");
+    exit();
 }
 
-$nombreUsu = trim($_POST["nombre_usuario"]);
-$email = trim($_POST["email"]);
-$contraseña = $_POST["contraseña"];
-$repetirContraseña = $_POST["repetirContraseña"];
+$nombreUsu = trim($_POST['nombre_usuario'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$pass = $_POST['contraseña'] ?? '';
+$pass2 = $_POST['repetirContraseña'] ?? '';
 $fechaActual = date("Y-m-d H:i:s");
 
-// Validar contraseñas
-if ($contraseña !== $repetirContraseña) {
-    die("Error: las contraseñas no coinciden");
+if ($nombreUsu === '' || $email === '' || $pass === '' || $pass2 === '') {
+    volverConError("Todos los campos son obligatorios");
 }
 
-// Validar longitud mínima
-if (strlen($contraseña) < 8) {
-    die("Error: la contraseña debe tener al menos 8 caracteres");
+if ($pass !== $pass2) {
+    volverConError("Las contraseñas no coinciden");
 }
 
-// Validar email
+if (strlen($pass) < 8) {
+    volverConError("La contraseña debe tener al menos 8 caracteres");
+}
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    die("Error: correo electrónico inválido");
+    volverConError("Correo electrónico inválido");
 }
 
-// Verificar usuario existente
+// Usuario existente
 $stmt = $conexion->prepare("SELECT id FROM usuarios WHERE username = ?");
 $stmt->bind_param("s", $nombreUsu);
 $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-    die("Error: el nombre de usuario ya existe");
+    volverConError("El nombre de usuario ya existe");
 }
 $stmt->close();
 
-// Verificar correo existente
+// Correo existente
 $stmt = $conexion->prepare("SELECT id FROM usuarios WHERE email = ?");
 $stmt->bind_param("s", $email);
 $stmt->execute();
 $stmt->store_result();
 
 if ($stmt->num_rows > 0) {
-    die("Error: el correo ya está en uso");
+    volverConError("El correo electrónico ya está en uso");
 }
 $stmt->close();
 
-// Hash de contraseña
-$contraseñaHash = password_hash($contraseña, PASSWORD_DEFAULT);
+$hash = password_hash($pass, PASSWORD_DEFAULT);
 
-// Insertar usuario
+// Insertar
 $stmt = $conexion->prepare(
     "INSERT INTO usuarios (username, email, password_hash, fecha_registro)
      VALUES (?, ?, ?, ?)"
 );
-$stmt->bind_param("ssss", $nombreUsu, $email, $contraseñaHash, $fechaActual);
+$stmt->bind_param("ssss", $nombreUsu, $email, $hash, $fechaActual);
 
-if ($stmt->execute()) {
-    $_SESSION['foto_perfil'] = '../../../Media/foto_default.png';
-    header("Location: ../inicio_sesion.php");
-    exit();
-} else {
-    die("Error al registrar el usuario");
+if (!$stmt->execute()) {
+    volverConError("Error interno al crear el usuario");
 }
 
-$stmt->close();
-mysqli_close($conexion);
+$_SESSION['success'] = "Usuario creado correctamente. Ya puedes iniciar sesión";
+header("Location: ../inicio_sesion.php");
+exit();
 ?>
