@@ -18,6 +18,8 @@ if (!isset($_SESSION['username'])) {
     <link rel="stylesheet" href="../../../Estilos/estilos_tablas_perfil.css">
 </head>
 <body>
+<?php include __DIR__ . '/../Templates/navBar.php'; ?>
+
     <div class="tabla-seguidores">
         <h2>Seguidores</h2>
         <table>
