@@ -38,11 +38,6 @@ $sql->execute([
 
 $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<pre>
-<?php print_r($chats); ?>
-</pre>
-
-
 <!DOCTYPE html>
 <html>
 <head>
