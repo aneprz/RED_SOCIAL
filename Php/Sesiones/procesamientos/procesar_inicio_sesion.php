@@ -20,6 +20,7 @@ if ($result && mysqli_num_rows($result) > 0) {
         $_SESSION['id'] = $datos_usuario['id'];
         $_SESSION['username'] = $datos_usuario['username'];
         $_SESSION['email'] = $datos_usuario['email'];
+        $_SESSION['user_id']  = $usuario['id']; // <--- MUY IMPORTANTE
 
         // Redirigir a la página de bienvenida
         header("location: ../../../index.php");
