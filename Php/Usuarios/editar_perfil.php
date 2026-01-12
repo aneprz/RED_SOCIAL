@@ -26,8 +26,9 @@ $foto_perfil=$_SESSION['foto_perfil'];
 
             <div class="profile-photo">
                 <img src="<?= $foto_perfil ?>" alt="Foto de perfil"><br>
-                <input type="text" name="foto_perfil" placeholder="Url de la imagen">
+                <input type="file" name="foto_perfil" accept="image/*">
             </div>
+
 
             <label>
                 Nombre de usuario

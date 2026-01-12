@@ -58,25 +58,39 @@ if (!empty($biografia)) {
 
 
 /* ========= FOTO PERFIL ========= */
-if (!empty($foto_perfil)) {
-    if (filter_var($foto_perfil, FILTER_VALIDATE_URL)) {
+if (!empty($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
 
-        $foto_perfil = mysqli_real_escape_string($conexion, $foto_perfil);
+    $file = $_FILES['foto_perfil'];
 
-        mysqli_query(
-            $conexion,
-            "UPDATE usuarios SET foto_perfil='$foto_perfil' WHERE id=$id"
-        );
+    $allowedMimes = ['image/jpeg','image/png','image/gif'];
+    $allowedExts  = ['jpg','jpeg','png','gif'];
 
-        $_SESSION['foto_perfil'] = $foto_perfil;
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $realType = finfo_file($finfo, $file['tmp_name']);
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
-    } else {
-        echo "<script>
-            alert('Imagen no válida');
-            history.back();
-        </script>";
-        exit;
+    if (!in_array($realType, $allowedMimes) || !in_array($ext, $allowedExts)) {
+        die("Archivo no permitido.");
     }
+
+    $maxSize = 5 * 1024 * 1024; // 5MB
+    if ($file['size'] > $maxSize) die("Archivo demasiado grande.");
+
+    $uploadDir = __DIR__ . '/fotosDePerfil/';
+    if (!is_dir($uploadDir)) mkdir($uploadDir, 0755, true);
+
+    $filename = uniqid('perfil_', true) . '.' . $ext;
+    $filepath = $uploadDir . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $filepath)) {
+        die("Error al guardar la imagen.");
+    }
+
+    // Guardamos la ruta relativa para usarla en HTML
+    $foto_perfil_db = 'fotosDePerfil/' . $filename;
+
+    mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil_db' WHERE id=$id");
+    $_SESSION['foto_perfil'] = $foto_perfil_db;
 }
 
 header("Location: perfil.php");
