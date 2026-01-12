@@ -115,3 +115,10 @@ a{
     background-color: #E94B3C;
     margin: 5px;
 }
+.bio {
+    max-width: 400px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+

@@ -41,7 +41,7 @@
       Inicio
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="../Busqueda/busqueda.php" class="nav-item-custom">
       <!-- BUSQUEDA -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke-linecap="round" stroke-linejoin="round">

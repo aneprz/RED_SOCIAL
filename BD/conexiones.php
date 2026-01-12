@@ -26,7 +26,7 @@ if (!isset($pdo) && !isset($conexion)) {
             PDO::ATTR_EMULATE_PREPARES   => false,
         ]);
     } catch (PDOException $e) {
-        die("❌ Error de conexión PDO a la base de datos");
+        die("Error de conexión PDO a la base de datos");
     }
 
     // ----------------------
@@ -35,7 +35,7 @@ if (!isset($pdo) && !isset($conexion)) {
     $conexion = mysqli_connect($host, $user, $pass, $db);
 
     if (!$conexion) {
-        die("❌ Error de conexión MySQLi: " . mysqli_connect_error());
+        die("Error de conexión MySQLi: " . mysqli_connect_error());
     }
 }
 

@@ -1,57 +1,73 @@
 <?php
 session_start();
-include '../../../BD/conexiones.php';
+require '../../../BD/conexiones.php';
 
-$nombreUsu = $_POST["nombre_usuario"];
-$email = $_POST["email"];
-$contraseña = $_POST["contraseña"];
-$repetirContraseña = $_POST["repetirContraseña"];
-$fechaActual=date("Y-m-d H:i:s");
-$contraseñaHash = password_hash($contraseña, PASSWORD_DEFAULT);
-
-//Validar que las contraseñas introducidas coincidan
-if ($contraseña != $repetirContraseña){
-    echo "<script>alert('Error. Las contraseñas no coinciden')</script>";
+function volverConError($mensaje) {
+    $_SESSION['error'] = $mensaje;
+    header("Location: ../registro_sesion.php");
     exit();
 }
 
-//Validar que el formato del correo electrónico sea válido
+$nombreUsu = trim($_POST['nombre_usuario'] ?? '');
+$email = trim($_POST['email'] ?? '');
+$pass = $_POST['contraseña'] ?? '';
+$pass2 = $_POST['repetirContraseña'] ?? '';
+$fechaActual = date("Y-m-d H:i:s");
+
+if ($nombreUsu === '' || $email === '' || $pass === '' || $pass2 === '') {
+    volverConError("Todos los campos son obligatorios");
+}
+
+if ($pass !== $pass2) {
+    volverConError("Las contraseñas no coinciden");
+}
+
+if (strlen($pass) < 8) {
+    volverConError("La contraseña debe tener al menos 8 caracteres");
+}
+
 if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-    echo "<script>alert('Error. Correo electrónico inválido')</script>";
-    exit();
+    volverConError("Correo electrónico inválido");
 }
 
-//Validar que no exista ya el usuario
-$verificar_usuario = mysqli_query($conexion, "SELECT * FROM usuarios WHERE username='$nombreUsu' ");
-if (mysqli_num_rows($verificar_usuario) > 0){
-    echo "<script>alert('Error. Este usuario ya está en uso')</script>";
-    exit();
+// Usuario existente
+$stmt = $conexion->prepare("SELECT id FROM usuarios WHERE username = ?");
+$stmt->bind_param("s", $nombreUsu);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    volverConError("El nombre de usuario ya existe");
+}
+$stmt->close();
+
+// Correo existente
+$stmt = $conexion->prepare("SELECT id FROM usuarios WHERE email = ?");
+$stmt->bind_param("s", $email);
+$stmt->execute();
+$stmt->store_result();
+
+if ($stmt->num_rows > 0) {
+    volverConError("El correo electrónico ya está en uso");
+}
+$stmt->close();
+
+$hash = password_hash($pass, PASSWORD_DEFAULT);
+
+// Insertar
+$stmt = $conexion->prepare(
+    "INSERT INTO usuarios (username, email, password_hash, fecha_registro)
+     VALUES (?, ?, ?, ?)"
+);
+$stmt->bind_param("ssss", $nombreUsu, $email, $hash, $fechaActual);
+
+if (!$stmt->execute()) {
+    volverConError("Error interno al crear el usuario");
 }
 
-//Validar que el correo no esté en uso
-$verificar_correo = mysqli_query($conexion, "SELECT * FROM usuarios WHERE email='$email' ");
-if (mysqli_num_rows($verificar_correo) > 0){
-    echo "<script>alert('Error. El correo electrónico ya está en uso')</script>";
-    exit();
-}
-
-
-$query = "INSERT INTO usuarios (username, email, password_hash, fecha_registro) 
-VALUES ('$nombreUsu', '$email', '$contraseñaHash', '$fechaActual')";
-
-$ejecutar = mysqli_query($conexion, $query);
-
-if ($ejecutar){
-    echo "<script>
-            alert('Usuario creado correctamente');
-            window.location.href = '../inicio_sesion.php';
-          </script>";
-
-} else {
-    echo "<div class='alert alert-danger shadow rounded'>
-            Error al insertar usuario: " . mysqli_error($conexion) . "
-          </div>";
-}
 $_SESSION['foto_perfil'] = '../../../Media/foto_default.png';
-mysqli_close($conexion);
+
+$_SESSION['success'] = "Usuario creado correctamente. Ya puedes iniciar sesión";
+header("Location: ../inicio_sesion.php");
+exit();
 ?>
