@@ -70,7 +70,7 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
     <?php
     if ($chat['es_grupo']) {
         $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
-        $fotoPerfil = '../../../Media/foto_default.png'; // siempre por defecto para grupos
+        $fotoPerfil = '../../../Media/foto_grupo_default.png'; // siempre por defecto para grupos
     } else {
         $nombreChat = $otrosUsuarios[0]['username'] ?? "Usuario";
 
@@ -101,14 +101,39 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
     </div>
 
     <div id="chat-mensajes">
-        <?php foreach ($mensajes as $m): ?>
-            <div class="mensaje <?= $m['usuario_id'] == $idUsu ? 'tuyo' : '' ?>">
-                <?= htmlspecialchars($m['texto']) ?>
-                <br>
-                <small class="fecha">(<?= $m['fecha'] ?>)</small>
+        <?php foreach ($mensajes as $m): 
+            $esTuyo = $m['usuario_id'] == $idUsu;
+            // Obtener foto de perfil del usuario
+            $fotoUsuario = '../../../Media/foto_default.png'; // por defecto
+            foreach ($otrosUsuarios as $u) {
+                if ($u['id'] == $m['usuario_id']) {
+                    if (!empty($u['foto_perfil']) && trim($u['foto_perfil']) !== '') {
+                        $fotoUsuario = $u['foto_perfil'];
+                    }
+                    break;
+                }
+            }
+        ?>
+            <div class="mensaje <?= $esTuyo ? 'tuyo' : 'otro' ?>">
+                <?php if (!$esTuyo && $chat['es_grupo']): ?>
+                    <div class="infoUsuario">
+                        <img src="<?= htmlspecialchars($fotoUsuario) ?>" 
+                            alt="Foto de <?= htmlspecialchars($m['username']) ?>" 
+                            onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
+                            class="fotoUsuario">
+                        <span class="nombreUsuario"><?= htmlspecialchars($m['username']) ?></span>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="textoMensaje">
+                    <?= htmlspecialchars($m['texto']) ?>
+                    <br>
+                    <small class="fecha">(<?= $m['fecha'] ?>)</small>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const chatMensajes = document.getElementById('chat-mensajes');
