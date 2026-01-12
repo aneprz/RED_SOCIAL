@@ -11,17 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const formFields = document.getElementById("formFields");
   const tagsList = document.getElementById("tagsList");
   const hiddenTagInputs = document.getElementById("hiddenTagInputs");
-  const manualTagInput = document.getElementById("manualTagInput");
-  const addManualTagBtn = document.getElementById("addManualTag");
   const cancelUploadBtn = document.getElementById("cancelUpload");
   const postForm = document.getElementById("postForm");
+  const suggestionsBox = document.getElementById("tagSuggestions");
 
   if (!openBtn || !modalRoot) return;
 
-  let tags = []; // {id, name, x, y}
+  let tags = [];
   let tagCounter = 0;
 
-  /* Abrir / cerrar modal */
   openBtn.addEventListener("click", (e) => { e.preventDefault(); openModal(); });
   function openModal(){
     modalRoot.style.display = "flex";
@@ -29,6 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
     content?.focus();
     document.body.style.overflow = "hidden";
   }
+
   function closeModal(){
     modalRoot.style.display = "none";
     modalRoot.setAttribute("aria-hidden","true");
@@ -36,19 +35,16 @@ document.addEventListener("DOMContentLoaded", () => {
     resetAll();
     openBtn.focus?.();
   }
+
   closeBtn?.addEventListener("click", closeModal);
   overlay?.addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e)=>{ if(e.key==="Escape" && modalRoot.style.display==="flex") closeModal(); });
   cancelUploadBtn?.addEventListener("click", closeModal);
+  document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modalRoot.style.display==="flex") closeModal(); });
 
-  /* Selección de archivo -> previsualización + mostrar formulario */
   fileInput.addEventListener("change", (e) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
-    const file = files[0];
-    showPreview(file);
-
-    // Mostrar formulario y botones
+    showPreview(files[0]);
     formFields.style.display = "flex";
     formFields.style.flexDirection = "column";
     previewContainer.style.display = "block";
@@ -62,34 +58,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (file.type.startsWith("image/")) {
       const img = document.createElement("img");
-      img.alt = file.name;
-      img.draggable = false;
+      img.alt = file.name; img.draggable = false;
       mediaWrapper.appendChild(img);
       const reader = new FileReader();
       reader.onload = (ev) => img.src = ev.target.result;
       reader.readAsDataURL(file);
-
     } else if (file.type.startsWith("video/")) {
       const video = document.createElement("video");
-      video.controls = true;
-      video.playsInline = true;
+      video.controls = true; video.playsInline = true;
       mediaWrapper.appendChild(video);
       const reader = new FileReader();
       reader.onload = (ev) => { video.src = ev.target.result; };
       reader.readAsDataURL(file);
-
     } else {
       mediaWrapper.textContent = "Tipo de archivo no soportado.";
     }
   }
 
-  /* Añadir etiqueta manual (sin coords) */
-  addManualTagBtn.addEventListener("click", () => {
-    let name = (manualTagInput.value||'').trim();
-    if (!name) return;
-    name = name.replace(/\s+/g,'');
-    addTag(name.startsWith('@') ? name : '@' + name, null, null);
-    manualTagInput.value = '';
+  document.addEventListener("input", async (e) => {
+    if(e.target && e.target.id === "manualTagInput") {
+      const manualTagInput = e.target;
+      const q = manualTagInput.value.trim().replace('@','');
+      if(q.length < 1){
+        suggestionsBox.innerHTML = '';
+        return;
+      }
+
+      try {
+        const res = await fetch(`../../Php/Crear/buscar_seguidores.php?q=${q}`);
+        const users = await res.json();
+        suggestionsBox.innerHTML = '';
+
+        users.forEach(u => {
+          const div = document.createElement("div");
+          div.className = "item";
+          div.innerHTML = `
+            <img src="${u.foto_perfil || '../../img/default.png'}">
+            <span>@${u.username}</span>
+          `;
+          div.addEventListener("click", () => {
+            addTag('@' + u.username, null, null);
+            manualTagInput.value = '';
+            suggestionsBox.innerHTML = '';
+          });
+          suggestionsBox.appendChild(div);
+        });
+      } catch(e) {
+        console.error("Error buscando seguidores:", e);
+      }
+    }
   });
 
   function addTag(name, x, y){
@@ -103,7 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     renderTags();
   }
 
-  /* Render lista visible y hidden inputs para PHP */
   function renderTags(){
     tagsList.innerHTML = '';
     hiddenTagInputs.innerHTML = '';
@@ -126,7 +142,6 @@ document.addEventListener("DOMContentLoaded", () => {
       row.appendChild(rem);
       tagsList.appendChild(row);
 
-      // inputs ocultos para PHP
       const inName = document.createElement('input');
       inName.type = 'hidden'; inName.name = 'tags_names[]'; inName.value = t.name;
       hiddenTagInputs.appendChild(inName);
@@ -159,12 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
     marker.style.top = (tag.y * 100) + '%';
     marker.addEventListener('click', (ev)=>{
       ev.stopPropagation();
-      if (confirm(`Eliminar etiqueta ${tag.name}?`)) removeTag(tag.id);
+      if(confirm(`Eliminar etiqueta ${tag.name}?`)) removeTag(tag.id);
     });
     mediaWrapper.appendChild(marker);
   }
 
-  /* Reset cuando se cierra */
   function resetAll(){
     fileInput.value = '';
     clearPreview();
@@ -174,11 +188,8 @@ document.addEventListener("DOMContentLoaded", () => {
     postForm.reset();
   }
 
-  function clearPreview(){
-    mediaWrapper.innerHTML = '';
-  }
+  function clearPreview(){ mediaWrapper.innerHTML = ''; }
 
-  /* Validación antes de enviar */
   postForm.addEventListener('submit', (e) => {
     if (!fileInput.files || fileInput.files.length===0) {
       e.preventDefault();
@@ -199,10 +210,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
   });
-    // Enviar formulario al hacer clic en "Subir Archivo"
-  const btnSubmitFile = document.getElementById("btnSubmitFile");
-  btnSubmitFile.addEventListener("click", () => {
-    postForm.requestSubmit(); // dispara el submit del formulario
-  });
 
+  const btnSubmitFile = document.getElementById("btnSubmitFile");
+  btnSubmitFile.addEventListener("click", () => postForm.requestSubmit());
 });
