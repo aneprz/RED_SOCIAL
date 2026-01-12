@@ -97,3 +97,10 @@ form button:hover{
     color: #c9c9c9;
     font-size: 13px;
 }
+
+.nombresParticipantes {
+    display: block;
+    color: white;
+    font-size: 0.8em;
+    word-wrap: break-word;
+}

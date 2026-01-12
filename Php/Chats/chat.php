@@ -32,6 +32,19 @@ $sql = $pdo->prepare("
 $sql->execute(['chat_id' => $chat_id, 'idUsu' => $idUsu]);
 $otrosUsuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+//Para guardar todos los participantes en los chats grupales
+$participantes = [];
+if ($chat['es_grupo']) {
+    $sql = $pdo->prepare("
+        SELECT u.username
+        FROM usuarios_chat uc
+        JOIN usuarios u ON u.id = uc.usuario_id
+        WHERE uc.chat_id = :chat_id
+    ");
+    $sql->execute(['chat_id' => $chat_id]);
+    $participantes = $sql->fetchAll(PDO::FETCH_COLUMN); // obtenemos solo los nombres
+}
+
 // 3️⃣ Obtener mensajes del chat
 $sql = $pdo->prepare("
     SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha
@@ -76,7 +89,15 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
         onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
         style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
 
-        <h2><?= htmlspecialchars($nombreChat) ?></h2>
+        <div class="tituloIntegrantes">
+            <h2><?= htmlspecialchars($nombreChat) ?></h2>
+
+            <?php if ($chat['es_grupo'] && !empty($participantes)): ?>
+                <div class="nombresParticipantes">
+                    <i><?= htmlspecialchars(implode(", ", $participantes)) ?></i>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div id="chat-mensajes">
