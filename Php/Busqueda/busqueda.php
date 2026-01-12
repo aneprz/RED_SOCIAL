@@ -44,7 +44,6 @@ while ($row = mysqli_fetch_assoc($res)) {
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
 
 <div class="tabla-seguidores">
-    <h2>Buscar Usuarios</h2>
 
     <!-- FORMULARIO DE BÚSQUEDA -->
     <form method="get" action="">
