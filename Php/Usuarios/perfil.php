@@ -38,16 +38,25 @@ $biografia = $_SESSION['biografia']?? '';
 
                 <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
                 <div class="profile-posts">
-                    <?php if (!empty($publicacionesArray)): ?>
-                        <?php foreach($publicacionesArray as $post): ?>
-                            <div class="post">
-                                <img src="<?= $post ?>" alt="Post">
-                            </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No hay publicaciones todavía</p>
-                    <?php endif; ?>
-                </div>
+    <?php if (!empty($publicacionesArray)): ?>
+        <?php foreach ($publicacionesArray as $post): ?>
+            <?php
+                $ruta = "../Crear/uploads/" . htmlspecialchars($post);
+                $ext = strtolower(pathinfo($post, PATHINFO_EXTENSION));
+            ?>
+            <div class="post">
+                <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                    <video src="<?= $ruta ?>" muted autoplay loop></video>
+                <?php else: ?>
+                    <img src="<?= $ruta ?>" alt="Post">
+                <?php endif; ?>
+            </div>
+        <?php endforeach; ?>
+    <?php else: ?>
+        <p>No hay publicaciones todavía</p>
+    <?php endif; ?>
+</div>
+
             <!-- Botón de cerrar sesión -->
         </div>
         <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
