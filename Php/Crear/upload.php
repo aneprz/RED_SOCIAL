@@ -29,7 +29,6 @@ $allowedExts  = ['jpg','jpeg','png','gif','mp4','webm'];
 
 $finfo = finfo_open(FILEINFO_MIME_TYPE);
 $realType = finfo_file($finfo, $file['tmp_name']);
-finfo_close($finfo);
 
 $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
 
