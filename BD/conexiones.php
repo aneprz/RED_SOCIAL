@@ -2,17 +2,17 @@
 // Evitar múltiples inclusiones
 if (!isset($pdo) && !isset($conexion)) {
 
-    // $host = "18.209.250.204";
-    // $db   = "salsagram_db";
-    // $user = "php";
-    // $pass = "";
-    // $charset = "utf8mb4";
-
-    $host = "localhost";
+    $host = "18.209.250.204";
     $db   = "salsagram_db";
-    $user = "root";
+    $user = "php";
     $pass = "";
     $charset = "utf8mb4";
+
+    // $host = "localhost";
+    // $db   = "salsagram_db";
+    // $user = "root";
+    // $pass = "";
+    // $charset = "utf8mb4";
 
     // ----------------------
     // Conexión PDO

@@ -68,7 +68,9 @@ $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
 
             // Obtener la foto de perfil del otro usuario usando la función
             // NOTA: necesitamos el ID del otro usuario
-            $fotoPerfil = isset($c['otro_usuario_id']) ? obtenerFotoPerfil($c['otro_usuario_id']) : '../../../Media/foto_default.png';
+            $fotoPerfil = (isset($c['foto_perfil']) && filter_var($c['foto_perfil'], FILTER_VALIDATE_URL)) 
+                          ? $c['foto_perfil'] 
+                          : '../../../Media/foto_default.png';
         }
     ?>
     <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
@@ -79,9 +81,11 @@ $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
                 style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
         </div>
 
-        <div class="titulo"><?= htmlspecialchars($nombreChat) ?></div>
-        <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
-        <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
+        <div class="info">
+            <div class="titulo"><?= htmlspecialchars($nombreChat) ?></div>
+            <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
+            <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
+        </div>
     </div>
     <?php endforeach; ?>
 
