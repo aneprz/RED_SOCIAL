@@ -331,5 +331,34 @@
   background-color: #22c55e;
 }
 
+.tag-suggestions{
+  position: relative;
+  background:#111827;
+  border-radius:8px;
+  overflow:hidden;
+  max-height:180px;
+  border:1px solid rgba(255,255,255,0.1);
+}
+
+.tag-suggestions .item{
+  padding:8px 12px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+
+.tag-suggestions .item:hover{
+  background:#1f2937;
+}
+
+.tag-suggestions img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+
 
 

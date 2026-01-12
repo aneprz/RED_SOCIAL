@@ -41,7 +41,7 @@
       Inicio
     </a>
 
-    <a href="#" class="nav-item-custom">
+    <a href="../Busqueda/busqueda.php" class="nav-item-custom">
       <!-- BUSQUEDA -->
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <g fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -140,7 +140,7 @@
   <div id="tagsArea">
     <div style="display:flex; gap:8px; align-items:center; margin-bottom:6px;">
       <input id="manualTagInput" type="text" placeholder="Etiquetar usuario manualmente" style="flex:1;padding:8px;border-radius:6px;" />
-      <button id="addManualTag" type="button" class="btn small">Añadir etiqueta</button>
+      <div id="tagSuggestions" class="tag-suggestions"></div>
     </div>
     <div id="tagsList" class="tags-list" style="max-height:180px; overflow-y:auto;">
       <div class="tag-item" style="color:#cbd5e1;">No hay etiquetas añadidas.</div>
@@ -199,5 +199,6 @@
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script src="../../Js/Crear/crear.js" defer></script>
+
 </body>
 </html>

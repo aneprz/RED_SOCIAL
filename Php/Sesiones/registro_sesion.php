@@ -21,6 +21,25 @@ include '../../BD/conexiones.php';
         <div class="card p-4" style="max-width: 400px; width: 100%;">
             <h2 class="text-center mb-4">Registrarse como salsero</h2>
 
+            <!-- Mensajes de error / éxito -->
+            <?php
+            if (!empty($_SESSION['error'])): ?>
+                <div class="alert alert-danger" role="alert">
+                    <?= htmlspecialchars($_SESSION['error']) ?>
+                </div>
+            <?php 
+                unset($_SESSION['error']);
+            endif;
+
+            if (!empty($_SESSION['success'])): ?>
+                <div class="alert alert-success" role="alert">
+                    <?= htmlspecialchars($_SESSION['success']) ?>
+                </div>
+            <?php 
+                unset($_SESSION['success']);
+            endif;
+            ?>
+
             <form action="procesamientos/procesar_registro_sesion.php" method="post">
                 <div class="mb-3">
                     <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control minusculas" placeholder="Nombre de usuario" required>

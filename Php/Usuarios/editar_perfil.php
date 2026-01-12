@@ -35,7 +35,7 @@ $foto_perfil=$_SESSION['foto_perfil'];
             </label>
             <label>
                 Biografía
-                <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..."></textarea>
+                <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..." maxlength="100"></textarea>
             </label>
 
             <button type="submit">Guardar cambios</button>
