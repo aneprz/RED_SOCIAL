@@ -4,21 +4,28 @@ if (!isset($_SESSION['username'])) {
     header("Location: Php/Sesiones/inicio_sesion.php");
     exit();
 }
+
 include '../../BD/conexiones.php';
 
-$id = $_SESSION['id'];
+if (isset($_POST['id_usuario']) && isset($_POST['accion'])) {
+    $id_usuario = intval($_POST['id_usuario']);
+    $accion = $_POST['accion'];
+    $seguidor_id = intval($_SESSION['id']);
 
-$usuarios = [];
-
-$resultado = mysqli_query(
-    $conexion,
-    "SELECT username FROM usuarios WHERE id != $id"
-);
-
-while ($fila = mysqli_fetch_assoc($resultado)) {
-    $usuarios[] = $fila['username'];
+    if ($accion === 'suprimir') {
+        $query = "DELETE FROM seguidores WHERE seguidor_id = $seguidor_id AND seguido_id = $id_usuario";
+        mysqli_query($conexion, $query);
+    } elseif ($accion === 'seguir') {
+        $check = "SELECT * FROM seguidores WHERE seguidor_id = $seguidor_id AND seguido_id = $id_usuario";
+        $res = mysqli_query($conexion, $check);
+        if ($res && mysqli_num_rows($res) == 0) {
+            $query = "INSERT INTO seguidores (seguidor_id, seguido_id) VALUES ($seguidor_id, $id_usuario)";
+            mysqli_query($conexion, $query);
+        }
+    }
 }
 
-
-
+$busqueda = $_POST['busqueda'] ?? '';
+header("Location: busqueda.php?busqueda=" . urlencode($busqueda));
+exit();
 ?>

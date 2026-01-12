@@ -1,66 +1,137 @@
-.table-container {
-    max-width: 600px;
-    margin: 40px auto;
-    padding: 20px;
-    background-color: #FFF8F5;
-    border-radius: 8px;
-    box-shadow: 5px 5px 30px rgb(40, 40, 40);
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
     font-family: Arial, sans-serif;
-}
-
-.table-container form {
-    margin-bottom: 15px;
     display: flex;
-    gap: 10px;
+    justify-content: center;
+    padding: 50px 20px;
+    min-height: 100vh;
+    margin-left: 250px ;
+    background-color: #F6E3DC;
 }
 
-.table-container input[type="text"] {
+.tabla-seguidores {
+    width: 500px;
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    border-radius: 12px;
+    padding: 25px 20px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s;
+}
+
+.tabla-seguidores:hover {
+    transform: translateY(-2px);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 25px;
+    color: #262626;
+}
+
+form {
+    display: flex;
+    margin-bottom: 20px;
+}
+
+form input[type="text"] {
     flex: 1;
     padding: 8px 12px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    border: 1px solid #dbdbdb;
+    border-radius: 6px 0 0 6px;
+    outline: none;
+    font-size: 14px;
 }
 
-.table-container button {
-    padding: 8px 12px;
-    border: none;
-    background-color: #E94B3C;
+form input[type="text"]:focus {
+    border-color: #0095f6;
+    box-shadow: 0 0 5px rgba(0, 149, 246, 0.3);
+}
+
+form button {
+    padding: 8px 16px;
+    border-radius: 0 6px 6px 0;
+    background-color: #0095f6;
     color: #fff;
-    border-radius: 5px;
+    border: none;
+    font-weight: bold;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.table-container button:hover {
-    background-color: #D62828;
+form button:hover {
+    background-color: #0073cc;
 }
 
-.user-table {
+table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.user-table thead tr {
-    background-color: #E94B3C;
-    color: #fff;
-    text-align: left;
+tbody tr {
+    border-top: 1px solid #efefef;
+    transition: background-color 0.2s;
 }
 
-.user-table th,
-.user-table td {
-    padding: 12px 15px;
-    border-bottom: 1px solid #ddd;
+tbody tr:hover {
+    background-color: #f5f5f5;
 }
 
-.user-table tbody tr:nth-child(even) {
-    background-color: #FFF2EF;
-}
-
-.user-table tbody tr:hover {
-    background-color: #FFDAD4;
-}
-
-.user-table td:first-child {
-    font-weight: bold;
-    width: 40px;
+tbody td {
+    padding: 10px 5px;
+    vertical-align: middle;
     text-align: center;
+}
+
+tbody img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+tbody button {
+    background-color: #0095f6;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+tbody button:hover {
+    background-color: #0073cc;
+}
+
+tbody td[colspan="3"] {
+    padding: 20px;
+    color: #999;
+    font-style: italic;
+}
+
+@media (max-width: 550px) {
+    .tabla-seguidores {
+        width: 100%;
+        padding: 20px 15px;
+    }
+
+    form {
+        flex-direction: column;
+    }
+
+    form input[type="text"], form button {
+        width: 100%;
+        border-radius: 6px;
+    }
+
+    form button {
+        margin-top: 10px;
+    }
 }
