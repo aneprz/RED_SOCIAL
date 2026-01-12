@@ -27,7 +27,7 @@ include 'procesar_busqueda.php';
     <link rel="stylesheet" href="usuarios.css">
 </head>
 <body>
-
+<?php include __DIR__ . '/../Templates/navBar.php';?>
 <div class="table-container">
     <table class="user-table">
         <thead>
@@ -46,7 +46,7 @@ include 'procesar_busqueda.php';
         </tbody>
     </table>
 </div>
-
+<?php include __DIR__ . '/../Templates/footer.php';?>
 </body>
 </html>
 
