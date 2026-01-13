@@ -1,34 +1,66 @@
-<?php 
+<?php
 session_start();
 if (!isset($_SESSION['username'])) {
-header("Location: Php/Sesiones/inicio_sesion.php");
-exit();
+    header("Location: Php/Sesiones/inicio_sesion.php");
+    exit();
 }
 
-include 'procesarPerfilAjeno.php';
-$foto_perfil=$_SESSION['foto_perfil'];
-$nombreusu = $_SESSION['username']?? '';
-$biografia = $_SESSION['biografia']?? '';
-$id = $_GET['id'];
+include '../../BD/conexiones.php';
+
+if (!isset($_POST['id'])) {
+    die("ID de usuario no valida.");
+}
+
+$id = intval($_POST['id']);
+
+$resultUsuario = mysqli_query($conexion, "SELECT foto_perfil, username, bio FROM usuarios WHERE id = $id");
+
+if (!$resultUsuario || mysqli_num_rows($resultUsuario) == 0) {
+    die("Usuario no encontrado.");
+}
+
+$usuario = mysqli_fetch_assoc($resultUsuario);
+$foto_perfil = $usuario['foto_perfil'];
+$nombreusu = $usuario['username'];
+$biografia = $usuario['bio'];
+
+$resultSeguidores = mysqli_query($conexion, "SELECT COUNT(seguidor_id) AS total FROM seguidores WHERE seguido_id = $id");
+$seguidores = mysqli_fetch_assoc($resultSeguidores)['total'];
+
+$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguidor_id = $id");
+$seguidos = mysqli_fetch_assoc($resultSeguidos)['total'];
+
+$resultPublicaciones = mysqli_query($conexion, "SELECT COUNT(usuario_id) AS total FROM publicaciones WHERE usuario_id = $id");
+$publicaciones = mysqli_fetch_assoc($resultPublicaciones)['total'];
+
+$publicacionesArray = [];
+$resultPost = mysqli_query($conexion, "SELECT imagen_url FROM publicaciones WHERE usuario_id = $id");
+
+if ($resultPost) {
+    while ($rowPost = mysqli_fetch_assoc($resultPost)) {
+        $publicacionesArray[] = $rowPost['imagen_url'];
+    }
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Perfil</title>
-  <link rel="stylesheet" href="../../Estilos/estilos_perfil.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de <?= htmlspecialchars($nombreusu) ?></title>
+    <link rel="stylesheet" href="../../Estilos/estilos_perfil.css">
 </head>
 <body>
-    <?php include __DIR__ . '/../Templates/navBar.php';?>
+    <?php include __DIR__ . '/../Templates/navBar.php'; ?>
     <main>
         <div class="objetos">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
+                    <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
                     <div class="profile-info">
-                        <h2><?php echo $nombreusu; ?></h2>
-                        <p class="bio"><?php echo $biografia; ?></p>
+                        <h2><?= htmlspecialchars($nombreusu) ?></h2>
+                        <p class="bio"><?= htmlspecialchars($biografia) ?></p>
                         <div class="stats">
                             <span><strong><?= $publicaciones ?></strong> publicaciones</span>
                             <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
@@ -36,26 +68,29 @@ $id = $_GET['id'];
                         </div>
                     </div>
                 </div>
+
                 <div class="profile-posts">
-    <?php if (!empty($publicacionesArray)): ?>
-        <?php foreach ($publicacionesArray as $post): ?>
-            <?php
-                $ruta = "../Crear/uploads/" . htmlspecialchars($post);
-                $ext = strtolower(pathinfo($post, PATHINFO_EXTENSION));
-            ?>
-            <div class="post">
-                <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                    <video src="<?= $ruta ?>" muted autoplay loop></video>
-                <?php else: ?>
-                    <img src="<?= $ruta ?>" alt="Post">
-                <?php endif; ?>
+                    <?php if (!empty($publicacionesArray)): ?>
+                        <?php foreach ($publicacionesArray as $post): ?>
+                            <?php
+                                $ruta = "../Crear/uploads/" . htmlspecialchars($post);
+                                $ext = strtolower(pathinfo($post, PATHINFO_EXTENSION));
+                            ?>
+                            <div class="post">
+                                <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                                    <video src="<?= $ruta ?>" muted autoplay loop></video>
+                                <?php else: ?>
+                                    <img src="<?= $ruta ?>" alt="Post">
+                                <?php endif; ?>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay publicaciones todavía</p>
+                    <?php endif; ?>
+                </div>
             </div>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <p>No hay publicaciones todavía</p>
-    <?php endif; ?>
-</div>
+        </div>
     </main>
-    <?php include __DIR__ . '/../Templates/footer.php';?>
+    <?php include __DIR__ . '/../Templates/footer.php'; ?>
 </body>
 </html>
