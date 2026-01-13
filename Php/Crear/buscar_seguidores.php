@@ -1,6 +1,10 @@
 <?php
 require '../../BD/conexiones.php';
 session_start();
+if (!isset($_SESSION['username'])) {
+    header("Location: Php/Sesiones/inicio_sesion.php");
+    exit();
+}
 
 $usuario_id = $_SESSION['id'] ?? null;
 $q = $_GET['q'] ?? '';
