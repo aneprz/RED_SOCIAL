@@ -20,7 +20,7 @@ if (!$resultUsuario || mysqli_num_rows($resultUsuario) == 0) {
 }
 
 $usuario = mysqli_fetch_assoc($resultUsuario);
-$foto_perfil = $usuario['foto_perfil'];
+$foto_perfil = '/' . ltrim($usuario['foto_perfil'], '/');
 $nombreusu = $usuario['username'];
 $biografia = $usuario['bio'];
 
@@ -73,14 +73,16 @@ if ($resultPost) {
                     <?php if (!empty($publicacionesArray)): ?>
                         <?php foreach ($publicacionesArray as $post): ?>
                             <?php
-                                $ruta = "../Crear/uploads/" . htmlspecialchars($post);
+                                $ruta = '/Php/Crear/uploads/' . htmlspecialchars($post);
                                 $ext = strtolower(pathinfo($post, PATHINFO_EXTENSION));
                             ?>
                             <div class="post">
                                 <?php if (in_array($ext, ['mp4', 'webm'])): ?>
                                     <video src="<?= $ruta ?>" muted autoplay loop></video>
-                                <?php else: ?>
+                                <?php elseif (in_array($ext, ['jpeg', 'jpg', 'png', 'gif'])): ?>
                                     <img src="<?= $ruta ?>" alt="Post">
+                                <?php else: ?>
+                                    <p>Archivo no soportado: <?= htmlspecialchars($post) ?></p>
                                 <?php endif; ?>
                             </div>
                         <?php endforeach; ?>

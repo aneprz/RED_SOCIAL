@@ -38,7 +38,15 @@ $id = intval($_SESSION['id']);
                     $texto_boton = ($accion === 'suprimir') ? 'Suprimir' : 'Seguir';
 
                     echo "<tr>";
-                    echo "<td><img src='" . htmlspecialchars($row['foto_perfil']) . "' width='50' alt='Foto de perfil'></td>";
+                    echo "<td>
+                            <form action='../Busqueda/usuarioAjeno.php' method='POST' style='display:inline;'>
+                                <input type='hidden' name='id' value='" . intval($row['id']) . "'>
+                                <button type='submit' style='border:none; background:none; padding:0; cursor:pointer;'>
+                                    <img src='" . htmlspecialchars($row['foto_perfil']) . "' width='50' alt='Foto de perfil'>
+                                </button>
+                            </form>
+                        </td>";
+
                     echo "<td>" . htmlspecialchars($row['username']) . "</td>";
                     echo "<td>
                             <form method='post' action='procesarSeguidores.php'>
