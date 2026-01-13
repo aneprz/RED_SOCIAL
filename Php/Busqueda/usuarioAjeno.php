@@ -6,10 +6,10 @@ exit();
 }
 
 include 'procesarPerfilAjeno.php';
+$id = $_POST['id'];
 $foto_perfil=$_SESSION['foto_perfil'];
 $nombreusu = $_SESSION['username']?? '';
 $biografia = $_SESSION['biografia']?? '';
-$id = $_GET['id'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
