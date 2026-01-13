@@ -5,10 +5,11 @@ header("Location: Php/Sesiones/inicio_sesion.php");
 exit();
 }
 
-include 'procesar_perfil.php';
+include 'procesarPerfilAjeno.php';
 $foto_perfil=$_SESSION['foto_perfil'];
 $nombreusu = $_SESSION['username']?? '';
 $biografia = $_SESSION['biografia']?? '';
+$id = $_GET['id'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -35,8 +36,6 @@ $biografia = $_SESSION['biografia']?? '';
                         </div>
                     </div>
                 </div>
-
-                <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
                 <div class="profile-posts">
     <?php if (!empty($publicacionesArray)): ?>
         <?php foreach ($publicacionesArray as $post): ?>
@@ -56,12 +55,6 @@ $biografia = $_SESSION['biografia']?? '';
         <p>No hay publicaciones todavía</p>
     <?php endif; ?>
 </div>
-
-            <!-- Botón de cerrar sesión -->
-        </div>
-        <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
-        <button type="submit" class="cerrarSesion">Cerrar sesión</button>
-        </form>
     </main>
     <?php include __DIR__ . '/../Templates/footer.php';?>
 </body>
