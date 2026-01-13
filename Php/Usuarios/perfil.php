@@ -6,6 +6,17 @@ exit();
 }
 
 include 'procesar_perfil.php';
+
+$stmt = $conexion->prepare(
+    "SELECT foto_perfil FROM usuarios WHERE id = ?"
+);
+$stmt->bind_param("i", $_SESSION['id']);
+$stmt->execute();
+$result = $stmt->get_result();
+$usuario = $result->fetch_assoc();
+
+$foto_perfil = $usuario['foto_perfil'] ?: 'foto_default.png';
+
 $nombreusu = $_SESSION['username']?? '';
 $biografia = $_SESSION['biografia']?? '';
 ?>
@@ -23,7 +34,11 @@ $biografia = $_SESSION['biografia']?? '';
         <div class="objetos">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
+                    
+
+                    <img src="../../Media/foto_default.png" alt="Foto perfil">
+
+
                     <div class="profile-info">
                         <h2><?php echo $nombreusu; ?></h2>
                         <p class="bio"><?php echo $biografia; ?></p>

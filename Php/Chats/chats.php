@@ -15,10 +15,25 @@ $sql = $pdo->prepare("
         u.foto_perfil AS foto_perfil,
         m.texto AS ultimo_mensaje,
         m.fecha AS fecha_mensaje,
-        c.fecha_creacion
+        c.fecha_creacion,
+
+        (
+            SELECT COUNT(*) 
+            FROM mensajes m2
+            WHERE m2.chat_id = c.id
+            AND m2.usuario_id != :yo1
+            AND m2.leido = 0
+        ) AS no_leidos
+
     FROM chats c
-    JOIN usuarios_chat cu ON cu.chat_id = c.id AND cu.usuario_id = :idUsu1
-    LEFT JOIN usuarios_chat cu2 ON cu2.chat_id = c.id AND cu2.usuario_id != :idUsu2
+    JOIN usuarios_chat cu 
+        ON cu.chat_id = c.id 
+        AND cu.usuario_id = :yo2
+
+    LEFT JOIN usuarios_chat cu2 
+        ON cu2.chat_id = c.id 
+        AND cu2.usuario_id != :yo3
+
     LEFT JOIN usuarios u ON u.id = cu2.usuario_id
     LEFT JOIN mensajes m ON m.id = (
         SELECT id 
@@ -29,11 +44,10 @@ $sql = $pdo->prepare("
     )
     ORDER BY COALESCE(m.fecha, c.fecha_creacion) DESC
 ");
-
-// Ejecutamos la consulta con los parámetros correctos
 $sql->execute([
-    "idUsu1" => $idUsu,
-    "idUsu2" => $idUsu
+    "yo1" => $idUsu,
+    "yo2" => $idUsu,
+    "yo3" => $idUsu
 ]);
 
 $chatsRaw = $sql->fetchAll(PDO::FETCH_ASSOC);
@@ -112,6 +126,12 @@ if ($chatReciente) {
             <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
             <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
         </div>
+
+        <?php if ($c['no_leidos'] > 0): ?>
+            <div class="badge">
+                <?= $c['no_leidos'] ?>
+            </div>
+        <?php endif; ?>
     </div>
     <?php endforeach; ?>
 
