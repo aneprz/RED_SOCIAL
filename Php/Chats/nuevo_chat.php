@@ -5,7 +5,11 @@ session_start();
 $idUsu = $_SESSION['id'];
 
 // Traer todos los usuarios excepto el actual
-$sql = $pdo->prepare("SELECT id, username FROM usuarios WHERE id != :idUsu");
+$sql = $pdo->prepare("
+    SELECT u.id, u.username
+    FROM usuarios u
+    INNER JOIN seguidores s ON s.seguido_id= u.id
+    WHERE s.seguidor_id = :idUsu");
 $sql->execute(["idUsu" => $idUsu]);
 $usuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
 
