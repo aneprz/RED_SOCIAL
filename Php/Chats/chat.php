@@ -156,7 +156,6 @@ $marcarLeidos->execute([
         </div>
     </div>
 
-
     <div id="chat-mensajes">
         <?php foreach ($mensajes as $m): 
             $esTuyo = $m['usuario_id'] == $idUsu;
