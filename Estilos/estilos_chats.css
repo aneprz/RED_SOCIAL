@@ -119,3 +119,21 @@ form{
 .crearChat:hover{
     background-color: #b63a2f;
 }
+
+.chat {
+    position: relative;
+}
+
+.badge {
+    margin-left: 10px;
+    top: 18px;
+    right: 15px;
+    background-color: #E94B3C;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 9px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 20px;
+    text-align: center;
+}

@@ -56,7 +56,7 @@ $sql = $pdo->prepare("
 $sql->execute(['chat_id' => $chat_id]);
 $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-//para saber si se ha leido el mensaje
+//para saber si se ha leido
 $marcarLeidos = $pdo->prepare("
     UPDATE mensajes
     SET leido = 1
