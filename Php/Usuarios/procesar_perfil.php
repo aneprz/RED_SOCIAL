@@ -43,7 +43,16 @@ if ($resultPost) {
         $publicacionesArray[] = $rowPost['imagen_url'];
     }
 }
+//foto_perfil
+$fotoPerfil = mysqli_query(
+    $conexion,
+    "SELECT foto_perfil AS foto FROM usuarios WHERE id = $id"
+);
 
+if ($fotoPerfil && mysqli_num_rows($fotoPerfil) > 0) {
+    $rowFoto = mysqli_fetch_assoc($fotoPerfil);
+    $_SESSION['foto_perfil'] = $rowFoto['foto'];
+}
 
 ?>
 
