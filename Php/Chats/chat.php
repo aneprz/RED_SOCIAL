@@ -24,12 +24,13 @@ if (!$chat) {
 
 // 2️⃣ Obtener los participantes (solo para mostrar nombres en chats 1 a 1)
 $sql = $pdo->prepare("
-    SELECT u.id, u.username, u.foto_perfil
-    FROM usuarios_chat uc
-    JOIN usuarios u ON u.id = uc.usuario_id
-    WHERE uc.chat_id = :chat_id AND u.id != :idUsu
+    SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha, m.leido
+    FROM mensajes m
+    JOIN usuarios u ON u.id = m.usuario_id
+    WHERE m.chat_id = :chat_id
+    ORDER BY m.fecha ASC
 ");
-$sql->execute(['chat_id' => $chat_id, 'idUsu' => $idUsu]);
+$sql->execute(['chat_id' => $chat_id]);
 $otrosUsuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 //Para guardar todos los participantes en los chats grupales
@@ -47,7 +48,7 @@ if ($chat['es_grupo']) {
 
 // 3️⃣ Obtener mensajes del chat
 $sql = $pdo->prepare("
-    SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha
+    SELECT m.id, m.usuario_id, u.username, u.foto_perfil, m.texto, m.fecha, m.leido
     FROM mensajes m
     JOIN usuarios u ON u.id = m.usuario_id
     WHERE m.chat_id = :chat_id
@@ -95,12 +96,54 @@ $marcarLeidos->execute([
     ?>
 
     <div class="encabezado">
-        <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
+        <a class="volver" href="chats.php">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                <path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/>
+            </svg>
+        </a>
+
+        <?php
+        // =========================
+        // Obtener información del chat
+        // =========================
+        if ($chat['es_grupo']) {
+            // Chat grupal
+            $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
+            $fotoPerfil = '../../../Media/foto_grupo_default.png';
+
+            // Participantes del grupo
+            $sql = $pdo->prepare("
+                SELECT u.username
+                FROM usuarios_chat uc
+                JOIN usuarios u ON u.id = uc.usuario_id
+                WHERE uc.chat_id = :chat_id
+            ");
+            $sql->execute(['chat_id' => $chat_id]);
+            $participantes = $sql->fetchAll(PDO::FETCH_COLUMN);
+
+        } else {
+            // Chat 1 a 1: obtener el otro usuario
+            $sql = $pdo->prepare("
+                SELECT u.id, u.username, u.foto_perfil
+                FROM usuarios_chat uc
+                JOIN usuarios u ON u.id = uc.usuario_id
+                WHERE uc.chat_id = :chat_id AND u.id != :idUsu
+                LIMIT 1
+            ");
+            $sql->execute(['chat_id' => $chat_id, 'idUsu' => $idUsu]);
+            $otroUsuario = $sql->fetch(PDO::FETCH_ASSOC);
+
+            $nombreChat = $otroUsuario['username'] ?? "Usuario";
+            $fotoPerfil = !empty($otroUsuario['foto_perfil']) 
+                        ? $otroUsuario['foto_perfil'] 
+                        : '../../../Media/foto_default.png';
+        }
+        ?>
 
         <img src="<?= htmlspecialchars($fotoPerfil) ?>" 
-        alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
-        onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
-        style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+            alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
+            onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
+            style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
 
         <div class="tituloIntegrantes">
             <h2><?= htmlspecialchars($nombreChat) ?></h2>
@@ -112,6 +155,7 @@ $marcarLeidos->execute([
             <?php endif; ?>
         </div>
     </div>
+
 
     <div id="chat-mensajes">
         <?php foreach ($mensajes as $m): 
@@ -142,6 +186,14 @@ $marcarLeidos->execute([
                     <?= htmlspecialchars($m['texto']) ?>
                     <br>
                     <small class="fecha">(<?= $m['fecha'] ?>)</small>
+
+                    <?php if ($esTuyo): ?>
+                        <?php if ($m['leido']): ?>
+                            <span class="leidoEstado"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span>
+                        <?php else: ?>
+                            <span class="noLeidoEstado"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg></span>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>

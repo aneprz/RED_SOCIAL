@@ -58,9 +58,14 @@ while ($row = mysqli_fetch_assoc($res)) {
             <?php if (!empty($usuarios)): ?>
                 <?php foreach ($usuarios as $usuario): ?>
                     <tr>
-                        <a href="usuarioAjeno.php?id=<?= $usuario['id'] ?>"></a>
-                            <td><img src="<?= htmlspecialchars($usuario['foto_perfil']) ?>" width="50" alt="Foto de perfil"></td>
-                        </a>
+                        <td>
+                            <form action="usuarioAjeno.php" method="POST" style="display:inline;">
+                                <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+                                <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
+                                    <img src="<?= htmlspecialchars($usuario['foto_perfil']) ?>" width="50" alt="Foto de perfil">
+                                </button>
+                            </form>
+                        </td>
                         <td><?= htmlspecialchars($usuario['username']) ?></td>
                         <td>
                             <form method="post" action="procesar_busqueda.php">

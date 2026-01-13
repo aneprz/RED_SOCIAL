@@ -1,3 +1,13 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box; /* incluye padding y border en el ancho total */
+}
+
+html, body {
+    overflow-x: hidden; /* evita scroll horizontal */
+}
+
 html,body{
     height: 100%;
     margin: 0;
@@ -56,6 +66,11 @@ main h2{
 }
 .mensaje {
     color: #c9c9c9;
+    max-width: 55%;        /* o el ancho que quieras */
+    white-space: nowrap;    /* una línea */
+    overflow: hidden;       /* corta lo que sobre */
+    text-overflow: ellipsis; /* muestra "..." */
+    display: block;         /* necesario para que funcione */
 }
 
 .fecha{
