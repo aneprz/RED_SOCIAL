@@ -28,7 +28,7 @@
                 
                 <p>¿No tienes usuario? <a href="registro_sesion.php">Créalo aquí</a></p>
 
-                <button type="submit" class="btn btn-primary w-100">Iniciar Sesión</button>
+                <button type="submit" class="botonIniciarSesion w-100">Iniciar Sesión</button>
             </form>
         </div>
     </div>

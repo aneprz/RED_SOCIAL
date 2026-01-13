@@ -73,7 +73,7 @@ include '../../BD/conexiones.php';
                     Se repiten las contraseñas.</p>
                 </div>
 
-                <button id="registrarse" type="submit" class="btn btn-primary w-100" disabled>Registrarse</button>
+                <button id="registrarse" type="submit" class="botonRegistroSesion w-100" disabled>Registrarse</button>
                 <p>¿Ya tienes usuario?<a href="inicio_sesion.php">Inicia sesión</a></p>
                 
                 <!--JavaScript-->
