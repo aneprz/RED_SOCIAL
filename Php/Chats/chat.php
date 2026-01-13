@@ -24,12 +24,13 @@ if (!$chat) {
 
 // 2️⃣ Obtener los participantes (solo para mostrar nombres en chats 1 a 1)
 $sql = $pdo->prepare("
-    SELECT u.id, u.username, u.foto_perfil
-    FROM usuarios_chat uc
-    JOIN usuarios u ON u.id = uc.usuario_id
-    WHERE uc.chat_id = :chat_id AND u.id != :idUsu
+    SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha, m.leido
+    FROM mensajes m
+    JOIN usuarios u ON u.id = m.usuario_id
+    WHERE m.chat_id = :chat_id
+    ORDER BY m.fecha ASC
 ");
-$sql->execute(['chat_id' => $chat_id, 'idUsu' => $idUsu]);
+$sql->execute(['chat_id' => $chat_id]);
 $otrosUsuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
 
 //Para guardar todos los participantes en los chats grupales
@@ -47,7 +48,7 @@ if ($chat['es_grupo']) {
 
 // 3️⃣ Obtener mensajes del chat
 $sql = $pdo->prepare("
-    SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha
+    SELECT m.id, m.usuario_id, u.username, u.foto_perfil, m.texto, m.fecha, m.leido
     FROM mensajes m
     JOIN usuarios u ON u.id = m.usuario_id
     WHERE m.chat_id = :chat_id
@@ -142,6 +143,14 @@ $marcarLeidos->execute([
                     <?= htmlspecialchars($m['texto']) ?>
                     <br>
                     <small class="fecha">(<?= $m['fecha'] ?>)</small>
+
+                    <?php if ($esTuyo): ?>
+                        <?php if ($m['leido']): ?>
+                            <span class="leidoEstado"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg></span>
+                        <?php else: ?>
+                            <span class="noLeidoEstado"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22m0-2q3.35 0 5.675-2.325T20 12t-2.325-5.675T12 4T6.325 6.325T4 12t2.325 5.675T12 20m0-8"/></svg></span>
+                        <?php endif; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         <?php endforeach; ?>

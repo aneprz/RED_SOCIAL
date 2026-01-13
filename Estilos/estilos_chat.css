@@ -135,10 +135,24 @@ form button:hover{
     background-color: #c13722;
     padding: 8px 12px;
     border-radius: 12px;
-    max-width: 70%;
+    word-wrap: break-word;   /* rompe palabras largas */
+    word-break: break-word;  /* soporte adicional */
+    white-space: normal;     /* permite saltos de línea */
 }
 .mensaje.tuyo .textoMensaje {
     background-color: #732115;
-    margin-left: auto;
+    margin-left: 30%;
 }
 
+.leidoEstado {
+    display: inline-block;
+    margin-left: 5px;
+    font-size: 11px;
+    color: #666;
+}
+.leidoEstado{
+    color: rgb(74, 104, 74);
+}
+.noLeidoEstado{
+    color: #949494;
+}
