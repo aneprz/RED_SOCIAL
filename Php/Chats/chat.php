@@ -154,6 +154,11 @@ $marcarLeidos->execute([
                 </div>
             <?php endif; ?>
         </div>
+
+        <?php if ($chat['es_grupo']): ?>
+            <button id="btnConfigGrupo" class="btnConfig">⚙ Configuración</button>
+        <?php endif; ?>
+
     </div>
 
     <div id="chat-mensajes">
@@ -212,6 +217,177 @@ $marcarLeidos->execute([
         <input class="escribirMensaje" type="text" name="mensaje" placeholder="Escribe tu mensaje..." required>
         <button type="submit"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M3 20v-6l8-2l-8-2V4l19 8z"/></svg></button>
     </form>
+
+    <?php if ($chat['es_grupo']): ?>
+        <div id="modalConfigGrupo" class="modal">
+            <div class="modal-content">
+                <span class="cerrar">&times;</span>
+                <h3>Configuración del grupo</h3>
+
+                <!-- Formulario para editar nombre y foto -->
+                <form action="procesamientos/editarGrupo.php" method="post" enctype="multipart/form-data">
+                    <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
+                    <label for="nombre_grupo">Nombre del grupo:</label>
+                    <input type="text" id="nombre_grupo" name="nombre_grupo" value="<?= htmlspecialchars($chat['nombre_grupo']) ?>" required>
+
+                    <button type="submit">Guardar cambios</button>
+                </form>
+
+                <?php
+                    $participantes = [];
+                    if ($chat['es_grupo']) {
+                        $sql = $pdo->prepare("
+                            SELECT u.id, u.username
+                            FROM usuarios_chat uc
+                            JOIN usuarios u ON u.id = uc.usuario_id
+                            WHERE uc.chat_id = :chat_id
+                        ");
+                        $sql->execute(['chat_id' => $chat_id]);
+                        $participantes = $sql->fetchAll(PDO::FETCH_ASSOC); // ahora es un array con id y username
+                    }
+                ?>
+
+                <h4>Participantes</h4>
+                <form action="procesamientos/editarParticipantes.php" method="post" id="formParticipantes">
+                    <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
+
+                    <!-- Input de búsqueda -->
+                    <input type="text" id="buscarUsuario" placeholder="Buscar usuario..." autocomplete="off">
+
+                    <!-- Lista de resultados -->
+                    <div id="resultadosBusqueda" class="resultadosBusqueda"></div>
+
+                    <!-- Participantes seleccionados -->
+                    <div id="usuariosSeleccionados" class="usuariosSeleccionados">
+                    <?php foreach ($participantes as $p): ?>
+                        <span class="usuarioTag" data-username="<?= htmlspecialchars($p['username']) ?>">
+                            <?= htmlspecialchars($p['username']) ?>
+                            <button type="button" class="quitarUsuario">&times;</button>
+                            <input type="hidden" name="usuarios[]" value="<?= $p['id'] ?>">
+                        </span>
+                    <?php endforeach; ?>
+                    </div>
+
+                    <button type="submit">Actualizar participantes</button>
+                </form>
+
+                <script>
+                const buscarInput = document.getElementById('buscarUsuario');
+                const resultados = document.getElementById('resultadosBusqueda');
+                const seleccionados = document.getElementById('usuariosSeleccionados');
+
+                // Lista de todos los usuarios que sigues (puedes filtrar por los que sigues desde PHP)
+                const todosUsuarios = <?= json_encode($todosUsuarios) ?>;
+
+                // Función para renderizar resultados filtrados
+                buscarInput.addEventListener('input', () => {
+                    const query = buscarInput.value.toLowerCase().trim();
+                    resultados.innerHTML = '';
+
+                    if(query === '') return;
+
+                    const filtrados = todosUsuarios.filter(u => 
+                        u.username.toLowerCase().includes(query) &&
+                        !document.querySelector(`#usuariosSeleccionados input[value="${u.id}"]`)
+                    );
+
+                    filtrados.forEach(u => {
+                        const div = document.createElement('div');
+                        div.textContent = u.username;
+                        div.classList.add('resultadoUsuario');
+                        div.addEventListener('click', () => agregarUsuario(u));
+                        resultados.appendChild(div);
+                    });
+                });
+
+                function agregarUsuario(usuario){
+                    const span = document.createElement('span');
+                    span.classList.add('usuarioTag');
+                    span.dataset.username = usuario.username;
+                    span.innerHTML = `
+                        ${usuario.username}
+                        <button type="button" class="quitarUsuario">&times;</button>
+                        <input type="hidden" name="usuarios[]" value="${usuario.id}">
+                    `;
+                    seleccionados.appendChild(span);
+
+                    span.querySelector('.quitarUsuario').addEventListener('click', () => {
+                        span.remove();
+                    });
+
+                    resultados.innerHTML = '';
+                    buscarInput.value = '';
+                }
+
+                // Quitar usuarios ya seleccionados
+                document.querySelectorAll('.quitarUsuario').forEach(btn => {
+                    btn.addEventListener('click', e => {
+                        e.target.parentElement.remove();
+                    });
+                });
+                </script>
+
+                <style>
+                .resultadosBusqueda{
+                    background: #222;
+                    color: #fff;
+                    max-height: 150px;
+                    overflow-y: auto;
+                    border: 1px solid #444;
+                    margin-top: 5px;
+                }
+                .resultadoUsuario{
+                    padding: 5px;
+                    cursor: pointer;
+                }
+                .resultadoUsuario:hover{
+                    background: #555;
+                }
+                .usuariosSeleccionados{
+                    display: flex;
+                    flex-wrap: wrap;
+                    margin-top: 10px;
+                    gap: 5px;
+                }
+                .usuarioTag{
+                    background: #444;
+                    color: #fff;
+                    padding: 3px 7px;
+                    border-radius: 5px;
+                    display: flex;
+                    align-items: center;
+                    gap: 5px;
+                }
+                .usuarioTag button{
+                    background: transparent;
+                    border: none;
+                    color: #fff;
+                    cursor: pointer;
+                }
+                </style>
+
+            </div>
+        </div>
+    <?php endif; ?>
+    <script>
+        const btnConfig = document.getElementById('btnConfigGrupo');
+        const modal = document.getElementById('modalConfigGrupo');
+        const spanCerrar = document.querySelector('.cerrar');
+
+        btnConfig.addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        spanCerrar.addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (e) => {
+            if (e.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
 </main>
 <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
