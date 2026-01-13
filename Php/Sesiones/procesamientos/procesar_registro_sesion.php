@@ -65,6 +65,8 @@ if (!$stmt->execute()) {
     volverConError("Error interno al crear el usuario");
 }
 
+//Para que se ponga la foto de perfil por defecto
+$_SESSION['foto_perfil'] = '../../../Media/foto_default.png';
 
 $_SESSION['success'] = "Usuario creado correctamente. Ya puedes iniciar sesión";
 header("Location: ../inicio_sesion.php");

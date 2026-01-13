@@ -5,6 +5,7 @@ header("Location: Php/Sesiones/inicio_sesion.php");
 exit();
 }
 $nombreusu = $_SESSION['username'];
+$foto_perfil=$_SESSION['foto_perfil'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
