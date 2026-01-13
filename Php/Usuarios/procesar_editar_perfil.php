@@ -14,9 +14,9 @@ if (!$id) {
 $foto_perfil = $_POST['foto_perfil'] ?? '';
 $nuevousu  = $_POST['nuevousu'] ?? '';
 $biografia = $_POST['biografia'] ?? '';
+$privada = isset($_POST['cuenta_privada']) ? 1 : 0;
 
-
-/* ========= VALIDAR USUARIO ========= */
+// VALIDAR USUARIO
 if (!empty($nuevousu)) {
 
     $nuevousu = mysqli_real_escape_string($conexion, $nuevousu);
@@ -43,7 +43,7 @@ if (!empty($nuevousu)) {
 }
 
 
-/* ========= BIOGRAFÍA ========= */
+// BIOGRAFÍA
 if (!empty($biografia)) {
     $biografia = mysqli_real_escape_string($conexion, $biografia);
     $biografia = mb_substr($biografia, 0, 150, 'UTF-8');
@@ -57,7 +57,7 @@ if (!empty($biografia)) {
 }
 
 
-/* ========= FOTO PERFIL ========= */
+// FOTO PERFIL
 if (!empty($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
 
     $file = $_FILES['foto_perfil'];
@@ -92,6 +92,10 @@ if (!empty($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
     mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil_db' WHERE id=$id");
     $_SESSION['foto_perfil'] = $foto_perfil_db;
 }
+
+// PRIVACIDAD
+mysqli_query($conexion,"UPDATE usuarios SET privacidad='$privada' WHERE id=$id");
+$_SESSION['privacidad'] = $privada;
 
 header("Location: perfil.php");
 exit;

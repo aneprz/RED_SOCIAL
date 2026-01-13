@@ -6,6 +6,7 @@ exit();
 }
 $nombreusu = $_SESSION['username'];
 $foto_perfil=$_SESSION['foto_perfil'];
+$privacidad=$_SESSION['privacidad'];
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -38,6 +39,16 @@ $foto_perfil=$_SESSION['foto_perfil'];
                 Biografía
                 <textarea name="biografia" placeholder="Cuéntanos algo sobre ti..." maxlength="100"></textarea>
             </label>
+            <label class="switch-label">
+                <div class="switch-container">
+                    <span id="estado-cuenta">Cuenta privada</span>
+                    <label class="switch">
+                        <input type="checkbox" name="cuenta_privada" <?= $privacidad ? 'checked' : '' ?>>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </label>
+
 
             <button type="submit">Guardar cambios</button>
         </form>
