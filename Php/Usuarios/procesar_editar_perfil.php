@@ -87,7 +87,7 @@ if (!empty($_FILES['foto_perfil']) && $_FILES['foto_perfil']['error'] === 0) {
     }
 
     // Guardamos la ruta relativa para usarla en HTML
-    $foto_perfil_db = 'fotosDePerfil/' . $filename;
+    $foto_perfil_db = '/Php/Usuarios/fotosDePerfil/' . $filename;
 
     mysqli_query($conexion, "UPDATE usuarios SET foto_perfil='$foto_perfil_db' WHERE id=$id");
     $_SESSION['foto_perfil'] = $foto_perfil_db;
