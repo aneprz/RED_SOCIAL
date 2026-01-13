@@ -32,6 +32,19 @@ $sql = $pdo->prepare("
 $sql->execute(['chat_id' => $chat_id, 'idUsu' => $idUsu]);
 $otrosUsuarios = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+//Para guardar todos los participantes en los chats grupales
+$participantes = [];
+if ($chat['es_grupo']) {
+    $sql = $pdo->prepare("
+        SELECT u.username
+        FROM usuarios_chat uc
+        JOIN usuarios u ON u.id = uc.usuario_id
+        WHERE uc.chat_id = :chat_id
+    ");
+    $sql->execute(['chat_id' => $chat_id]);
+    $participantes = $sql->fetchAll(PDO::FETCH_COLUMN); // obtenemos solo los nombres
+}
+
 // 3️⃣ Obtener mensajes del chat
 $sql = $pdo->prepare("
     SELECT m.id, m.usuario_id, u.username, m.texto, m.fecha
@@ -57,7 +70,7 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
     <?php
     if ($chat['es_grupo']) {
         $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
-        $fotoPerfil = '../../../Media/foto_default.png'; // siempre por defecto para grupos
+        $fotoPerfil = '../../../Media/foto_grupo_default.png'; // siempre por defecto para grupos
     } else {
         $nombreChat = $otrosUsuarios[0]['username'] ?? "Usuario";
 
@@ -76,18 +89,51 @@ $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
         onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
         style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
 
-        <h2><?= htmlspecialchars($nombreChat) ?></h2>
+        <div class="tituloIntegrantes">
+            <h2><?= htmlspecialchars($nombreChat) ?></h2>
+
+            <?php if ($chat['es_grupo'] && !empty($participantes)): ?>
+                <div class="nombresParticipantes">
+                    <i><?= htmlspecialchars(implode(", ", $participantes)) ?></i>
+                </div>
+            <?php endif; ?>
+        </div>
     </div>
 
     <div id="chat-mensajes">
-        <?php foreach ($mensajes as $m): ?>
-            <div class="mensaje <?= $m['usuario_id'] == $idUsu ? 'tuyo' : '' ?>">
-                <?= htmlspecialchars($m['texto']) ?>
-                <br>
-                <small class="fecha">(<?= $m['fecha'] ?>)</small>
+        <?php foreach ($mensajes as $m): 
+            $esTuyo = $m['usuario_id'] == $idUsu;
+            // Obtener foto de perfil del usuario
+            $fotoUsuario = '../../../Media/foto_default.png'; // por defecto
+            foreach ($otrosUsuarios as $u) {
+                if ($u['id'] == $m['usuario_id']) {
+                    if (!empty($u['foto_perfil']) && trim($u['foto_perfil']) !== '') {
+                        $fotoUsuario = $u['foto_perfil'];
+                    }
+                    break;
+                }
+            }
+        ?>
+            <div class="mensaje <?= $esTuyo ? 'tuyo' : 'otro' ?>">
+                <?php if (!$esTuyo && $chat['es_grupo']): ?>
+                    <div class="infoUsuario">
+                        <img src="<?= htmlspecialchars($fotoUsuario) ?>" 
+                            alt="Foto de <?= htmlspecialchars($m['username']) ?>" 
+                            onerror="this.onerror=null;this.src='../../../Media/foto_default.png';"
+                            class="fotoUsuario">
+                        <span class="nombreUsuario"><?= htmlspecialchars($m['username']) ?></span>
+                    </div>
+                <?php endif; ?>
+                
+                <div class="textoMensaje">
+                    <?= htmlspecialchars($m['texto']) ?>
+                    <br>
+                    <small class="fecha">(<?= $m['fecha'] ?>)</small>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>
+
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const chatMensajes = document.getElementById('chat-mensajes');

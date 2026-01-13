@@ -79,7 +79,7 @@
         <path fill="none" stroke-linecap="round" stroke-linejoin="round"
               d="M22 17a2 2 0 0 1-2 2H7a2 2 0 0 0-1.4.6L3.4 22A.7.7 0 0 1 2 21.3V5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2z"/>
       </svg>
-      Mensajes
+      Chats
     </a>
 
     <a href="#" class="nav-item-custom">
@@ -187,7 +187,7 @@
       <a href="#" class="nav-item-custom d-block mb-2">Búsqueda</a>
       <a href="#" class="nav-item-custom d-block mb-2">Explorar</a>
       <a href="#" class="nav-item-custom d-block mb-2">Sals</a>
-      <a href="#" class="nav-item-custom d-block mb-2">Mensajes</a>
+      <a href="#" class="nav-item-custom d-block mb-2">Chats</a>
       <a href="#" class="nav-item-custom d-block mb-2">Notificaciones</a>
       <a href="#" class="nav-item-custom d-block mb-2">Crear</a>
       <a href="#" class="nav-item-custom d-block mb-2">Perfil</a>

@@ -27,7 +27,7 @@ main{
 
 .encabezado{
     display: flex;
-    padding: 20px;
+    padding: 15px;
     background-color: rgb(21, 21, 21);
 }
 
@@ -64,7 +64,6 @@ main{
 }
 
 .mensaje { 
-    background-color: #c13722;
     border-radius: 10px;
     padding: 10px;
     margin: 10px;
@@ -74,7 +73,6 @@ main{
 }
 
 .mensaje.tuyo { 
-    background-color: #732115;
     margin-left: auto;         /* empuja el div a la derecha */
 }
 
@@ -96,4 +94,50 @@ form button:hover{
     font-style: italic;
     color: #c9c9c9;
     font-size: 13px;
+}
+
+.nombresParticipantes {
+    display: block;
+    color: white;
+    font-size: 0.8em;
+    word-wrap: break-word;
+}
+
+.mensaje.otro {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.infoUsuario {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+    width: 60px;
+    text-align: center;
+}
+
+.fotoUsuario {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.nombreUsuario {
+    font-size: 0.58em;
+    margin-top: 2px;
+    word-break: break-word;
+}
+
+.textoMensaje {
+    background-color: #c13722;
+    padding: 8px 12px;
+    border-radius: 12px;
+    max-width: 70%;
+}
+.mensaje.tuyo .textoMensaje {
+    background-color: #732115;
+    margin-left: auto;
 }

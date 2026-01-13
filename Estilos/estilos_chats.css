@@ -102,3 +102,20 @@ form label{
 form{
     margin: 30px;
 }
+
+#resultadosUsuarios{
+    color: white;
+    background-color: rgb(34, 34, 34);
+    margin: 5px;
+}
+
+.crearChat{
+    background-color: #E94B3C;
+    color: white;
+    margin-top: 15px;
+    border-radius: 10px;
+}
+
+.crearChat:hover{
+    background-color: #b63a2f;
+}

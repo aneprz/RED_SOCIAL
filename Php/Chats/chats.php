@@ -36,7 +36,33 @@ $sql->execute([
     "idUsu2" => $idUsu
 ]);
 
-$chats = $sql->fetchAll(PDO::FETCH_ASSOC);
+$chatsRaw = $sql->fetchAll(PDO::FETCH_ASSOC);
+
+// Filtrar duplicados por chat_id
+$chatsUnicos = [];
+$idsMostrados = [];
+
+foreach ($chatsRaw as $c) {
+    if (!in_array($c['chat_id'], $idsMostrados)) {
+        $idsMostrados[] = $c['chat_id'];
+        $chatsUnicos[] = $c;
+    }
+}
+
+$chats = $chatsUnicos;
+
+// Revisar si hay un chat recién accedido
+$chatReciente = $_GET['chat_id'] ?? null;
+
+if ($chatReciente) {
+    // Reordenar el array para que el chat reciente esté primero
+    usort($chats, function($a, $b) use ($chatReciente) {
+        if ($a['chat_id'] == $chatReciente) return -1;
+        if ($b['chat_id'] == $chatReciente) return 1;
+        return 0;
+    });
+}
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -62,7 +88,7 @@ $chats = $sql->fetchAll(PDO::FETCH_ASSOC);
     <?php
         if ($c['es_grupo']) {
             $nombreChat = $c['nombre_grupo'] ?: "Grupo sin nombre";
-            $fotoPerfil = '../../../Media/foto_default.png'; // grupo
+            $fotoPerfil = '../../../Media/foto_grupo_default.png'; // grupo
         } else {
             $nombreChat = $c['otro_usuario'] ?: "Usuario desconocido";
 
