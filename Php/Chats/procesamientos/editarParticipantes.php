@@ -21,5 +21,5 @@ foreach ($usuarios as $u_id) {
     ]);
 }
 
-header("Location: ../Chats/chat.php?chat_id=$chat_id");
+header("Location: ../chat.php?chat_id=$chat_id");
 exit;
