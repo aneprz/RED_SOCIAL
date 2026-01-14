@@ -19,7 +19,10 @@ include '../../BD/conexiones.php';
 <body>
     <div class="container d-flex justify-content-center my-5">
         <div class="card p-4" style="max-width: 400px; width: 100%;">
-            <h2 class="text-center mb-4">Registrarse como salsero</h2>
+            <div class="d-flex justify-content-center align-items-center m-3">
+                <img class="w-25 mx-2" src="../../Media/logo.png" alt="">
+                <h2>Registrarse como salsero</h2>
+            </div>
 
             <!-- Mensajes de error / éxito -->
             <?php
@@ -42,19 +45,23 @@ include '../../BD/conexiones.php';
 
             <form action="procesamientos/procesar_registro_sesion.php" method="post">
                 <div class="mb-3">
-                    <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control minusculas" placeholder="Nombre de usuario" required>
+                    <label for="nombre_usuario" class="form-label">Nombre de Usuario:</label>
+                    <input type="text" id="nombre_usuario" name="nombre_usuario" class="form-control minusculas" placeholder="tu.nombre" required>
                 </div>
 
                 <div class="mb-3">
-                    <input type="text" id="email" name="email" class="form-control" placeholder="Correo electrónico" required>
+                    <label for="email" class="form-label">Correo electrónico:</label>
+                   <input type="text" id="email" name="email" class="form-control" placeholder="tucorreo@gmail.com" required>
                 </div>
 
                 <div class="mb-3">
-                    <input placeholder="Contraseña" type="password" id="contraseña" name="contraseña" class="form-control" onclick="textoValidarContraseña()" required>
+                    <label for="contraseña" class="form-label">Contraseña:</label>
+                    <input type="password" id="contraseña" name="contraseña" class="form-control" onclick="textoValidarContraseña()" required>
                 </div>
 
                 <div class="mb-3">
-                    <input placeholder="Repetir contraseña" type="password" id="repetirContraseña" name="repetirContraseña" class="form-control" onclick="textoValidarContraseña()" required>
+                    <label for="repetirContraseña" class="form-label">Repetir contraseña:</label>
+                    <input type="password" id="repetirContraseña" name="repetirContraseña" class="form-control" onclick="textoValidarContraseña()" required>
                 </div>
                 
                 <!--Esto solo se muestra si se hace click en los inputs de contraseña-->

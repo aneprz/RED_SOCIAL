@@ -13,7 +13,10 @@
 <body>
     <div class="container d-flex justify-content-center my-5">
         <div class="card p-4" style="max-width: 400px; width: 100%;">
-            <h2 class="text-center mb-4">Inicio de Sesión</h2>
+            <div class="d-flex justify-content-center align-items-center m-3">
+                <img class="w-25 mx-2" src="../../Media/logo.png" alt="">
+                <h2>Iniciar sesión</h2>
+            </div>
 
             <form action="procesamientos/procesar_inicio_sesion.php" method="post">
                 <div class="mb-3">
