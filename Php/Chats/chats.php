@@ -102,15 +102,12 @@ if ($chatReciente) {
     <?php
         if ($c['es_grupo']) {
             $nombreChat = $c['nombre_grupo'] ?: "Grupo sin nombre";
-            $fotoPerfil = '../../../Media/foto_grupo_default.png'; // grupo
+            $fotoPerfil = '../../../Media/foto_grupo_default.png';
         } else {
             $nombreChat = $c['otro_usuario'] ?: "Usuario desconocido";
-
-            // Obtener la foto de perfil del otro usuario usando la función
-            // NOTA: necesitamos el ID del otro usuario
-            $fotoPerfil = (isset($c['foto_perfil']) && filter_var($c['foto_perfil'], FILTER_VALIDATE_URL)) 
-                          ? $c['foto_perfil'] 
-                          : '../../../Media/foto_default.png';
+            $fotoPerfil = !empty($c['foto_perfil'])
+                ? $c['foto_perfil']    // aquí está la ruta correcta que se guarda en la BD
+                : '../../../Media/foto_default.png';
         }
     ?>
     <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
