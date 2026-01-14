@@ -116,7 +116,7 @@ $result = $conexion->query($sql);
         <div class="grid-item">
             <?php
                 $ruta = "../Crear/uploads/" . $post['imagen_url'];
-                $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
+                $ext = strtolower(string: pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
             ?>
             <div class="media-wrapper">
                 <?php if (in_array($ext, ['mp4', 'webm'])): ?>
