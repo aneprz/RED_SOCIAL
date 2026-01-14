@@ -1,40 +1,50 @@
+/* Reset y body */
 body {
     font-family: Arial, sans-serif;
-    display: flex;
-    justify-content: center;
-    padding: 50px 20px;
-    min-height: 100vh;
-    margin-left: 250px;
+    margin: 0;
+    padding: 0;
     background-color: #F6E3DC !important;
 }
 
+/* Contenedor que ocupa toda la pantalla y centra el contenido */
+.reels-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 70px); /* Resta altura del navbar si es fijo */
+    padding-top: 70px; /* Ajusta si tu navbar es fijo */
+}
+
+/* Contenedor del video + controles */
 .reel-container {
     display: flex;
     align-items: center; /* Centra verticalmente */
     gap: 20px; /* Espacio entre video y controles */
-    width: 800px; /* Contenedor más ancho */
-    max-width: 90vw;
+    margin-left: 15em;
 }
 
+/* Contenedor del video */
 .reel-video-wrapper {
-    flex: 1;
-    height: 600px; /* Altura grande */
+    width: 400px;
+    height: 700px; /* Vertical */
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
+/* Video vertical centrado */
 .reel-video-wrapper video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    border-radius: 12px;
+    object-fit: cover; /* Mantiene proporción vertical */
 }
 
+/* Flechas a la derecha del video */
 .reel-controls {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 15px;
+    justify-content: center;
 }
 
 .reel-controls button {
@@ -52,6 +62,7 @@ body {
     background-color: #0073cc;
 }
 
+/* Responsive para móviles */
 @media (max-width: 900px) {
     .reel-container {
         flex-direction: column;
@@ -59,7 +70,7 @@ body {
 
     .reel-controls {
         flex-direction: row;
-        justify-content: center;
         margin-top: 15px;
+        gap: 10px;
     }
 }

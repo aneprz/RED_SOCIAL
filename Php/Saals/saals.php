@@ -38,28 +38,31 @@ if (!$reel) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Saals</title>
+    <title>Reels</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_saals.css">
 </head>
 <body>
 
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
 
-<div class="reel-container">
-    <div class="reel-video-wrapper">
-        <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay muted loop></video>
+<div class="reels-screen">
+
+    <div class="reel-container">
+        <div class="reel-video-wrapper">
+            <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay muted loop></video>
+        </div>
+
+        <div class="reel-controls">
+            <button onclick="anterior()">⬆</button>
+            <button onclick="siguiente()">⬇</button>
+        </div>
     </div>
 
-    <div class="reel-controls">
-        <button onclick="anterior()">⬆</button>
-        <button onclick="siguiente(<?= $reel['id'] ?>)">⬇</button>
-    </div>
 </div>
 
-
 <script>
-function siguiente(id) {
-    window.location.href = "procesarSaals.php?id=" + id;
+function siguiente() {
+    window.location.href = "saals.php";
 }
 
 function anterior() {
