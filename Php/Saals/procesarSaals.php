@@ -19,3 +19,4 @@ if ($reel_id > 0) {
 
 header("Location: saals.php");
 exit();
+?>

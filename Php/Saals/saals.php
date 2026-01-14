@@ -52,10 +52,15 @@ if (!$reel) {
             <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay muted loop></video>
         </div>
 
-        <div class="reel-controls">
-            <button onclick="anterior()">⬆</button>
-            <button onclick="siguiente()">⬇</button>
-        </div>
+    <div class="reel-controls">
+        <button onclick="anterior()">⬆</button>
+
+        <form id="siguienteForm" action="procesarSaals.php" method="get">
+            <input type="hidden" name="id" value="<?= $reel['id'] ?>">
+            <button type="submit">⬇</button>
+        </form>
+    </div>
+
     </div>
 
 </div>
