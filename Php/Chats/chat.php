@@ -33,18 +33,15 @@ $pdo->prepare("
     WHERE chat_id = :chat_id AND usuario_id != :yo
 ")->execute(['chat_id' => $chat_id, 'yo' => $idUsu]);
 
-// Participantes del grupo (id y username)
-$participantes = [];
-if ($chat['es_grupo']) {
-    $stmt = $pdo->prepare("
-        SELECT u.id, u.username
-        FROM usuarios_chat uc
-        JOIN usuarios u ON u.id = uc.usuario_id
-        WHERE uc.chat_id = :chat_id
-    ");
-    $stmt->execute(['chat_id' => $chat_id]);
-    $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+// 1️⃣ Obtener participantes del chat (grupo o privado)
+$stmt = $pdo->prepare("
+    SELECT u.id, u.username, u.foto_perfil
+    FROM usuarios_chat uc
+    JOIN usuarios u ON u.id = uc.usuario_id
+    WHERE uc.chat_id = :chat_id
+");
+$stmt->execute(['chat_id' => $chat_id]);
+$participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Todos los usuarios que sigues (para búsqueda)
 $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO::FETCH_ASSOC);
@@ -62,26 +59,37 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
 
 <main>
     <?php
-    if ($chat['es_grupo']) {
-        $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
-        $fotoPerfil = '../../../Media/foto_grupo_default.png';
-    } else {
-        $nombreChat = $mensajes[0]['username'] ?? "Usuario";
-        $fotoPerfil = !empty($mensajes[0]['foto_perfil']) ? $mensajes[0]['foto_perfil'] : '../../../Media/foto_default.png';
-    }
-    ?>
+        // 2️⃣ Determinar nombre y foto para encabezado
+        if ($chat['es_grupo']) {
+            $nombreChat = $chat['nombre_grupo'] ?: "Grupo sin nombre";
+            $fotoPerfil = '../../../Media/foto_grupo_default.png';
+        } else {
+            // Chat privado → buscar al otro usuario
+            $nombreChat = "Usuario";
+            $fotoPerfil = '../../../Media/foto_default.png';
 
+            foreach ($participantes as $p) {
+                if ($p['id'] != $idUsu) {
+                    $nombreChat = $p['username'];
+                    $fotoPerfil = !empty($p['foto_perfil'])
+                        ? $p['foto_perfil']
+                        : '../../../Media/foto_default.png';
+                    break;
+                }
+            }
+        }
+    ?>
     <div class="encabezado">
-        <a class="volver" href="chats.php">← Volver</a>
+        <a class="volver" href="chats.php"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="m9.55 12l7.35 7.35q.375.375.363.875t-.388.875t-.875.375t-.875-.375l-7.7-7.675q-.3-.3-.45-.675t-.15-.75t.15-.75t.45-.675l7.7-7.7q.375-.375.888-.363t.887.388t.375.875t-.375.875z"/></svg></a>
         <img src="<?= htmlspecialchars($fotoPerfil) ?>" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
         <div class="tituloIntegrantes">
             <h2><?= htmlspecialchars($nombreChat) ?></h2>
             <?php if ($chat['es_grupo'] && $participantes): ?>
-                <i><?= htmlspecialchars(implode(", ", array_column($participantes, 'username'))) ?></i>
+                <i style="width: 8px; color: #c9c9c9;"><?= htmlspecialchars(implode(", ", array_column($participantes, 'username'))) ?></i>
             <?php endif; ?>
         </div>
         <?php if ($chat['es_grupo']): ?>
-            <button id="btnConfigGrupo" class="btnConfig">⚙ Configuración</button>
+            <button id="btnConfigGrupo" class="btnConfig"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24"><path fill="currentColor" d="M10.825 22q-.675 0-1.162-.45t-.588-1.1L8.85 18.8q-.325-.125-.612-.3t-.563-.375l-1.55.65q-.625.275-1.25.05t-.975-.8l-1.175-2.05q-.35-.575-.2-1.225t.675-1.075l1.325-1Q4.5 12.5 4.5 12.337v-.675q0-.162.025-.337l-1.325-1Q2.675 9.9 2.525 9.25t.2-1.225L3.9 5.975q.35-.575.975-.8t1.25.05l1.55.65q.275-.2.575-.375t.6-.3l.225-1.65q.1-.65.588-1.1T10.825 2h2.35q.675 0 1.163.45t.587 1.1l.225 1.65q.325.125.613.3t.562.375l1.55-.65q.625-.275 1.25-.05t.975.8l1.175 2.05q.35.575.2 1.225t-.675 1.075l-1.325 1q.025.175.025.338v.674q0 .163-.05.338l1.325 1q.525.425.675 1.075t-.2 1.225l-1.2 2.05q-.35.575-.975.8t-1.25-.05l-1.5-.65q-.275.2-.575.375t-.6.3l-.225 1.65q-.1.65-.587 1.1t-1.163.45zm1.225-6.5q1.45 0 2.475-1.025T15.55 12t-1.025-2.475T12.05 8.5q-1.475 0-2.488 1.025T8.55 12t1.013 2.475T12.05 15.5"/></svg></button>
         <?php endif; ?>
     </div>
 
@@ -98,7 +106,14 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
                 <?php endif; ?>
                 <div class="textoMensaje">
                     <?= htmlspecialchars($m['texto']) ?><br>
-                    <small><?= $m['fecha'] ?></small>
+                    <small>
+                        <?= $m['fecha'] ?>
+                        <?php if ($esTuyo): ?>
+                            <span class="estadoLeido">
+                                <?= $m['leido'] ? '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275t-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7t-.7-.275t-.7.275zM12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg>' : '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"><path fill="currentColor" d="M12 22q-2.075 0-3.9-.788t-3.175-2.137T2.788 15.9T2 12t.788-3.9t2.137-3.175T8.1 2.788T12 2t3.9.788t3.175 2.137T21.213 8.1T22 12t-.788 3.9t-2.137 3.175t-3.175 2.138T12 22"/></svg>' ?>
+                            </span>
+                        <?php endif; ?>
+                    </small>
                 </div>
             </div>
         <?php endforeach; ?>
@@ -122,7 +137,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
             <form action="procesamientos/editarGrupo.php" method="post" enctype="multipart/form-data">
                 <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
                 <label>Nombre del grupo:</label>
-                <input type="text" name="nombre_grupo" value="<?= htmlspecialchars($chat['nombre_grupo']) ?>" required>
+                <input maxlength="40" type="text" name="nombre_grupo" value="<?= htmlspecialchars($chat['nombre_grupo']) ?>" required>
                 <button type="submit">Guardar cambios</button>
             </form>
 
@@ -140,7 +155,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
                         </span>
                     <?php endforeach; ?>
                 </div>
-                <button type="submit">Actualizar participantes</button>
+                <button type="submit" style="margin-top:5px;">Actualizar participantes</button>
             </form>
 
             <script>
@@ -203,6 +218,17 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
     <?php endif; ?>
 
     <script>
+
+        function scrollChatAlFinal() {
+            const chatMensajes = document.getElementById('chat-mensajes');
+            if (chatMensajes) {
+                chatMensajes.scrollTop = chatMensajes.scrollHeight;
+            }
+        }
+
+        // Llamar la función cuando cargue la página
+        window.addEventListener('load', scrollChatAlFinal);
+
         const btnConfig = document.getElementById('btnConfigGrupo');
         const modal = document.getElementById('modalConfigGrupo');
         const spanCerrar = document.querySelector('.cerrar');

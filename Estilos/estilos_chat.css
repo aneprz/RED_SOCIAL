@@ -29,6 +29,7 @@ main{
     display: flex;
     padding: 15px;
     background-color: rgb(21, 21, 21);
+    position: relative; /* necesario para que el botón se posicione relativo al encabezado */
 }
 
 .encabezado h2{
@@ -116,6 +117,10 @@ form button:hover{
     margin-right: 10px;
     width: 60px;
     text-align: center;
+    font-size: 11px;
+    word-wrap: break-word;   /* rompe palabras largas */
+    word-break: break-word;  /* soporte adicional */
+    white-space: normal;     /* permite saltos de línea */
 }
 
 .fotoUsuario {
@@ -158,18 +163,19 @@ form button:hover{
 }
 
 .btnConfig {
-    background-color: #444;
-    color: #fff;
+    background-color: rgb(21, 21, 21);
+    color: #E94B3C;
     border: none;
-    padding: 5px 10px;
-    border-radius: 5px;
     cursor: pointer;
-    font-size: 14px;
-    margin-left: 10px;
+
+    position: absolute; /* sacamos el botón del flujo normal */
+    top: 50%;           /* centrado vertical */
+    right: 50px;        /* a 20px del borde derecho */
+    transform: translateY(-50%); /* para centrar verticalmente exacto */
 }
 
 .btnConfig:hover {
-    background-color: #666;
+    color: #c03c30;
 }
 
 .modal {
