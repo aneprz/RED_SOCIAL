@@ -83,6 +83,7 @@ if ($chatReciente) {
 <head>
     <title>Mis Chats</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_chats.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
 <!--Barra de navegación-->

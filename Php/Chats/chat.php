@@ -53,6 +53,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
 <head>
     <title>Chat</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_chat.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
 <?php include __DIR__ . '../../../Php/Templates/navBar.php';?>

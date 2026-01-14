@@ -26,6 +26,7 @@ $token = $_SESSION['nuevo_chat_token'];
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nuevo chat</title>
 <link rel="stylesheet" href="../../../Estilos/estilos_chats.css">
+<link rel="icon" type="image/png" href="/Media/logo.png">
 <style>
 .usuario-opcion { cursor: pointer; padding: 5px; }
 .usuario-opcion:hover { background-color: #eee; }
