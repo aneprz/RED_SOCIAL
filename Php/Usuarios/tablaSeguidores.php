@@ -22,7 +22,7 @@ $id = intval($_SESSION['id']);
         <tbody>
             <?php
             include '../../BD/conexiones.php';
-            
+
             $query = "SELECT u.foto_perfil, u.username, u.id 
                       FROM usuarios u
                       JOIN seguidores s ON u.id = s.seguidor_id
@@ -32,28 +32,25 @@ $id = intval($_SESSION['id']);
             if ($result && mysqli_num_rows($result) > 0) {
                 while ($row = mysqli_fetch_assoc($result)) {
                     $usuario_id = intval($row['id']);
-                    $check = "SELECT 1 FROM seguidores WHERE seguidor_id = $id AND seguido_id = $usuario_id";
-                    $res_check = mysqli_query($conexion, $check);
-                    $accion = (mysqli_num_rows($res_check) > 0) ? 'suprimir' : 'seguir';
-                    $texto_boton = ($accion === 'suprimir') ? 'Suprimir' : 'Seguir';
 
                     echo "<tr>";
                     echo "<td>
                             <form action='../Busqueda/usuarioAjeno.php' method='POST' style='display:inline;'>
-                                <input type='hidden' name='id' value='" . intval($row['id']) . "'>
+                                <input type='hidden' name='id' value='$usuario_id'>
                                 <button type='submit' style='border:none; background:none; padding:0; cursor:pointer;'>
-                                    <img src='" . htmlspecialchars($row['foto_perfil']) . "' width='50' alt='Foto de perfil'>
+                                    <img src='" . htmlspecialchars($row['foto_perfil']) . "' width='50'>
                                 </button>
                             </form>
-                        </td>";
+                          </td>";
 
                     echo "<td>" . htmlspecialchars($row['username']) . "</td>";
+
                     echo "<td>
                             <form method='post' action='procesarSeguidores.php'>
                                 <input type='hidden' name='id_usuario' value='$usuario_id'>
-                                <input type='hidden' name='accion' value='$accion'>
+                                <input type='hidden' name='accion' value='quitar'>
                                 <input type='hidden' name='pagina_origen' value='" . basename($_SERVER['PHP_SELF']) . "'>
-                                <button type='submit'>$texto_boton</button>
+                                <button type='submit'>Quitar</button>
                             </form>
                           </td>";
                     echo "</tr>";
