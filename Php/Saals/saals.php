@@ -27,7 +27,10 @@ $result = mysqli_query($conexion, $query);
 $reel = mysqli_fetch_assoc($result);
 
 if (!$reel) {
-    echo "No hay más reels disponibles.";
+    echo "<script>
+            alert('No hay más saals disponibles.');
+            window.location.href = '../Usuarios/perfil.php';
+          </script>";
     exit();
 }
 ?>
@@ -42,16 +45,17 @@ if (!$reel) {
 
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
 
-<div class="tabla-seguidores reel-box">
-    <div class="reel-video-container">
+<div class="reel-container">
+    <div class="reel-video-wrapper">
         <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay muted loop></video>
+    </div>
 
-        <div class="reel-controls">
-            <button onclick="anterior()">⬆</button>
-            <button onclick="siguiente(<?= $reel['id'] ?>)">⬇</button>
-        </div>
+    <div class="reel-controls">
+        <button onclick="anterior()">⬆</button>
+        <button onclick="siguiente(<?= $reel['id'] ?>)">⬇</button>
     </div>
 </div>
+
 
 <script>
 function siguiente(id) {

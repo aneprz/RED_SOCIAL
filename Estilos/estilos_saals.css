@@ -8,34 +8,30 @@ body {
     background-color: #F6E3DC !important;
 }
 
-.tabla-seguidores {
-    width: 400px;
-    background-color: #fff;
-    border: 1px solid #dbdbdb;
-    border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+.reel-container {
+    display: flex;
+    align-items: center; /* Centra verticalmente */
+    gap: 20px; /* Espacio entre video y controles */
+    width: 800px; /* Contenedor más ancho */
+    max-width: 90vw;
 }
 
-.reel-video-container {
-    position: relative;
-    width: 100%;
-    height: 600px;
+.reel-video-wrapper {
+    flex: 1;
+    height: 600px; /* Altura grande */
     border-radius: 12px;
     overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-.reel-video-container video {
+.reel-video-wrapper video {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    border-radius: 12px;
 }
 
 .reel-controls {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
     display: flex;
     flex-direction: column;
     gap: 12px;
@@ -45,12 +41,25 @@ body {
     background-color: #0095f6;
     color: white;
     border: none;
-    font-size: 22px;
-    padding: 10px;
+    font-size: 24px;
+    padding: 15px;
     border-radius: 50%;
     cursor: pointer;
+    transition: background-color 0.2s;
 }
 
 .reel-controls button:hover {
     background-color: #0073cc;
+}
+
+@media (max-width: 900px) {
+    .reel-container {
+        flex-direction: column;
+    }
+
+    .reel-controls {
+        flex-direction: row;
+        justify-content: center;
+        margin-top: 15px;
+    }
 }
