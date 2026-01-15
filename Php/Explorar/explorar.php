@@ -95,6 +95,7 @@ document.querySelectorAll('.hover-video').forEach(v => {
 });
 
 let pollingInterval = null;
+let likesInterval = null;
 let lastCommentId = 0;
 let currentPostId = null;
 let likedByUser = false;
@@ -176,7 +177,9 @@ function openModal(postId){
         document.getElementById('postModal').style.display = 'flex';
 
         if(pollingInterval) clearInterval(pollingInterval);
+        if(likesInterval) clearInterval(likesInterval);
 
+        // 🔄 Polling comentarios
         pollingInterval = setInterval(() => {
             fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
@@ -189,6 +192,16 @@ function openModal(postId){
                 });
             });
         }, 3000);
+
+        // 🔄 Polling likes (TIEMPO REAL)
+        likesInterval = setInterval(() => {
+            fetch(`procesamiento/get_likes.php?post_id=${postId}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('modalLikes')
+                    .innerHTML = '🌶️ ' + data.total + ' picantes';
+            });
+        }, 2000);
     });
 }
 
@@ -211,9 +224,14 @@ function toggleLike(){
 
 function closeModal(){
     document.getElementById('postModal').style.display = 'none';
+
     if(pollingInterval){
         clearInterval(pollingInterval);
         pollingInterval = null;
+    }
+    if(likesInterval){
+        clearInterval(likesInterval);
+        likesInterval = null;
     }
 }
 
