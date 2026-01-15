@@ -82,7 +82,7 @@ document.querySelectorAll('.hover-video').forEach(v => {
     v.addEventListener('mouseleave', ()=>{v.pause(); v.currentTime=0;});
 });
 
-// Variable global para último comentario
+let pollingInterval = null;
 let lastCommentId = 0;
 
 // Abrir modal
@@ -116,23 +116,48 @@ function openModal(postId) {
         // Insertar comentarios existentes
         data.comentarios.forEach(c=>{
             comentariosDiv.innerHTML += `
-                <div class="comment">
+                <div class="comment" data-id="${c.id}">
                     <span class="comment-user">${c.usuario}</span>:
                     <span class="comment-text">${c.texto}</span>
                 </div>`;
         });
 
-        // Actualizar último comentario
         lastCommentId = data.comentarios.length > 0 ? data.comentarios[data.comentarios.length - 1].id : 0;
 
         document.getElementById('modalPostId').value = postId;
         modal.style.display = 'flex';
+
+        // Detener cualquier polling previo
+        if(pollingInterval) clearInterval(pollingInterval);
+
+        // Iniciar polling de comentarios
+        pollingInterval = setInterval(() => {
+            fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
+            .then(res => res.json())
+            .then(comments => {
+                const comentariosDiv = document.getElementById('modalComentarios');
+                comments.forEach(c => {
+                    if(!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)){
+                        comentariosDiv.innerHTML += `
+                            <div class="comment" data-id="${c.id}">
+                                <span class="comment-user">${c.usuario}</span>:
+                                <span class="comment-text">${c.texto}</span>
+                            </div>`;
+                        lastCommentId = c.id;
+                    }
+                });
+            });
+        }, 3000);
     });
 }
 
 // Cerrar modal
 function closeModal(){
     document.getElementById('postModal').style.display = 'none';
+    if(pollingInterval){
+        clearInterval(pollingInterval);
+        pollingInterval = null;
+    }
 }
 
 // Cerrar al hacer click fuera
@@ -144,10 +169,9 @@ document.getElementById('postModal').addEventListener('click', e => {
 function submitComment(e){
     e.preventDefault();
 
-    const texto = document.getElementById('commentText').value;
+    const texto = document.getElementById('commentText').value.trim();
     const post_id = document.getElementById('modalPostId').value;
-
-    if(!texto.trim()) return;
+    if(!texto) return;
 
     fetch('procesamiento/add_comment.php',{
         method:'POST',
@@ -159,42 +183,16 @@ function submitComment(e){
         if(data.success){
             const comentariosDiv = document.getElementById('modalComentarios');
             comentariosDiv.innerHTML += `
-                <div class="comment">
+                <div class="comment" data-id="${data.comment_id}">
                     <span class="comment-user">${data.usuario}</span>:
                     <span class="comment-text">${texto}</span>
                 </div>`;
             document.getElementById('commentText').value='';
-
-            // Actualizar lastCommentId para evitar duplicados
-            lastCommentId = Math.max(lastCommentId, data.comment_id || lastCommentId + 1);
+            lastCommentId = data.comment_id;
         }
     });
 }
-
-// Polling: traer comentarios nuevos cada 3 segundos
-setInterval(() => {
-  const modal = document.getElementById('postModal');
-  if(modal.style.display !== 'flex') return; // solo si el modal está abierto
-
-  const postId = document.getElementById('modalPostId').value;
-  if(!postId) return;
-
-  fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
-    .then(res => res.json())
-    .then(comments => {
-      const comentariosDiv = document.getElementById('modalComentarios');
-      comments.forEach(c => {
-        comentariosDiv.innerHTML += `
-          <div class="comment">
-            <span class="comment-user">${c.usuario}</span>:
-            <span class="comment-text">${c.texto}</span>
-          </div>`;
-        lastCommentId = c.id; // actualizar último id
-      });
-    });
-}, 3000);
 </script>
-
 
 <?php include __DIR__ . '/../Templates/footer.php'; ?>
 </body>
