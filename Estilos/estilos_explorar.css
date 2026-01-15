@@ -207,3 +207,28 @@ body {
     font-weight: bold;
 }
 
+/* ===== USUARIO CREADOR DEL POST ===== */
+
+.post-owner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999; /* más oscuro */
+}
+
+
+.post-user {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* ===== META POST (LIKES + FECHA) ===== */
+
+.post-meta {
+    border-top: 1px solid #ddd;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+}

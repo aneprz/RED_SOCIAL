@@ -6,11 +6,19 @@ require '../../../BD/conexiones.php';
 $post_id = intval($_GET['id'] ?? 0);
 
 $res = $conexion->query("
-    SELECT id, imagen_url, fecha_publicacion,
-           (SELECT COUNT(*) FROM likes WHERE post_id=$post_id) AS total_likes
-    FROM publicaciones
-    WHERE id=$post_id
+    SELECT 
+        p.id,
+        p.imagen_url,
+        p.fecha_publicacion,
+        u.id AS usuario_id,
+        u.username AS usuario,
+        u.foto_perfil,
+        (SELECT COUNT(*) FROM likes WHERE post_id = $post_id) AS total_likes
+    FROM publicaciones p
+    JOIN usuarios u ON p.usuario_id = u.id
+    WHERE p.id = $post_id
 ");
+
 $post = $res->fetch_assoc();
 
 /* ===== COMENTARIOS CON FOTO PERFIL ===== */

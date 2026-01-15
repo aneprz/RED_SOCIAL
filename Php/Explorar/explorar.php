@@ -59,24 +59,32 @@ $result = $conexion->query($sql);
     <div class="modal-left" id="modalMedia"></div>
 
     <div class="modal-right">
-      <div class="info">
+
+      <!-- USUARIO CREADOR -->
+      <div class="post-owner" id="modalOwner"></div>
+
+      <!-- COMENTARIOS -->
+      <div id="modalComentarios"></div>
+
+      <!-- LIKES + FECHA -->
+      <div class="post-meta">
         <div id="modalLikes"></div>
         <div id="modalFecha"></div>
       </div>
 
-      <div id="modalComentarios"></div>
-
+      <!-- FORM COMENTAR -->
       <form id="commentForm" onsubmit="return submitComment(event)">
         <input type="hidden" id="modalPostId">
         <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
         <button type="submit">Comentar</button>
       </form>
+
     </div>
   </div>
 </div>
 
 <script>
-// Hover videos (solo grid)
+// Hover videos
 document.querySelectorAll('.hover-video').forEach(v => {
     v.addEventListener('mouseenter', ()=>v.play());
     v.addEventListener('mouseleave', ()=>{v.pause(); v.currentTime=0;});
@@ -102,7 +110,6 @@ function renderComment(c){
     </div>`;
 }
 
-// Abrir modal
 function openModal(postId) {
     fetch('procesamiento/get_post.php?id='+postId)
     .then(res => res.json())
@@ -119,22 +126,30 @@ function openModal(postId) {
             video.controls = true;
             video.autoplay = true;
             video.muted = true;
-            video.style.maxWidth = '100%';
-            video.style.maxHeight = '100%';
+            video.loop = true; // 🔁 LOOP INFINITO
 
-            video.addEventListener('canplay', ()=>video.play());
-            video.addEventListener('ended', ()=>video.play());
-            modal.addEventListener('click', ()=>{ video.muted = false; }, { once: true });
+            video.addEventListener('canplay', () => video.play());
 
             mediaDiv.appendChild(video);
-        } else {
+        }else {
             const img = document.createElement('img');
             img.src = "../Crear/uploads/"+data.imagen_url;
             mediaDiv.appendChild(img);
         }
 
-        document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' picantes';
-        document.getElementById('modalFecha').innerHTML = '📅 ' + data.fecha_publicacion;
+        // USUARIO CREADOR
+        document.getElementById('modalOwner').innerHTML = `
+            <form action="../Busqueda/usuarioAjeno.php" method="POST" class="comment-avatar-form">
+                <input type="hidden" name="id" value="${data.usuario_id}">
+                <button type="submit">
+                    <img src="${data.foto_perfil}" alt="perfil">
+                </button>
+            </form>
+            <span class="post-user">${data.usuario}</span>
+        `;
+
+        document.getElementById('modalLikes').innerHTML = data.total_likes + ' picantes';
+        document.getElementById('modalFecha').innerHTML = data.fecha_publicacion;
 
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
@@ -167,7 +182,6 @@ function openModal(postId) {
     });
 }
 
-// Cerrar modal
 function closeModal(){
     const modal = document.getElementById('postModal');
     modal.style.display = 'none';
@@ -177,12 +191,10 @@ function closeModal(){
     }
 }
 
-// Click fuera
 document.getElementById('postModal').addEventListener('click', e => {
     if (e.target.id === 'postModal') closeModal();
 });
 
-// Enviar comentario
 function submitComment(e){
     e.preventDefault();
 
@@ -198,8 +210,7 @@ function submitComment(e){
     .then(res=>res.json())
     .then(data=>{
         if(data.success){
-            const comentariosDiv = document.getElementById('modalComentarios');
-            comentariosDiv.innerHTML += renderComment({
+            document.getElementById('modalComentarios').innerHTML += renderComment({
                 id: data.comment_id,
                 usuario: data.usuario,
                 usuario_id: data.usuario_id,
