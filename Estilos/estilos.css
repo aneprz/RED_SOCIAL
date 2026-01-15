@@ -104,8 +104,8 @@ footer {
 }
 
 .btnMeGusta img {
-    width: 24px;  /* ancho deseado */
-    height: 24px; /* alto deseado */
+    width: 28px;  /* ancho deseado */
+    height: 28px; /* alto deseado */
     object-fit: contain; /* mantiene proporción */
 }
 
