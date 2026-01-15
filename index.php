@@ -129,24 +129,29 @@ if (empty($ids_sigo)) {
 </div>
 
 <!-- MODAL PUBLICACIÓN -->
-<div class="post-modal" id="postModal" style="display:none;">
-    <span class="close-modal" onclick="closeModal()">&times;</span>
-    <div class="modal-content">
-        <div class="modal-left" id="modalMedia"></div>
-        <div class="modal-right">
-            <div class="info">
-                <div id="modalLikes"></div>
-                <div id="modalFecha"></div>
-            </div>
-            <div id="modalComentarios"></div>
-            <form id="commentForm" onsubmit="return submitComment(event)">
-                <input type="hidden" id="modalPostId">
-                <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
-                <button type="submit">Comentar</button>
-            </form>
-        </div>
+<div class="explore-modal" id="postModal">
+  <span class="close-modal" onclick="closeModal()">&times;</span>
+
+  <div class="explore-modal-content">
+    <div class="modal-left" id="modalMedia"></div>
+
+    <div class="modal-right">
+      <div class="info">
+        <div id="modalLikes"></div>
+        <div id="modalFecha"></div>
+      </div>
+
+      <div id="modalComentarios"></div>
+
+      <form id="commentForm" onsubmit="return submitComment(event)">
+        <input type="hidden" id="modalPostId">
+        <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
+        <button type="submit">Comentar</button>
+      </form>
     </div>
+  </div>
 </div>
+
 
 <?php include __DIR__ . '/Php/Templates/footer.php'; ?>
 
