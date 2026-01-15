@@ -76,7 +76,7 @@ $result = $conexion->query($sql);
 </div>
 
 <script>
-// Hover videos (solo para grid)
+// Hover videos (solo grid)
 document.querySelectorAll('.hover-video').forEach(v => {
     v.addEventListener('mouseenter', ()=>v.play());
     v.addEventListener('mouseleave', ()=>{v.pause(); v.currentTime=0;});
@@ -84,6 +84,23 @@ document.querySelectorAll('.hover-video').forEach(v => {
 
 let pollingInterval = null;
 let lastCommentId = 0;
+
+function renderComment(c){
+    return `
+    <div class="comment" data-id="${c.id}">
+        <form action="../Busqueda/usuarioAjeno.php" method="POST" class="comment-avatar-form">
+            <input type="hidden" name="id" value="${c.usuario_id}">
+            <button type="submit">
+                <img src="${c.foto_perfil}" alt="perfil">
+            </button>
+        </form>
+
+        <div class="comment-content">
+            <span class="comment-user">${c.usuario}</span>
+            <span class="comment-text">${c.texto}</span>
+        </div>
+    </div>`;
+}
 
 // Abrir modal
 function openModal(postId) {
@@ -101,17 +118,12 @@ function openModal(postId) {
             video.src = "../Crear/uploads/"+data.imagen_url;
             video.controls = true;
             video.autoplay = true;
-            video.muted = true; // inicial muted para permitir autoplay
+            video.muted = true;
             video.style.maxWidth = '100%';
             video.style.maxHeight = '100%';
-            
-            // Reproducir al cargar
-            video.addEventListener('canplay', ()=>video.play());
-            
-            // Reinicio automático al terminar
-            video.addEventListener('ended', ()=>video.play());
 
-            // Al interactuar con modal, quitar mute para sonido
+            video.addEventListener('canplay', ()=>video.play());
+            video.addEventListener('ended', ()=>video.play());
             modal.addEventListener('click', ()=>{ video.muted = false; }, { once: true });
 
             mediaDiv.appendChild(video);
@@ -127,38 +139,27 @@ function openModal(postId) {
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
 
-        // Insertar comentarios existentes
         data.comentarios.forEach(c=>{
-            comentariosDiv.innerHTML += `
-                <div class="comment" data-id="${c.id}">
-                    <span class="comment-user">${c.usuario}</span>:
-                    <span class="comment-text">${c.texto}</span>
-                </div>`;
+            comentariosDiv.innerHTML += renderComment(c);
         });
 
-        // Inicializar lastCommentId para este post
-        lastCommentId = data.comentarios.length > 0 ? data.comentarios[data.comentarios.length - 1].id : 0;
+        lastCommentId = data.comentarios.length
+            ? data.comentarios[data.comentarios.length - 1].id
+            : 0;
 
         document.getElementById('modalPostId').value = postId;
         modal.style.display = 'flex';
 
-        // Detener polling previo antes de iniciar uno nuevo
         if(pollingInterval) clearInterval(pollingInterval);
 
-        // Iniciar polling
         pollingInterval = setInterval(() => {
             fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
             .then(comments => {
-                const comentariosDiv = document.getElementById('modalComentarios');
                 comments.forEach(c => {
                     if(!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)){
-                        comentariosDiv.innerHTML += `
-                            <div class="comment" data-id="${c.id}">
-                                <span class="comment-user">${c.usuario}</span>:
-                                <span class="comment-text">${c.texto}</span>
-                            </div>`;
-                        lastCommentId = c.id; // actualizar último id
+                        comentariosDiv.innerHTML += renderComment(c);
+                        lastCommentId = c.id;
                     }
                 });
             });
@@ -176,7 +177,7 @@ function closeModal(){
     }
 }
 
-// Cerrar al click fuera
+// Click fuera
 document.getElementById('postModal').addEventListener('click', e => {
     if (e.target.id === 'postModal') closeModal();
 });
@@ -198,11 +199,13 @@ function submitComment(e){
     .then(data=>{
         if(data.success){
             const comentariosDiv = document.getElementById('modalComentarios');
-            comentariosDiv.innerHTML += `
-                <div class="comment" data-id="${data.comment_id}">
-                    <span class="comment-user">${data.usuario}</span>:
-                    <span class="comment-text">${texto}</span>
-                </div>`;
+            comentariosDiv.innerHTML += renderComment({
+                id: data.comment_id,
+                usuario: data.usuario,
+                usuario_id: data.usuario_id,
+                foto_perfil: data.foto_perfil,
+                texto: texto
+            });
             document.getElementById('commentText').value='';
             lastCommentId = data.comment_id;
         }
