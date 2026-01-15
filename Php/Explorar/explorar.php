@@ -82,6 +82,9 @@ document.querySelectorAll('.hover-video').forEach(v => {
     v.addEventListener('mouseleave', ()=>{v.pause(); v.currentTime=0;});
 });
 
+// Variable global para último comentario
+let lastCommentId = 0;
+
 // Abrir modal
 function openModal(postId) {
     fetch('procesamiento/get_post.php?id='+postId)
@@ -92,7 +95,6 @@ function openModal(postId) {
         mediaDiv.innerHTML = '';
 
         const ext = data.imagen_url.split('.').pop().toLowerCase();
-
         if(['mp4','webm'].includes(ext)){
             const video = document.createElement('video');
             video.src = "../Crear/uploads/"+data.imagen_url;
@@ -111,6 +113,7 @@ function openModal(postId) {
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
 
+        // Insertar comentarios existentes
         data.comentarios.forEach(c=>{
             comentariosDiv.innerHTML += `
                 <div class="comment">
@@ -118,6 +121,9 @@ function openModal(postId) {
                     <span class="comment-text">${c.texto}</span>
                 </div>`;
         });
+
+        // Actualizar último comentario
+        lastCommentId = data.comentarios.length > 0 ? data.comentarios[data.comentarios.length - 1].id : 0;
 
         document.getElementById('modalPostId').value = postId;
         modal.style.display = 'flex';
@@ -129,12 +135,19 @@ function closeModal(){
     document.getElementById('postModal').style.display = 'none';
 }
 
+// Cerrar al hacer click fuera
+document.getElementById('postModal').addEventListener('click', e => {
+    if (e.target.id === 'postModal') closeModal();
+});
+
 // Enviar comentario
 function submitComment(e){
     e.preventDefault();
 
     const texto = document.getElementById('commentText').value;
     const post_id = document.getElementById('modalPostId').value;
+
+    if(!texto.trim()) return;
 
     fetch('procesamiento/add_comment.php',{
         method:'POST',
@@ -144,44 +157,44 @@ function submitComment(e){
     .then(res=>res.json())
     .then(data=>{
         if(data.success){
-            document.getElementById('modalComentarios').innerHTML += `
+            const comentariosDiv = document.getElementById('modalComentarios');
+            comentariosDiv.innerHTML += `
                 <div class="comment">
                     <span class="comment-user">${data.usuario}</span>:
                     <span class="comment-text">${texto}</span>
                 </div>`;
             document.getElementById('commentText').value='';
+
+            // Actualizar lastCommentId para evitar duplicados
+            lastCommentId = Math.max(lastCommentId, data.comment_id || lastCommentId + 1);
         }
     });
 }
 
-// Cerrar al hacer click fuera
-document.getElementById('postModal').addEventListener('click', e => {
-    if (e.target.id === 'postModal') closeModal();
-});
-
-// AJax se recarga sin recargar
-let lastCommentId = 0;
-lastCommentId = data.comentarios.at(-1)?.id || 0;
-
+// Polling: traer comentarios nuevos cada 3 segundos
 setInterval(() => {
+  const modal = document.getElementById('postModal');
+  if(modal.style.display !== 'flex') return; // solo si el modal está abierto
+
   const postId = document.getElementById('modalPostId').value;
   if(!postId) return;
 
   fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
     .then(res => res.json())
     .then(comments => {
+      const comentariosDiv = document.getElementById('modalComentarios');
       comments.forEach(c => {
-        document.getElementById('modalComentarios').innerHTML += `
+        comentariosDiv.innerHTML += `
           <div class="comment">
             <span class="comment-user">${c.usuario}</span>:
             <span class="comment-text">${c.texto}</span>
           </div>`;
-        lastCommentId = c.id;
+        lastCommentId = c.id; // actualizar último id
       });
     });
 }, 3000);
-
 </script>
+
 
 <?php include __DIR__ . '/../Templates/footer.php'; ?>
 </body>
