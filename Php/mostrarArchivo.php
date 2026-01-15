@@ -1,52 +1,30 @@
 <?php
-// mostrar_archivo.php
-
-// Revisamos que venga el parámetro 'f'
 if (!isset($_GET['f']) || empty($_GET['f'])) {
     http_response_code(400);
-    echo "Archivo no especificado";
     exit;
 }
 
-$archivo = basename($_GET['f']); // evitar rutas maliciosas
-$ruta = __DIR__ . '/../Crear/uploads/' . $archivo; // ruta real al archivo
+$archivo = str_replace(['..', '\\'], '', $_GET['f']);
 
-// Verificamos que el archivo exista
-if (!file_exists($ruta)) {
+$baseDir = realpath(__DIR__ . '/../Crear/uploads');
+$ruta = realpath($baseDir . '/' . $archivo);
+
+if ($ruta === false || strpos($ruta, $baseDir) !== 0 || !file_exists($ruta)) {
     http_response_code(404);
-    echo "Archivo no encontrado";
     exit;
 }
 
-// Detectamos el tipo MIME
-$ext = strtolower(pathinfo($archivo, PATHINFO_EXTENSION));
-switch ($ext) {
-    case 'jpg':
-    case 'jpeg':
-        $tipo = 'image/jpeg';
-        break;
-    case 'png':
-        $tipo = 'image/png';
-        break;
-    case 'gif':
-        $tipo = 'image/gif';
-        break;
-    case 'mp4':
-        $tipo = 'video/mp4';
-        break;
-    case 'webm':
-        $tipo = 'video/webm';
-        break;
-    default:
-        $tipo = 'application/octet-stream';
-        break;
-}
+$ext = strtolower(pathinfo($ruta, PATHINFO_EXTENSION));
+$mime = [
+    'jpg' => 'image/jpeg',
+    'jpeg'=> 'image/jpeg',
+    'png' => 'image/png',
+    'gif' => 'image/gif',
+    'mp4' => 'video/mp4',
+    'webm'=> 'video/webm',
+][$ext] ?? 'application/octet-stream';
 
-// Cabeceras para que el navegador interprete el archivo
-header('Content-Type: ' . $tipo);
-header('Content-Length: ' . filesize($ruta));
-header('Cache-Control: max-age=3600');
-
-// Leemos y enviamos el archivo
+header("Content-Type: $mime");
+header("Content-Length: " . filesize($ruta));
 readfile($ruta);
 exit;
