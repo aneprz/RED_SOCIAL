@@ -94,8 +94,8 @@ if (empty($ids_sigo)) {
                     <?php endif; ?>
 
                     <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"
-                        style="margin-top:10px; padding:5px 10px; border:none; background:#FF6B6B; color:white; border-radius:5px; cursor:pointer;">
-                        Ver más
+                        style="margin-top:10px; padding:5px 10px; border:none;color:rgb(128, 128, 128); border-radius:5px; cursor:pointer;">
+                        Comentar
                     </button>
                 </div>
             <?php endforeach; ?>
@@ -161,12 +161,11 @@ videos.forEach(video=>{
     video.addEventListener('mouseenter',()=>video.play());
     video.addEventListener('mouseleave',()=>{video.pause(); video.currentTime=0;});
 });
-
 let pollingInterval = null;
 let lastCommentId = 0;
 
-function openModal(postId){
-    fetch('Php/Index/get_post.php?id='+postId)
+function openModal(postId) {
+    fetch('Php/Index/get_post.php?id=' + postId)
     .then(res => res.json())
     .then(data => {
         if(data.error){
@@ -176,8 +175,9 @@ function openModal(postId){
 
         const modal = document.getElementById('postModal');
         const mediaDiv = document.getElementById('modalMedia');
-        mediaDiv.innerHTML = '';
+        mediaDiv.innerHTML = ''; // limpiar contenido previo
 
+        // --- IMAGEN O VIDEO ---
         const ext = data.imagen_url.split('.').pop().toLowerCase();
         const mediaPath = "/Php/Crear/uploads/" + data.imagen_url;
 
@@ -189,44 +189,77 @@ function openModal(postId){
             video.muted = true;
             video.style.maxWidth = '100%';
             video.style.maxHeight = '100%';
+            video.style.objectFit = 'contain';
+
+            // reproducir automáticamente
+            video.addEventListener('canplay', () => video.play());
+
+            // reiniciar al terminar
+            video.addEventListener('ended', () => video.play());
+
             mediaDiv.appendChild(video);
         } else {
             const img = document.createElement('img');
             img.src = mediaPath;
-            img.style.width = '100%';
-            img.style.borderRadius = '8px';
+            img.style.maxWidth = '100%';
+            img.style.maxHeight = '100%';
+            img.style.objectFit = 'contain';
             mediaDiv.appendChild(img);
         }
 
+        // --- INFO DEL POST ---
         document.getElementById('modalLikes').innerText = '🌶️ ' + data.sals + ' picantes';
         document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
 
+        // --- COMENTARIOS EXISTENTES ---
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
-        data.comentarios.forEach(c=>{
-            comentariosDiv.innerHTML += `<div class="comment" data-id="${c.id}"><strong>${c.usuario}</strong>: ${c.texto}</div>`;
+
+        data.comentarios.forEach(c => {
+            const div = document.createElement('div');
+            div.classList.add('comment');
+            div.dataset.id = c.id;
+            div.innerHTML = `<span class="comment-user">${c.usuario}</span>: <span class="comment-text">${c.texto}</span>`;
+            comentariosDiv.appendChild(div);
         });
 
-        lastCommentId = data.comentarios.length ? data.comentarios[data.comentarios.length-1].id : 0;
+        // último comentario
+        lastCommentId = data.comentarios.length ? data.comentarios[data.comentarios.length - 1].id : 0;
+
+        // guardar postId en hidden
         document.getElementById('modalPostId').value = postId;
 
+        // mostrar modal
         modal.style.display = 'flex';
 
+        // hacer scroll al último comentario
+        comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
+
+        // --- POLLING DE NUEVOS COMENTARIOS ---
         if(pollingInterval) clearInterval(pollingInterval);
-        pollingInterval = setInterval(()=>{
+
+        pollingInterval = setInterval(() => {
             fetch(`Php/Explorar/Procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
             .then(comments => {
                 comments.forEach(c => {
                     if(!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)){
-                        comentariosDiv.innerHTML += `<div class="comment" data-id="${c.id}"><strong>${c.usuario}</strong>: ${c.texto}</div>`;
+                        const div = document.createElement('div');
+                        div.classList.add('comment');
+                        div.dataset.id = c.id;
+                        div.innerHTML = `<span class="comment-user">${c.usuario}</span>: <span class="comment-text">${c.texto}</span>`;
+                        comentariosDiv.appendChild(div);
                         lastCommentId = c.id;
+
+                        // scroll automático
+                        comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
                     }
                 });
             });
         }, 3000);
+
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error('Error al cargar el post:', err));
 }
 
 function closeModal(){
@@ -241,22 +274,42 @@ document.getElementById('postModal').addEventListener('click', e=>{
 
 function submitComment(e){
     e.preventDefault();
-    const texto=document.getElementById('commentText').value.trim();
-    const post_id=document.getElementById('modalPostId').value;
+
+    const texto = document.getElementById('commentText').value.trim();
+    const post_id = document.getElementById('modalPostId').value;
     if(!texto) return;
 
-    fetch('Php/Crear/procesamiento/add_comment.php',{
+    fetch('Php/Index/add_comment.php',{
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body:'post_id='+post_id+'&texto='+encodeURIComponent(texto)
-    }).then(res=>res.json()).then(data=>{
+    })
+    .then(res=>res.json())
+    .then(data=>{
         if(data.success){
             const comentariosDiv = document.getElementById('modalComentarios');
-            comentariosDiv.innerHTML+=`<div class="comment" data-id="${data.comment_id}"><span class="comment-user">${data.usuario}</span>: <span class="comment-text">${texto}</span></div>`;
-            document.getElementById('commentText').value='';
-            lastCommentId=data.comment_id;
+            
+            // Crear nuevo div para comentario
+            const div = document.createElement('div');
+            div.classList.add('comment');
+            div.dataset.id = data.comment_id;
+            div.innerHTML = `<span class="comment-user">${data.usuario}</span>: <span class="comment-text">${texto}</span>`;
+            
+            comentariosDiv.appendChild(div);
+            
+            // Limpiar input
+            document.getElementById('commentText').value = '';
+
+            // Scroll hacia abajo para ver el nuevo comentario
+            comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
+
+            // Actualizar último ID
+            lastCommentId = data.comment_id;
+        } else {
+            alert(data.error);
         }
-    });
+    })
+    .catch(err => console.error(err));
 }
 </script>
 </body>
