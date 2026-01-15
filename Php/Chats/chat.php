@@ -89,7 +89,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
         <img src="<?= htmlspecialchars($fotoPerfil) ?>" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
         <div class="tituloIntegrantes">
             <?php if ($otroUsuario): ?>
-                    <!--lleva al perfil del otro usuario -->
+                <!--lleva al perfil del otro usuario -->
                 <form action="../Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
                     <input type="hidden" name="id" value="<?= $otroUsuario['id'] ?>">
                     <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
