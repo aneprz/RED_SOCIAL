@@ -91,3 +91,118 @@ footer {
 .fecha{
     font-size: 12px;
 }
+
+/* MODAL */
+/* ================= MODAL INDEX (igual a explorar) ================= */
+
+.explore-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.explore-modal-content {
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    background: white;
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Media izquierda */
+.modal-left {
+    flex: 2;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-left img,
+.modal-left video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Columna derecha */
+.modal-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background: #fafafa;
+    min-height: 0;
+}
+
+/* Info superior */
+.modal-right .info {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* Comentarios (único scroll vertical) */
+#modalComentarios {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Comentario */
+.comment {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.comment-user {
+    font-weight: bold;
+}
+
+/* Formulario abajo */
+#commentForm {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+#commentForm input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+#commentForm button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/* Botón cerrar */
+.close-modal {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 32px;
+    color: white;
+    cursor: pointer;
+    z-index: 4000;
+}
