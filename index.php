@@ -35,6 +35,18 @@ if (empty($ids_sigo)) {
     $stmt_posts = $pdo->query($sql_posts);
     $publicaciones = $stmt_posts->fetchAll(PDO::FETCH_ASSOC);
 
+    foreach($publicaciones as &$post){
+        $stmt_com = $pdo->prepare("SELECT c.texto, u.username 
+                                FROM comentarios c
+                                JOIN usuarios u ON c.usuario_id = u.id
+                                WHERE c.post_id = :post_id
+                                ORDER BY c.id ASC
+                                LIMIT 2");
+        $stmt_com->execute(['post_id'=>$post['id']]);
+        $post['comentarios'] = $stmt_com->fetchAll(PDO::FETCH_ASSOC);
+    }
+    unset($post); // romper referencia
+
     // Sugerencias
     $sql_sug = "
         SELECT DISTINCT u.id, u.username, u.foto_perfil
@@ -88,15 +100,24 @@ if (empty($ids_sigo)) {
                     <?php else: ?>
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
-
+                    <div class="botones">
+                        <button class="btnMeGusta"><img src="/Media/meGusta.png" alt=""></button>
+                        <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.825 0-1.412-.587T2 16V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v15.575q0 .675-.612.938T20.3 20.3L18 18zm14.85-2L20 17.125V4H4v12zM4 16V4z"/></svg></button>   
+                    </div>
+                      
                     <?php if (!empty($post['pie_foto'])): ?>
                         <p class="pieFoto"><?= nl2br(htmlspecialchars($post['pie_foto'])) ?></p>
                     <?php endif; ?>
 
-                    <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"
-                        style="margin-top:10px; padding:5px 10px; border:none;color:rgb(128, 128, 128); border-radius:5px; cursor:pointer;">
-                        Comentar
-                    </button>
+                    <?php if (!empty($post['comentarios'])): ?>
+                        <div class="preview-comentarios">
+                            <?php foreach($post['comentarios'] as $c): ?>
+                                <div class="preview-comment">
+                                    <strong><?= htmlspecialchars($c['username']) ?></strong>: <?= htmlspecialchars($c['texto']) ?>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
