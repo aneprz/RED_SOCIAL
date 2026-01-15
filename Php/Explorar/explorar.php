@@ -105,7 +105,7 @@ function openModal(postId) {
             mediaDiv.appendChild(img);
         }
 
-        document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' likes';
+        document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' picantes';
         document.getElementById('modalFecha').innerHTML = '📅 ' + data.fecha_publicacion;
 
         const comentariosDiv = document.getElementById('modalComentarios');
@@ -158,6 +158,29 @@ function submitComment(e){
 document.getElementById('postModal').addEventListener('click', e => {
     if (e.target.id === 'postModal') closeModal();
 });
+
+// AJax se recarga sin recargar
+let lastCommentId = 0;
+lastCommentId = data.comentarios.at(-1)?.id || 0;
+
+setInterval(() => {
+  const postId = document.getElementById('modalPostId').value;
+  if(!postId) return;
+
+  fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
+    .then(res => res.json())
+    .then(comments => {
+      comments.forEach(c => {
+        document.getElementById('modalComentarios').innerHTML += `
+          <div class="comment">
+            <span class="comment-user">${c.usuario}</span>:
+            <span class="comment-text">${c.texto}</span>
+          </div>`;
+        lastCommentId = c.id;
+      });
+    });
+}, 3000);
+
 </script>
 
 <?php include __DIR__ . '/../Templates/footer.php'; ?>
