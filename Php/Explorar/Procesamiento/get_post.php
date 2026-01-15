@@ -3,7 +3,9 @@ session_start();
 if(!isset($_SESSION['id'])) exit();
 
 require '../../../BD/conexiones.php';
+
 $post_id = intval($_GET['id'] ?? 0);
+$usuario_id = intval($_SESSION['id']);
 
 $res = $conexion->query("
     SELECT 
@@ -13,7 +15,8 @@ $res = $conexion->query("
         u.id AS usuario_id,
         u.username AS usuario,
         u.foto_perfil,
-        (SELECT COUNT(*) FROM likes WHERE post_id = $post_id) AS total_likes
+        (SELECT COUNT(*) FROM likes WHERE post_id = $post_id) AS total_likes,
+        (SELECT COUNT(*) FROM likes WHERE post_id = $post_id AND usuario_id = $usuario_id) AS liked
     FROM publicaciones p
     JOIN usuarios u ON p.usuario_id = u.id
     WHERE p.id = $post_id
@@ -21,7 +24,7 @@ $res = $conexion->query("
 
 $post = $res->fetch_assoc();
 
-/* ===== COMENTARIOS CON FOTO PERFIL ===== */
+/* ===== COMENTARIOS ===== */
 $comentarios = [];
 $cRes = $conexion->query("
     SELECT 
