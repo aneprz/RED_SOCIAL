@@ -1,0 +1,272 @@
+ html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
+.main {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center; /* centra los posts horizontalmente */
+    width: 100%; /* que ocupe todo el ancho del contenedor */
+    box-sizing: border-box;
+}
+
+body{
+    margin-left: 0 !important;
+    background-color: #f6dcf0;
+
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    gap: 20px;
+    padding: 20px;
+
+    justify-content: flex-start; /* no es necesario centrar main+sidebar, solo centramos posts dentro de main */
+    align-items: flex-start;
+}
+
+.main { flex: 3; }
+.sidebar { flex: 1; }
+
+.suggestion { margin-bottom: 10px; }
+
+footer {
+    background: #f0f0f0;
+    padding: 15px;
+    text-align: center;
+}
+
+.container { display: flex; gap: 20px; padding: 20px; }
+.main { flex: 3; }
+
+.sugerencias { 
+    flex: 1; 
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 8px;
+    border: 2px solid #b2a49f
+}
+
+.sugerencias h2{
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.post {
+    background-color: #FFF8F5;
+    box-shadow: 5px 5px 30px rgb(40, 40, 40);
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+
+    width: 100%;       /* ocupa todo lo que le permita el parent */
+    max-width: 600px;  /* tamaño máximo */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.suggestion { margin-bottom: 10px; }
+
+.post img,
+.post video {
+    width: 100%;
+    max-width: 100%;
+    max-height: 400px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.pieFoto{
+    margin-top: 5px;
+}
+
+.fecha{
+    font-size: 12px;
+}
+
+.btnVerMas{
+    background-color: #FFF8F5;
+    border: none;
+    text-align: left;
+}
+
+.btnMeGusta{
+    background-color: #FFF8F5;
+    border: none;
+    all: unset;          /* 💣 elimina TODOS los estilos del botón */
+    cursor: pointer;
+    display: inline-flex;
+}
+
+.btnMeGusta img {
+    width: 28px;
+    height: 28px;
+    display: block;
+}
+
+.btnMeGusta img {
+    width: 28px !important;
+    height: 28px !important;
+}
+
+.botones{
+    display: flex;
+}
+/* MODAL */
+/* ================= MODAL INDEX (igual a explorar) ================= */
+
+.explore-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+.explore-modal-content {
+    width: 90%;
+    max-width: 1000px;
+    height: 85vh;
+    background: white;
+    display: flex;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Media izquierda */
+.modal-left {
+    flex: 2;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-left img,
+.modal-left video {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+/* Columna derecha */
+.modal-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    background: #fafafa;
+    min-height: 0;
+}
+
+/* Info superior */
+.modal-right .info {
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* Comentarios (único scroll vertical) */
+#modalComentarios {
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
+    padding-right: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Comentario */
+.comment {
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.comment-user {
+    font-weight: bold;
+}
+
+/* Formulario abajo */
+#commentForm {
+    display: flex;
+    gap: 8px;
+    border-top: 1px solid #ddd;
+    padding-top: 10px;
+}
+
+#commentForm input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 20px;
+    border: 1px solid #ccc;
+    outline: none;
+}
+
+#commentForm button {
+    background: #0095f6;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 8px 14px;
+    cursor: pointer;
+}
+
+/* Botón cerrar */
+.close-modal {
+    position: fixed;
+    top: 20px;
+    right: 30px;
+    font-size: 32px;
+    color: white;
+    cursor: pointer;
+    z-index: 4000;
+}
+
+/* Previsualización de comentarios debajo del pie de foto */
+.preview-comentarios {
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.preview-comment {
+    white-space: normal;
+    overflow-wrap: break-word;
+}
+
+.mas-comentarios {
+    font-size: 12px;
+    color: #999;
+    cursor: pointer;
+    font-style: italic;
+}
+
+.comentarioUsuario{
+    display: flex;
+    align-items: center;
+}
+
+.fotoPerfilComentarios{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+}

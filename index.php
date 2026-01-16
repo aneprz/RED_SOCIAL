@@ -36,12 +36,12 @@ if (empty($ids_sigo)) {
     $publicaciones = $stmt_posts->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($publicaciones as &$post){
-        $stmt_com = $pdo->prepare("SELECT c.texto, u.username 
-                                FROM comentarios c
-                                JOIN usuarios u ON c.usuario_id = u.id
-                                WHERE c.post_id = :post_id
-                                ORDER BY c.id ASC
-                                LIMIT 2");
+        $stmt_com = $pdo->prepare("SELECT c.texto, u.username, u.foto_perfil
+                                    FROM comentarios c
+                                    JOIN usuarios u ON c.usuario_id = u.id
+                                    WHERE c.post_id = :post_id
+                                    ORDER BY c.id ASC
+                                    LIMIT 2");
         $stmt_com->execute(['post_id'=>$post['id']]);
         $post['comentarios'] = $stmt_com->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -68,7 +68,7 @@ if (empty($ids_sigo)) {
 <head>
     <meta charset="UTF-8">
     <title>Inicio</title>
-    <link rel="stylesheet" href="/Estilos/estilos.css">
+    <link rel="stylesheet" href="Estilos/estilos_index.css">
     <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
@@ -101,7 +101,7 @@ if (empty($ids_sigo)) {
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
                     <div class="botones">
-                        <button class="btnMeGusta"><img src="/Media/meGusta.png" alt=""></button>
+                        <button class="btnMeGusta"><img src="/Media/meGusta.png" alt="" width="28px" height="28px"></button>
                         <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.825 0-1.412-.587T2 16V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v15.575q0 .675-.612.938T20.3 20.3L18 18zm14.85-2L20 17.125V4H4v12zM4 16V4z"/></svg></button>   
                     </div>
                       
@@ -128,9 +128,9 @@ if (empty($ids_sigo)) {
         <?php if (!empty($sugerencias)): ?>
             <?php foreach($sugerencias as $user): ?>
                 <?php
-                    $fotoRuta = !empty($user['foto_perfil']) && file_exists(__DIR__ . '/Php/Usuarios/fotosDePerfil/' . $user['foto_perfil'])
-                        ? '/Php/Usuarios/fotosDePerfil/' . $user['foto_perfil']
-                        : '/Media/foto_default.png';
+                    $fotoRuta = !empty($user['foto_perfil']) && file_exists(__DIR__ . 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil'])
+                        ? 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil']
+                        : 'Media/foto_default.png';
                 ?>
                 <div class="suggestion" style="display:flex; align-items:center; margin-bottom:10px;">
                     <img src="<?= htmlspecialchars($fotoRuta) ?>" alt="Perfil"
@@ -240,7 +240,17 @@ function openModal(postId) {
             const div = document.createElement('div');
             div.classList.add('comment');
             div.dataset.id = c.id;
-            div.innerHTML = `<span class="comment-user">${c.usuario}</span>: <span class="comment-text">${c.texto}</span>`;
+
+            // Estructura con foto de perfil
+            div.innerHTML = `
+            <div class="comentarioUsuario">
+                <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
+                <div>
+                    <span class="comment-user">${c.usuario}</span>
+                    <span class="comment-text">${c.texto}</span>
+                </div>
+            </div>
+            `;
             comentariosDiv.appendChild(div);
         });
 
@@ -257,22 +267,26 @@ function openModal(postId) {
         comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
 
         // --- POLLING DE NUEVOS COMENTARIOS ---
-        if(pollingInterval) clearInterval(pollingInterval);
+        if (pollingInterval) clearInterval(pollingInterval);
 
         pollingInterval = setInterval(() => {
             fetch(`Php/Explorar/Procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
             .then(comments => {
                 comments.forEach(c => {
-                    if(!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)){
+                    if (!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)) {
                         const div = document.createElement('div');
                         div.classList.add('comment');
                         div.dataset.id = c.id;
-                        div.innerHTML = `<span class="comment-user">${c.usuario}</span>: <span class="comment-text">${c.texto}</span>`;
+                        div.innerHTML = `
+                            <img src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
+                            <div>
+                                <span class="comment-user">${c.usuario}</span>
+                                <span class="comment-text">${c.texto}</span>
+                            </div>
+                        `;
                         comentariosDiv.appendChild(div);
                         lastCommentId = c.id;
-
-                        // scroll automático
                         comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
                     }
                 });
