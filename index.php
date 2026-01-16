@@ -157,16 +157,16 @@ if (empty($ids_sigo)) {
     <div class="modal-left" id="modalMedia"></div>
 
     <div class="modal-right">
+      <div id="modalComentarios"></div>
+
       <div class="info">
         <div id="modalLikes"></div>
         <div id="modalFecha"></div>
       </div>
 
-      <div id="modalComentarios"></div>
-
       <form id="commentForm" onsubmit="return submitComment(event)">
         <input type="hidden" id="modalPostId">
-        <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
+        <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
         <button type="submit">Comentar</button>
       </form>
     </div>
@@ -247,6 +247,7 @@ function openModal(postId) {
                 <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
                 <div>
                     <span class="comment-user">${c.usuario}</span>
+                    <br>
                     <span class="comment-text">${c.texto}</span>
                 </div>
             </div>
@@ -324,11 +325,19 @@ function submitComment(e){
         if(data.success){
             const comentariosDiv = document.getElementById('modalComentarios');
             
-            // Crear nuevo div para comentario
+            // Crear nuevo div para comentario con foto de perfil
             const div = document.createElement('div');
             div.classList.add('comment');
             div.dataset.id = data.comment_id;
-            div.innerHTML = `<span class="comment-user">${data.usuario}</span>: <span class="comment-text">${texto}</span>`;
+            div.innerHTML = `
+                <div class="comentarioUsuario">
+                    <img class="fotoPerfilComentarios" src="${data.foto_perfil}" alt="${data.usuario}'s avatar">
+                    <div>
+                        <span class="comment-user">${data.usuario}</span>
+                        <p class="comment-text" style="white-space: pre-wrap; overflow-wrap: break-word;">${texto}</p>
+                    </div>
+                </div>
+            `;
             
             comentariosDiv.appendChild(div);
             

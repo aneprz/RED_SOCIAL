@@ -108,8 +108,8 @@ footer {
 }
 
 .btnMeGusta img {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     display: block;
 }
 
@@ -172,9 +172,11 @@ footer {
 
 /* Info superior */
 .modal-right .info {
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
     padding-bottom: 10px;
     margin-bottom: 10px;
+    padding-top: 10px;
+    margin-top: 10px;
     font-size: 14px;
 }
 
@@ -191,9 +193,13 @@ footer {
 
 /* Comentario */
 .comment {
-    padding: 8px 0;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
+
+    /* Forzar salto de línea en comentarios largos */
+    white-space: normal;
+    overflow-wrap: break-word;
+    word-break: break-word; /* opcional para compatibilidad */
 }
 
 .comment-user {
@@ -261,7 +267,8 @@ footer {
 
 .comentarioUsuario{
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* que la imagen se alinee arriba, no al centro */
+    gap: 5px; /* espacio entre foto y texto */
 }
 
 .fotoPerfilComentarios{
@@ -269,4 +276,6 @@ footer {
     width: 30px;
     border-radius: 50%;
     margin-right: 5px;
+    flex-shrink: 0;       /* evita que se reduzca al crecer el texto */
+    object-fit: cover;    /* mantiene proporción y recorta si hace falta */
 }
