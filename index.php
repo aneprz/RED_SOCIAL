@@ -160,6 +160,7 @@ if (empty($ids_sigo)) {
       <div id="modalComentarios"></div>
 
       <div class="info">
+        <div id="darLike"></div>
         <div id="modalLikes"></div>
         <div id="modalFecha"></div>
       </div>

@@ -87,6 +87,7 @@ footer {
 
 .pieFoto{
     margin-top: 5px;
+    font-size: 25px;
 }
 
 .fecha{
@@ -119,6 +120,7 @@ footer {
 }
 
 .botones{
+    margin-top: 5px;
     display: flex;
 }
 /* MODAL */
