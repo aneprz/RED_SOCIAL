@@ -111,15 +111,7 @@ body {
     min-height: 0;
 }
 
-/* Info superior */
-.modal-right .info {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    font-size: 14px;
-}
-
-/* Comentarios (único scroll) */
+/* Comentarios */
 #modalComentarios {
     flex: 1;
     overflow-y: auto;
@@ -129,6 +121,8 @@ body {
 
 /* Comentario */
 .comment {
+    display: flex;
+    gap: 10px;
     padding: 8px 0;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
@@ -138,7 +132,76 @@ body {
     font-weight: bold;
 }
 
-/* Formulario abajo */
+.comment-avatar-form button {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.comment-avatar-form img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.comment-content {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ===== USUARIO CREADOR ===== */
+
+.post-owner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 1px solid #999;
+}
+
+.post-user {
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* ===== META POST ===== */
+
+.post-meta {
+    border-top: 1px solid #ddd;
+    padding-top: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+/* ===== BOTÓN LIKE (PNG) ===== */
+
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 0;
+    display: flex;
+    align-items: center;
+}
+
+.like-btn img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+    pointer-events: none;
+    transition: transform 0.15s ease;
+}
+
+.like-btn:active img {
+    transform: scale(1.2);
+}
+
+
+/* ===== FORM COMENTARIO ===== */
+
 #commentForm {
     display: flex;
     gap: 8px;
@@ -173,79 +236,3 @@ body {
     cursor: pointer;
     z-index: 4000;
 }
-
-/* ===== COMENTARIOS CON AVATAR (INSTAGRAM STYLE) ===== */
-
-.comment {
-    display: flex;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid #ddd;
-}
-
-.comment-avatar-form button {
-    border: none;
-    background: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.comment-avatar-form img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.comment-content {
-    display: flex;
-    flex-direction: column;
-    font-size: 14px;
-}
-
-.comment-user {
-    font-weight: bold;
-}
-
-/* ===== USUARIO CREADOR DEL POST ===== */
-
-.post-owner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #999; /* más oscuro */
-}
-
-
-.post-user {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* ===== META POST (LIKES + FECHA) ===== */
-
-.post-meta {
-    border-top: 1px solid #ddd;
-    padding-top: 8px;
-    margin-top: 8px;
-    font-size: 14px;
-}
-
-.like-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 0;
-    color: #262626;
-}
-
-.like-btn.liked {
-    color: #e0245e; /* rojo tipo Instagram */
-}
-
-.like-btn svg {
-    pointer-events: none;
-}
-

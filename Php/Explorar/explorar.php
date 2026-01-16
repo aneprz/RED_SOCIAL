@@ -67,11 +67,9 @@ $result = $conexion->query($sql);
       <!-- META -->
       <div class="post-meta">
         <button id="likeBtn" class="like-btn" onclick="toggleLike()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-            <path fill="currentColor"
-              d="M4 18q-.825 0-1.412-.587T2 16V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v15.575q0 .675-.612.938T20.3 20.3L18 18zm14.85-2L20 17.125V4H4v12zM4 16V4z"/>
-          </svg>
+        <img id="likeImg" src="../../Media/like_off.png" alt="like">
         </button>
+
 
         <div id="modalLikes"></div>
         <div id="modalFecha"></div>
@@ -124,8 +122,12 @@ function openModal(postId){
         currentPostId = postId;
         likedByUser = data.liked > 0;
 
-        document.getElementById('likeBtn')
-            .classList.toggle('liked', likedByUser);
+        document.getElementById('likeImg').src =
+            likedByUser
+                ? '../../Media/meGustaDado.png'
+                : '../../Media/meGusta.png';
+
+
 
         const mediaDiv = document.getElementById('modalMedia');
         mediaDiv.innerHTML = '';
@@ -214,8 +216,12 @@ function toggleLike(){
     .then(res => res.json())
     .then(data => {
         likedByUser = data.liked;
-        document.getElementById('likeBtn')
-            .classList.toggle('liked', likedByUser);
+        document.getElementById('likeImg').src =
+            likedByUser
+                ? '../../Media/meGustaDado.png'
+                : '../../Media/meGusta.png';
+
+
 
         document.getElementById('modalLikes')
             .innerHTML = '🌶️ ' + data.total + ' picantes';
