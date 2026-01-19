@@ -7,8 +7,8 @@ if(!isset($_SESSION['id'])){
 
 require __DIR__ . '/../../BD/conexiones.php'; // ruta a tu PDO
 
-
 $post_id = intval($_GET['id'] ?? 0);
+$usuario_id = intval($_SESSION['id']); // <-- Usuario actual
 
 // Post
 $stmt = $pdo->prepare("
@@ -25,6 +25,16 @@ if(!$post){
     echo json_encode(['error'=>'Post no encontrado']);
     exit;
 }
+
+// ===== TOTAL DE LIKES =====
+$stmtLikes = $pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE post_id = :id");
+$stmtLikes->execute(['id' => $post_id]);
+$total_likes = $stmtLikes->fetchColumn() ?? 0;
+
+// ===== SI EL USUARIO YA DIO LIKE =====
+$stmtUserLike = $pdo->prepare("SELECT COUNT(*) AS liked FROM likes WHERE post_id = :id AND usuario_id = :uid");
+$stmtUserLike->execute(['id' => $post_id, 'uid' => $usuario_id]);
+$liked = $stmtUserLike->fetchColumn() > 0;
 
 // Comentarios con foto de perfil
 $stmtC = $pdo->prepare("
@@ -44,6 +54,10 @@ foreach($comentarios as &$c){
 unset($c);
 
 $post['comentarios'] = $comentarios;
+
+// 🔹 AGREGAR TOTAL DE LIKES Y SI EL USUARIO YA DIO LIKE
+$post['total_likes'] = $total_likes;
+$post['liked'] = $liked;
 
 header('Content-Type: application/json');
 echo json_encode($post);

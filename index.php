@@ -26,13 +26,20 @@ if (empty($ids_sigo)) {
     // Publicaciones
     $sql_posts = "
         SELECT p.id, p.imagen_url, p.pie_foto, p.fecha_publicacion,
-               u.id AS usuario_id, u.username, u.foto_perfil
+            u.id AS usuario_id, u.username, u.foto_perfil,
+            (
+                SELECT COUNT(*) 
+                FROM likes l 
+                WHERE l.post_id = p.id AND l.usuario_id = :user_id
+            ) AS liked
         FROM publicaciones p
         JOIN usuarios u ON p.usuario_id = u.id
         WHERE p.usuario_id IN ($ids_sigo_str)
         ORDER BY p.fecha_publicacion DESC
     ";
-    $stmt_posts = $pdo->query($sql_posts);
+
+    $stmt_posts = $pdo->prepare($sql_posts);
+    $stmt_posts->execute(['user_id' => $user_id]);
     $publicaciones = $stmt_posts->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($publicaciones as &$post){
@@ -101,7 +108,17 @@ if (empty($ids_sigo)) {
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
                     <div class="botones">
-                        <button class="btnMeGusta"><img src="/Media/meGusta.png" alt="" width="28px" height="28px"></button>
+                        <button 
+                            class="btnMeGusta"
+                            data-post-id="<?= $post['id'] ?>"
+                            data-liked="<?= $post['liked'] ?>"
+                        >
+                            <img 
+                                class="likeImg"
+                                src="<?= $post['liked'] ? '/Media/meGustaDado.png' : '/Media/meGusta.png' ?>"
+                                width="28"
+                            >
+                        </button>
                         <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.825 0-1.412-.587T2 16V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v15.575q0 .675-.612.938T20.3 20.3L18 18zm14.85-2L20 17.125V4H4v12zM4 16V4z"/></svg></button>   
                     </div>
                       
@@ -159,17 +176,22 @@ if (empty($ids_sigo)) {
     <div class="modal-right">
       <div id="modalComentarios"></div>
 
-      <div class="info">
-        <div id="darLike"></div>
+    <div class="info">
+        <!-- BOTÓN LIKE DEL MODAL -->
+        <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
+            <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
+        </button>
+
+        <!-- CONTADOR DE PICANTES -->
         <div id="modalLikes"></div>
         <div id="modalFecha"></div>
-      </div>
+    </div>
 
-      <form id="commentForm" onsubmit="return submitComment(event)">
+    <form id="commentForm" onsubmit="return submitComment(event)">
         <input type="hidden" id="modalPostId">
         <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
         <button type="submit">Comentar</button>
-      </form>
+    </form>
     </div>
   </div>
 </div>
@@ -230,7 +252,7 @@ function openModal(postId) {
         }
 
         // --- INFO DEL POST ---
-        document.getElementById('modalLikes').innerText = '🌶️ ' + data.sals + ' picantes';
+        document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
         document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
 
         // --- COMENTARIOS EXISTENTES ---
@@ -261,6 +283,13 @@ function openModal(postId) {
 
         // guardar postId en hidden
         document.getElementById('modalPostId').value = postId;
+
+        // --- CONFIGURAR BOTÓN LIKE DEL MODAL ---
+        const modalLikeBtn = document.getElementById('modalLikeBtn');
+        const modalLikeImg = document.getElementById('modalLikeImg');
+
+        modalLikeBtn.dataset.postId = postId;
+        modalLikeImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
 
         // mostrar modal
         modal.style.display = 'flex';
@@ -355,6 +384,71 @@ function submitComment(e){
         }
     })
     .catch(err => console.error(err));
+}
+/* =========================
+   LIKE FEED Y MODAL
+========================= */
+document.addEventListener('click', e => {
+
+    const btn = e.target.closest('.btnMeGusta');
+    if (!btn) return;
+
+    const postId = btn.dataset.postId;
+    const img = btn.querySelector('.likeImg');
+
+    fetch('Php/Index/toggle_like.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'post_id=' + postId
+    })
+    .then(res => res.json())
+    .then(data => {
+        // cambiar icono
+        img.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+
+        // actualizar contador si existe en feed
+        const contador = btn.parentElement.querySelector('.likeCount');
+        if (contador) contador.textContent = '🌶️ ' + data.total;
+
+        // sincronizar modal si está abierto y es el mismo post
+        const modalPostId = document.getElementById('modalPostId').value;
+        if (modalPostId == postId) {
+            document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
+
+            const modalImg = document.getElementById('modalLikeImg');
+            if(modalImg) modalImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+        }
+    })
+    .catch(err => console.error(err));
+});
+
+/* BOTÓN LIKE DEL MODAL (si lo quieres añadir) */
+const modalBtn = document.getElementById('modalLikeBtn');
+if(modalBtn){
+    modalBtn.onclick = () => {
+        const postId = document.getElementById('modalPostId').value;
+
+        fetch('Php/Index/toggle_like.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'post_id=' + postId
+        })
+        .then(res => res.json())
+        .then(data => {
+            // icono modal
+            document.getElementById('modalLikeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+            document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
+
+            // sincronizar feed
+            const feedBtn = document.querySelector(`.btnMeGusta[data-post-id="${postId}"]`);
+            if(feedBtn){
+                feedBtn.querySelector('.likeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+                const contador = feedBtn.parentElement.querySelector('.likeCount');
+                if(contador) contador.textContent = '🌶️ ' + data.total;
+            }
+        })
+        .catch(err => console.error(err));
+    };
 }
 </script>
 </body>
