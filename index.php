@@ -19,7 +19,12 @@ $sugerencias = [];
 $publicaciones = [];
 
 if (empty($ids_sigo)) {
-    $seguir_mensaje = "No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!";
+    ?>
+        <div class="no-sigues">
+            <img src="/Media/picantes.png" alt="No sigues a nadie">
+            <p>No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!</p>
+        </div>
+    <?php
 } else {
     $ids_sigo_str = implode(',', $ids_sigo);
 
