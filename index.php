@@ -56,12 +56,15 @@ if (empty($ids_sigo)) {
 
     // Sugerencias
     $sql_sug = "
-        SELECT DISTINCT u.id, u.username, u.foto_perfil
-        FROM seguidores s
-        JOIN usuarios u ON s.seguido_id = u.id
-        WHERE s.seguidor_id IN ($ids_sigo_str)
-          AND u.id != :user_id
-          AND u.id NOT IN ($ids_sigo_str)
+        SELECT u.id, u.username, u.foto_perfil
+        FROM usuarios u
+        WHERE u.id != :user_id
+        AND u.id NOT IN ($ids_sigo_str)
+        AND EXISTS (
+            SELECT 1 
+            FROM seguidores s 
+            WHERE s.seguidor_id IN ($ids_sigo_str) AND s.seguido_id = u.id
+        )
         ORDER BY RAND()
         LIMIT 5
     ";
@@ -145,20 +148,32 @@ if (empty($ids_sigo)) {
         <?php if (!empty($sugerencias)): ?>
             <?php foreach($sugerencias as $user): ?>
                 <?php
-                    $fotoRuta = !empty($user['foto_perfil']) && file_exists(__DIR__ . 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil'])
-                        ? 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil']
-                        : 'Media/foto_default.png';
+                    $fotoNombre = $user['foto_perfil'] ?? '';
+                    $fotoUrl = $fotoNombre !== '' ? '/Php/Usuarios/fotosDePerfil/' . $fotoNombre : '/Media/foto_default.png';
                 ?>
-                <div class="suggestion" style="display:flex; align-items:center; margin-bottom:10px;">
-                    <img src="<?= htmlspecialchars($fotoRuta) ?>" alt="Perfil"
-                         style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
-                    <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                        <button type="submit" style="border:none; background:none; padding:0; cursor:pointer; font-weight:bold; color:#333;">
-                            <?= htmlspecialchars($user['username']) ?>
-                        </button>
-                    </form>
+                <div class="suggestion" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="display:flex; align-items:center;">
+                        <img src="<?= htmlspecialchars($fotoUrl) ?>" alt="Perfil"
+                            style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;"
+                            onerror="this.onerror=null; this.src='/Media/foto_default.png';">
+
+                        <!-- Link al perfil -->
+                        <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                            <button type="submit"
+                                    style="border:none; background:none; padding:0; cursor:pointer; font-weight:bold; color:#333;">
+                                <?= htmlspecialchars($user['username']) ?>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Botón AJAX seguir -->
+                    <button type="button" class="btnSeguir" data-id="<?= $user['id'] ?>"
+                            style="padding:5px 10px; border-radius:5px; border:1px solid #ccc; background:#f0f0f0; cursor:pointer;">
+                        Seguir
+                    </button>
                 </div>
+
             <?php endforeach; ?>
         <?php else: ?>
             <p>No hay sugerencias por ahora.</p>
@@ -450,6 +465,33 @@ if(modalBtn){
         .catch(err => console.error(err));
     };
 }
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btnSeguir');
+    if (!btn) return;
+
+    const userId = btn.dataset.id;
+
+    fetch('Php/Index/seguir_usuario.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'seguir_id=' + userId
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            btn.textContent = 'Siguiendo';
+            btn.disabled = true;
+            btn.style.background = '#d0ffd0';
+            btn.style.border = '1px solid #8f8';
+            btn.style.cursor = 'default';
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(err => console.error(err));
+});
+
 </script>
 </body>
 </html>
