@@ -293,7 +293,7 @@ function openModal(postId) {
             });
         }, 3000);
 
-    })
+    })  
     .catch(err => console.error('Error al cargar el post:', err));
 }
 

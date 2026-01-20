@@ -9,26 +9,31 @@ include '../../BD/conexiones.php';
 $id = intval($_SESSION['id']);
 
 $busqueda = $_GET['busqueda'] ?? '';
-$busqueda_param = "%$busqueda%";
+// Proteger contra inyección SQL básica en el LIKE
+$busqueda_safe = mysqli_real_escape_string($conexion, $busqueda); 
+$busqueda_param = "%$busqueda_safe%";
 
-$stmt = mysqli_prepare(
-    $conexion,
-    "SELECT id, username, foto_perfil FROM usuarios WHERE id != ? AND username LIKE ? ORDER BY username ASC"
-);
-mysqli_stmt_bind_param($stmt, "is", $id, $busqueda_param);
-mysqli_stmt_execute($stmt);
-$resultado = mysqli_stmt_get_result($stmt);
+// 1. Buscar Usuarios
+$sql_users = "SELECT id, username, foto_perfil FROM usuarios WHERE id != $id AND username LIKE '$busqueda_param' ORDER BY username ASC";
+$resultado = mysqli_query($conexion, $sql_users);
 
 $usuarios = [];
 while ($fila = mysqli_fetch_assoc($resultado)) {
     $usuarios[] = $fila;
 }
 
+// 2. Obtener lista de a quién SIGO
 $seguidores_actuales = [];
-$seguidores_query = "SELECT seguido_id FROM seguidores WHERE seguidor_id = $id";
-$res = mysqli_query($conexion, $seguidores_query);
+$res = mysqli_query($conexion, "SELECT seguido_id FROM seguidores WHERE seguidor_id = $id");
 while ($row = mysqli_fetch_assoc($res)) {
     $seguidores_actuales[] = $row['seguido_id'];
+}
+
+// 3. Obtener lista de a quién he SOLICITADO (Pendientes)
+$solicitados_actuales = [];
+$res_sol = mysqli_query($conexion, "SELECT receptor_id FROM solicitudes_seguimiento WHERE solicitante_id = $id AND estado = 'pendiente'");
+while ($row = mysqli_fetch_assoc($res_sol)) {
+    $solicitados_actuales[] = $row['receptor_id'];
 }
 ?>
 
@@ -70,12 +75,19 @@ while ($row = mysqli_fetch_assoc($res)) {
                         <td>
                             <form method="post" action="procesar_busqueda.php">
                                 <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
+                                <input type="hidden" name="busqueda" value="<?= htmlspecialchars($busqueda) ?>">
+
                                 <?php if (in_array($usuario['id'], $seguidores_actuales)): ?>
                                     <input type="hidden" name="accion" value="suprimir">
-                                    <button type="submit">Dejar de seguir</button>
+                                    <button type="submit" class="btn-siguiendo">Siguiendo</button>
+
+                                <?php elseif (in_array($usuario['id'], $solicitados_actuales)): ?>
+                                    <input type="hidden" name="accion" value="suprimir">
+                                    <button type="submit" class="btn-pendiente" style="background-color: #95a5a6;">Pendiente</button>
+
                                 <?php else: ?>
                                     <input type="hidden" name="accion" value="seguir">
-                                    <button type="submit">Seguir</button>
+                                    <button type="submit" class="btn-seguir">Seguir</button>
                                 <?php endif; ?>
                             </form>
                         </td>
