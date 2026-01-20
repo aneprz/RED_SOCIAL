@@ -19,20 +19,32 @@ $sugerencias = [];
 $publicaciones = [];
 
 if (empty($ids_sigo)) {
-    $seguir_mensaje = "No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!";
+    ?>
+        <div class="no-sigues">
+            <img src="/Media/picantes.png" alt="No sigues a nadie">
+            <p>No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!</p>
+        </div>
+    <?php
 } else {
     $ids_sigo_str = implode(',', $ids_sigo);
 
     // Publicaciones
     $sql_posts = "
         SELECT p.id, p.imagen_url, p.pie_foto, p.fecha_publicacion,
-               u.id AS usuario_id, u.username, u.foto_perfil
+            u.id AS usuario_id, u.username, u.foto_perfil,
+            (
+                SELECT COUNT(*) 
+                FROM likes l 
+                WHERE l.post_id = p.id AND l.usuario_id = :user_id
+            ) AS liked
         FROM publicaciones p
         JOIN usuarios u ON p.usuario_id = u.id
         WHERE p.usuario_id IN ($ids_sigo_str)
         ORDER BY p.fecha_publicacion DESC
     ";
-    $stmt_posts = $pdo->query($sql_posts);
+
+    $stmt_posts = $pdo->prepare($sql_posts);
+    $stmt_posts->execute(['user_id' => $user_id]);
     $publicaciones = $stmt_posts->fetchAll(PDO::FETCH_ASSOC);
 
     foreach($publicaciones as &$post){
@@ -49,12 +61,15 @@ if (empty($ids_sigo)) {
 
     // Sugerencias
     $sql_sug = "
-        SELECT DISTINCT u.id, u.username, u.foto_perfil
-        FROM seguidores s
-        JOIN usuarios u ON s.seguido_id = u.id
-        WHERE s.seguidor_id IN ($ids_sigo_str)
-          AND u.id != :user_id
-          AND u.id NOT IN ($ids_sigo_str)
+        SELECT u.id, u.username, u.foto_perfil
+        FROM usuarios u
+        WHERE u.id != :user_id
+        AND u.id NOT IN ($ids_sigo_str)
+        AND EXISTS (
+            SELECT 1 
+            FROM seguidores s 
+            WHERE s.seguidor_id IN ($ids_sigo_str) AND s.seguido_id = u.id
+        )
         ORDER BY RAND()
         LIMIT 5
     ";
@@ -101,7 +116,17 @@ if (empty($ids_sigo)) {
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
                     <div class="botones">
-                        <button class="btnMeGusta"><img src="/Media/meGusta.png" alt="" width="28px" height="28px"></button>
+                        <button 
+                            class="btnMeGusta"
+                            data-post-id="<?= $post['id'] ?>"
+                            data-liked="<?= $post['liked'] ?>"
+                        >
+                            <img 
+                                class="likeImg"
+                                src="<?= $post['liked'] ? '/Media/meGustaDado.png' : '/Media/meGusta.png' ?>"
+                                width="28"
+                            >
+                        </button>
                         <button type="button" class="btnVerMas" onclick="openModal(<?= $post['id'] ?>)"><svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24"><path fill="currentColor" d="M4 18q-.825 0-1.412-.587T2 16V4q0-.825.588-1.412T4 2h16q.825 0 1.413.588T22 4v15.575q0 .675-.612.938T20.3 20.3L18 18zm14.85-2L20 17.125V4H4v12zM4 16V4z"/></svg></button>   
                     </div>
                       
@@ -128,20 +153,32 @@ if (empty($ids_sigo)) {
         <?php if (!empty($sugerencias)): ?>
             <?php foreach($sugerencias as $user): ?>
                 <?php
-                    $fotoRuta = !empty($user['foto_perfil']) && file_exists(__DIR__ . 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil'])
-                        ? 'Php/Usuarios/fotosDePerfil/' . $user['foto_perfil']
-                        : 'Media/foto_default.png';
+                    $fotoNombre = $user['foto_perfil'] ?? '';
+                    $fotoUrl = $fotoNombre !== '' ? '/Php/Usuarios/fotosDePerfil/' . $fotoNombre : '/Media/foto_default.png';
                 ?>
-                <div class="suggestion" style="display:flex; align-items:center; margin-bottom:10px;">
-                    <img src="<?= htmlspecialchars($fotoRuta) ?>" alt="Perfil"
-                         style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;">
-                    <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="id" value="<?= $user['id'] ?>">
-                        <button type="submit" style="border:none; background:none; padding:0; cursor:pointer; font-weight:bold; color:#333;">
-                            <?= htmlspecialchars($user['username']) ?>
-                        </button>
-                    </form>
+                <div class="suggestion" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+                    <div style="display:flex; align-items:center;">
+                        <img src="<?= htmlspecialchars($fotoUrl) ?>" alt="Perfil"
+                            style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;"
+                            onerror="this.onerror=null; this.src='/Media/foto_default.png';">
+
+                        <!-- Link al perfil -->
+                        <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="id" value="<?= $user['id'] ?>">
+                            <button type="submit"
+                                    style="border:none; background:none; padding:0; cursor:pointer; font-weight:bold; color:#333;">
+                                <?= htmlspecialchars($user['username']) ?>
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Botón AJAX seguir -->
+                    <button type="button" class="btnSeguir" data-id="<?= $user['id'] ?>"
+                            style="padding:5px 10px; border-radius:5px; border:1px solid #ccc; background:#f0f0f0; cursor:pointer;">
+                        Seguir
+                    </button>
                 </div>
+
             <?php endforeach; ?>
         <?php else: ?>
             <p>No hay sugerencias por ahora.</p>
@@ -157,18 +194,24 @@ if (empty($ids_sigo)) {
     <div class="modal-left" id="modalMedia"></div>
 
     <div class="modal-right">
-      <div class="info">
-        <div id="modalLikes"></div>
-        <div id="modalFecha"></div>
-      </div>
-
       <div id="modalComentarios"></div>
 
-      <form id="commentForm" onsubmit="return submitComment(event)">
+    <div class="info">
+        <!-- BOTÓN LIKE DEL MODAL -->
+        <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
+            <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
+        </button>
+
+        <!-- CONTADOR DE PICANTES -->
+        <div id="modalLikes"></div>
+        <div id="modalFecha"></div>
+    </div>
+
+    <form id="commentForm" onsubmit="return submitComment(event)">
         <input type="hidden" id="modalPostId">
-        <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
+        <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
         <button type="submit">Comentar</button>
-      </form>
+    </form>
     </div>
   </div>
 </div>
@@ -229,7 +272,7 @@ function openModal(postId) {
         }
 
         // --- INFO DEL POST ---
-        document.getElementById('modalLikes').innerText = '🌶️ ' + data.sals + ' picantes';
+        document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
         document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
 
         // --- COMENTARIOS EXISTENTES ---
@@ -247,6 +290,7 @@ function openModal(postId) {
                 <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
                 <div>
                     <span class="comment-user">${c.usuario}</span>
+                    <br>
                     <span class="comment-text">${c.texto}</span>
                 </div>
             </div>
@@ -259,6 +303,13 @@ function openModal(postId) {
 
         // guardar postId en hidden
         document.getElementById('modalPostId').value = postId;
+
+        // --- CONFIGURAR BOTÓN LIKE DEL MODAL ---
+        const modalLikeBtn = document.getElementById('modalLikeBtn');
+        const modalLikeImg = document.getElementById('modalLikeImg');
+
+        modalLikeBtn.dataset.postId = postId;
+        modalLikeImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
 
         // mostrar modal
         modal.style.display = 'flex';
@@ -324,11 +375,19 @@ function submitComment(e){
         if(data.success){
             const comentariosDiv = document.getElementById('modalComentarios');
             
-            // Crear nuevo div para comentario
+            // Crear nuevo div para comentario con foto de perfil
             const div = document.createElement('div');
             div.classList.add('comment');
             div.dataset.id = data.comment_id;
-            div.innerHTML = `<span class="comment-user">${data.usuario}</span>: <span class="comment-text">${texto}</span>`;
+            div.innerHTML = `
+                <div class="comentarioUsuario">
+                    <img class="fotoPerfilComentarios" src="${data.foto_perfil}" alt="${data.usuario}'s avatar">
+                    <div>
+                        <span class="comment-user">${data.usuario}</span>
+                        <p class="comment-text" style="white-space: pre-wrap; overflow-wrap: break-word;">${texto}</p>
+                    </div>
+                </div>
+            `;
             
             comentariosDiv.appendChild(div);
             
@@ -346,6 +405,98 @@ function submitComment(e){
     })
     .catch(err => console.error(err));
 }
+/* =========================
+   LIKE FEED Y MODAL
+========================= */
+document.addEventListener('click', e => {
+
+    const btn = e.target.closest('.btnMeGusta');
+    if (!btn) return;
+
+    const postId = btn.dataset.postId;
+    const img = btn.querySelector('.likeImg');
+
+    fetch('Php/Index/toggle_like.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'post_id=' + postId
+    })
+    .then(res => res.json())
+    .then(data => {
+        // cambiar icono
+        img.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+
+        // actualizar contador si existe en feed
+        const contador = btn.parentElement.querySelector('.likeCount');
+        if (contador) contador.textContent = '🌶️ ' + data.total;
+
+        // sincronizar modal si está abierto y es el mismo post
+        const modalPostId = document.getElementById('modalPostId').value;
+        if (modalPostId == postId) {
+            document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
+
+            const modalImg = document.getElementById('modalLikeImg');
+            if(modalImg) modalImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+        }
+    })
+    .catch(err => console.error(err));
+});
+
+/* BOTÓN LIKE DEL MODAL (si lo quieres añadir) */
+const modalBtn = document.getElementById('modalLikeBtn');
+if(modalBtn){
+    modalBtn.onclick = () => {
+        const postId = document.getElementById('modalPostId').value;
+
+        fetch('Php/Index/toggle_like.php', {
+            method: 'POST',
+            headers: {'Content-Type':'application/x-www-form-urlencoded'},
+            body: 'post_id=' + postId
+        })
+        .then(res => res.json())
+        .then(data => {
+            // icono modal
+            document.getElementById('modalLikeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+            document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
+
+            // sincronizar feed
+            const feedBtn = document.querySelector(`.btnMeGusta[data-post-id="${postId}"]`);
+            if(feedBtn){
+                feedBtn.querySelector('.likeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+                const contador = feedBtn.parentElement.querySelector('.likeCount');
+                if(contador) contador.textContent = '🌶️ ' + data.total;
+            }
+        })
+        .catch(err => console.error(err));
+    };
+}
+
+document.addEventListener('click', function(e) {
+    const btn = e.target.closest('.btnSeguir');
+    if (!btn) return;
+
+    const userId = btn.dataset.id;
+
+    fetch('Php/Index/seguir_usuario.php', {
+        method: 'POST',
+        headers: {'Content-Type':'application/x-www-form-urlencoded'},
+        body: 'seguir_id=' + userId
+    })
+    .then(res => res.json())
+    .then(data => {
+        if(data.success){
+            btn.textContent = 'Siguiendo';
+            btn.disabled = true;
+            btn.style.background = '#d0ffd0';
+            btn.style.border = '1px solid #8f8';
+            btn.style.cursor = 'default';
+        } else {
+            alert(data.error);
+        }
+    })
+    .catch(err => console.error(err));
+});
+
 </script>
 </body>
 </html>

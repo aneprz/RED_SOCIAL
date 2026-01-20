@@ -1,36 +1,51 @@
 <?php
 session_start();
-require '../../BD/conexiones.php';
-
 if(!isset($_SESSION['id'])) {
     echo json_encode(['success'=>false,'error'=>'No logueado']);
     exit;
 }
 
-$post_id = intval($_POST['post_id']);
-$texto = trim($_POST['texto']);
+require '../../BD/conexiones.php'; // PDO
+
+$post_id = intval($_POST['post_id'] ?? 0);
+$texto = trim($_POST['texto'] ?? '');
 $usuario_id = $_SESSION['id'];
 
-if(empty($texto)){
-    echo json_encode(['success'=>false,'error'=>'Comentario vacío']);
+if($post_id <= 0 || $texto === ''){
+    echo json_encode(['success'=>false,'error'=>'Datos inválidos']);
     exit;
 }
 
 // Insertar comentario
-$stmt = $conexion->prepare("INSERT INTO comentarios (post_id, usuario_id, texto, fecha) VALUES (?, ?, ?, NOW())");
-$stmt->bind_param("iis", $post_id, $usuario_id, $texto);
-if($stmt->execute()){
-    $comment_id = $stmt->insert_id;
-    
-    // Obtener username
-    $stmt2 = $conexion->prepare("SELECT username FROM usuarios WHERE id=?");
-    $stmt2->bind_param("i",$usuario_id);
-    $stmt2->execute();
-    $res = $stmt2->get_result()->fetch_assoc();
-    $usuario = $res['username'];
+$stmt = $pdo->prepare("
+    INSERT INTO comentarios (post_id, usuario_id, texto, fecha)
+    VALUES (:post_id, :usuario_id, :texto, NOW())
+");
+$stmt->execute([
+    'post_id' => $post_id,
+    'usuario_id' => $usuario_id,
+    'texto' => $texto
+]);
 
-    echo json_encode(['success'=>true,'comment_id'=>$comment_id,'usuario'=>$usuario]);
-} else {
-    echo json_encode(['success'=>false,'error'=>'Error al insertar comentario']);
-}
-?>
+$comment_id = $pdo->lastInsertId();
+
+// Obtener usuario y foto EXACTAMENTE igual que get_post.php
+$stmt2 = $pdo->prepare("
+    SELECT u.username AS usuario, u.foto_perfil
+    FROM usuarios u
+    WHERE u.id = :id
+");
+$stmt2->execute(['id' => $usuario_id]);
+$user = $stmt2->fetch(PDO::FETCH_ASSOC);
+
+// Ajustar ruta de la foto (MISMA lógica)
+$user['foto_perfil'] = !empty($user['foto_perfil'])
+    ? $user['foto_perfil']
+    : '/Media/foto_default.png';
+
+echo json_encode([
+    'success' => true,
+    'comment_id' => $comment_id,
+    'usuario' => $user['usuario'],
+    'foto_perfil' => $user['foto_perfil']
+]);
