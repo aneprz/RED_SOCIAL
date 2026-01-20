@@ -118,8 +118,9 @@ footer {
     height: 28px !important;
 }
 
-.botones{
+.botonesPublicacion{
     display: flex;
+    margin-top: 5px;
 }
 /* MODAL */
 /* ================= MODAL INDEX (igual a explorar) ================= */

@@ -121,7 +121,7 @@ if (empty($ids_sigo)) {
                     <?php else: ?>
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
-                    <div class="botones">
+                    <div class="botonesPublicacion">
                         <button 
                             class="btnMeGusta"
                             data-post-id="<?= $post['id'] ?>"

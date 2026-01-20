@@ -67,11 +67,6 @@ body {
   color: #fff;
 }
 
-.nav-item-custom.active {
-  background-color: #E94B3C;
-  border-color: rgba(0, 0, 0, 0.35);
-}
-
 /* SVG ICONS */
 .nav-item-custom svg {
   width: 26px;
