@@ -19,12 +19,7 @@ $sugerencias = [];
 $publicaciones = [];
 
 if (empty($ids_sigo)) {
-    ?>
-        <div class="no-sigues">
-            <img src="/Media/picantes.png" alt="No sigues a nadie">
-            <p>No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!</p>
-        </div>
-    <?php
+    $seguir_mensaje="No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!";
 } else {
     $ids_sigo_str = implode(',', $ids_sigo);
 
@@ -92,7 +87,18 @@ if (empty($ids_sigo)) {
 <div class="content container">
     <div class="main">
         <?php if ($seguir_mensaje): ?>
-            <p><?= htmlspecialchars($seguir_mensaje) ?></p>
+            <div class="no-sigues">
+                <img src="/Media/picantes.png" alt="No sigues a nadie">
+                <p>No sigues a nadie aún. ¡Empieza a seguir gente para ver sus publicaciones!</p>
+                <div class="botones">
+                    <form action="Php/Explorar/explorar.php">
+                        <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m16.2 7.8-1.8 5.4a2 2 0 0 1-1.3 1.3L7.8 16.2l1.8-5.4a2 2 0 0 1 1.3-1.3z"/><circle cx="12" cy="12" r="10"/></g></svg></button>
+                    </form>
+                    <form action="Php/Busqueda/busqueda.php">
+                        <button><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><g fill="none" stroke-linecap="round" stroke-linejoin="round"><path d="m21 21-4.3-4.3"/><circle cx="11" cy="11" r="8"/></g></svg></button>
+                    </form>
+                </div>
+            </div>
         <?php else: ?>
             <?php foreach($publicaciones as $post): ?>
                 <?php

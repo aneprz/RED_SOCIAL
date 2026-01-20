@@ -1,16 +1,17 @@
-html, body {
+ html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    background-color: #f6dcf0;
 }
 
 .main {
-    flex: 3;                  /* ocupa 3/4 del ancho */
+    flex: 3;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    min-width: 0;             /* para que flex respete ancho */
+    align-items: center; /* centra los posts horizontalmente */
+    width: 100%; /* que ocupe todo el ancho del contenedor */
+    box-sizing: border-box;
 }
 
 body{
@@ -23,16 +24,16 @@ body{
 }
 
 .content {
+    flex: 1;
     display: flex;
-    flex-direction: row;      /* fila horizontal */
-    align-items: flex-start;  /* alinear arriba */
     gap: 20px;
     padding: 20px;
-    flex-wrap: nowrap;        /* evitar que baje la derecha */
-    min-height: 100vh;        /* ocupar toda la altura de la ventana */
-    box-sizing: border-box;
+
+    justify-content: flex-start; /* no es necesario centrar main+sidebar, solo centramos posts dentro de main */
+    align-items: flex-start;
 }
 
+.main { flex: 3; }
 .sidebar { flex: 1; }
 
 .suggestion { margin-bottom: 10px; }
@@ -44,20 +45,14 @@ footer {
 }
 
 .container { display: flex; gap: 20px; padding: 20px; }
+.main { flex: 3; }
 
 .sugerencias { 
-    flex: 1;                  /* ocupa 1/4 del ancho */
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+    flex: 1; 
+    margin: 20px auto;
     padding: 20px;
     border-radius: 8px;
-    border: 2px solid #b2a49f;
-
-    position: sticky;         /* pega arriba */
-    top: 0;
-    align-self: flex-start;   /* asegura que esté arriba */
-    min-width: 200px;         /* evita que colapse */
+    border: 2px solid #b2a49f
 }
 
 .sugerencias h2{
@@ -92,7 +87,6 @@ footer {
 
 .pieFoto{
     margin-top: 5px;
-    font-size: 25px;
 }
 
 .fecha{
@@ -125,7 +119,6 @@ footer {
 }
 
 .botones{
-    margin-top: 5px;
     display: flex;
 }
 /* MODAL */
@@ -287,16 +280,39 @@ footer {
     object-fit: cover;    /* mantiene proporción y recorta si hace falta */
 }
 
-.no-sigues {
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    width:100%;
-    min-height:300px;
+.no-sigues{
+    text-align: center;
 }
-.no-sigues img {
-    max-width:200px;
-    width:50%;
-    height:auto;
+
+.no-sigues img{
+    width: 30%;
+}
+
+.no-sigues svg{
+    width: 26px;
+    height: 26px;
+    stroke-width: 2.5;
+    stroke: white;
+    filter: drop-shadow(0 1px 1px black);
+    flex-shrink: 0;
+}
+
+.no-sigues button{
+    background-color: #9d2f24;
+    border-radius: 10px;
+    border:3px solid #802015;
+    padding: 5px;
+    transition: background .15s, transform .1s;
+}
+
+.no-sigues button:hover{
+    background-color: #E94B3C;
+    transform: translateY(-2px);
+    border-color: rgba(0, 0, 0, 0.35);
+}
+
+.botones{
+    display: flex;
+    justify-content: center;
+    gap: 15px;
 }
