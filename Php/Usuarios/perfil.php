@@ -46,7 +46,7 @@ $biografia = $_SESSION['biografia']?? '';
             ?>
             <div class="post">
                 <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                    <video src="<?= $ruta ?>" muted autoplay loop></video>
+                    <video src="<?= $ruta ?>"></video> <!-- he desactivado esto para que no se active el video muted autoplay loop -->
                 <?php else: ?>
                     <img src="<?= $ruta ?>" alt="Post">
                 <?php endif; ?>
