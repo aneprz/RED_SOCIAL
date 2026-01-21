@@ -317,3 +317,10 @@ footer {
     justify-content: center;
     gap: 15px;
 }
+
+.username-link{
+    max-width: 90px;         /* 1. Define aquí el ancho máximo (en píxeles) */
+    white-space: nowrap;      /* 2. Prohíbe que el texto salte de línea */
+    overflow: hidden;         /* 3. Esconde lo que se pase del ancho */
+    text-overflow: ellipsis;  /* 4. Pone los puntos suspensivos (...) automáticamente */
+}
