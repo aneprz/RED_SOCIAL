@@ -14,7 +14,7 @@ $otro_usuario = $_POST['id_usuario'];
 if ($yo == $otro_usuario) exit; 
 
 // 1. Verificamos si la cuenta destino es PRIVADA
-$stmt = $pdo->prepare("SELECT es_privada FROM usuarios WHERE id = ?");
+$stmt = $pdo->prepare("SELECT privacidad FROM usuarios WHERE id = ?");
 $stmt->execute([$otro_usuario]);
 $es_privada = $stmt->fetchColumn();
 
