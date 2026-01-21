@@ -117,7 +117,7 @@ if (empty($ids_sigo)) {
                     <em class="fecha"><?= htmlspecialchars($post['fecha_publicacion']) ?></em>
 
                     <?php if (in_array($ext, ['mp4','webm'])): ?>
-                        <video class="hover-video" src="<?= htmlspecialchars($archivoRuta) ?>" muted loop style="width:50%; border-radius:8px;"></video>
+                        <video class="hover-video" src="<?= htmlspecialchars($archivoRuta) ?>" loop style="width:50%; border-radius:8px;"></video>
                     <?php else: ?>
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>
@@ -256,7 +256,6 @@ function openModal(postId) {
             video.src = mediaPath;
             video.controls = true;
             video.autoplay = true;
-            video.muted = true;
             video.style.maxWidth = '100%';
             video.style.maxHeight = '100%';
             video.style.objectFit = 'contain';

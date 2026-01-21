@@ -11,6 +11,9 @@ $sql = "SELECT p.id, p.imagen_url,
             (SELECT COUNT(*) FROM likes WHERE post_id = p.id) AS total_likes,
             (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) AS total_comentarios
         FROM publicaciones p
+        INNER JOIN usuarios u ON p.usuario_id = u.id
+        WHERE u.privacidad = 'publica' 
+        AND p.usuario_id != '{$_SESSION['id']}'
         ORDER BY p.id DESC";
 $result = $conexion->query($sql);
 ?>
@@ -34,7 +37,7 @@ $result = $conexion->query($sql);
 <div class="grid-item" onclick="openModal(<?= $post['id'] ?>)">
     <div class="media-wrapper">
         <?php if(in_array($ext,['mp4','webm'])): ?>
-            <video class="media hover-video" src="<?= $ruta ?>" muted loop></video>
+            <video class="media hover-video" src="<?= $ruta ?>" loop></video>
         <?php else: ?>
             <img class="media" src="<?= $ruta ?>" alt="post">
         <?php endif; ?>
@@ -139,7 +142,6 @@ function openModal(postId){
             video.src = "../Crear/uploads/"+data.imagen_url;
             video.controls = true;
             video.autoplay = true;
-            video.muted = true;
             video.loop = true;
             mediaDiv.appendChild(video);
         } else {
@@ -229,8 +231,14 @@ function toggleLike(){
 }
 
 function closeModal(){
+    // 1. Ocultar el modal
     document.getElementById('postModal').style.display = 'none';
 
+    // 2. IMPORTANTE: Limpiar el contenedor multimedia
+    // Al vaciar el innerHTML, la etiqueta <video> se destruye y el audio se corta instantáneamente.
+    document.getElementById('modalMedia').innerHTML = '';
+
+    // 3. Limpiar intervalos (esto ya lo tenías)
     if(pollingInterval){
         clearInterval(pollingInterval);
         pollingInterval = null;
