@@ -34,6 +34,7 @@ try {
         FROM notificaciones n
         JOIN usuarios u ON n.id_emisor = u.id
         WHERE n.id_usuario = :mi_id 
+        AND n.tipo != 'solicitud'  
         ORDER BY n.fecha DESC LIMIT 20
     ";
     $stmt = $pdo->prepare($sql_notif);

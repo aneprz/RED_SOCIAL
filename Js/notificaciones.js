@@ -72,7 +72,7 @@ function cargarContenidoNotificaciones() {
                             <div class="notif-info">
                                 <strong>${item.username}</strong> ha comenzado a seguirte.
                             </div>
-                            <button class="btn-accion btn-seguir" onclick="seguirDeVuelta(${item.usuario_origen_id})">Seguir</button>
+                            <button class="btn-accion btn-seguir" onclick="seguirDeVuelta(${item.usuario_origen_id}, this)">Seguir</button>
                         </div>
                     `;
                 }
@@ -98,7 +98,7 @@ function cargarContenidoNotificaciones() {
                             <div class="notif-info">
                                 Sugerencia: <strong>${item.username}</strong>
                             </div>
-                            <button class="btn-accion btn-seguir" onclick="seguirDeVuelta(${item.usuario_origen_id})">Seguir</button>
+                            <button class="btn-accion btn-seguir" onclick="seguirDeVuelta(${item.usuario_origen_id}, this)">Seguir</button>
                         </div>
                     `;
                 }
@@ -152,27 +152,100 @@ function aceptarSolicitud(idUsuario) {
     }).catch(err => console.error("Error aceptando solicitud", err));
 }
 
-function seguirDeVuelta(idUsuario) {
+function seguirDeVuelta(idUsuario, btnElement) {
+    // 1. Feedback inmediato y bloqueo
+    btnElement.disabled = true;
+    const textoOriginal = btnElement.innerText;
+    btnElement.innerText = "..."; 
 
-    fetch('/Php/Usuarios/seguir_usuario.php', { 
-        
+    // 2. Petición al servidor
+    fetch('../../Php/Usuarios/seguir_usuario.php', { 
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
         body: 'id_usuario=' + idUsuario 
     })
     .then(res => res.json())
     .then(data => {
+        btnElement.disabled = false; // Reactivar botón
+
         if(data.status === 'success') {
+            // 3. Lógica de estados visuales
             if(data.estado === 'solicitado') {
-                alert("Solicitud enviada (Cuenta Privada)");
-            } else if (data.estado === 'siguiendo') {
-                alert("Ahora sigues a este usuario");
-            } else {
-                alert("Dejaste de seguir/solicitar");
+                btnElement.innerText = "Solicitado";
+                btnElement.classList.add('btn-gris');     // Estilo gris
+                btnElement.classList.remove('btn-seguir'); // Quitar azul
+            } 
+            else if (data.estado === 'siguiendo') {
+                btnElement.innerText = "Siguiendo";
+                btnElement.classList.add('btn-gris');     // Estilo gris/borde
+                btnElement.classList.remove('btn-seguir'); // Quitar azul
+            } 
+            else {
+                // Caso 'no_seguido' (unfollow)
+                btnElement.innerText = "Seguir";
+                btnElement.classList.add('btn-seguir');    // Volver a azul
+                btnElement.classList.remove('btn-gris');
             }
-            // Recargar notificaciones para actualizar botones si es necesario
-            cargarContenidoNotificaciones(); 
+        } else {
+            console.error("Error servidor:", data.message);
+            btnElement.innerText = textoOriginal; // Restaurar si falla
         }
     })
-    .catch(err => console.error("Error al seguir:", err));
+    .catch(err => {
+        console.error("Error al seguir:", err);
+        btnElement.disabled = false;
+        btnElement.innerText = textoOriginal;
+    });
+}
+
+function seguirUsuario(idUsuario, btnElement) {
+    // 1. Deshabilitar botón momentáneamente para evitar doble click
+    btnElement.disabled = true;
+    const textoOriginal = btnElement.innerText;
+    btnElement.innerText = "..."; // Feedback visual de carga
+
+    const formData = new FormData();
+    formData.append('id_usuario', idUsuario);
+
+    // Ajusta la ruta si es necesario (ej: ../Php/Usuarios/seguir_usuario.php)
+    fetch('../../Php/Usuarios/seguir_usuario.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        btnElement.disabled = false;
+
+        if (data.status === 'success') {
+            // 2. CAMBIAR LA APARIENCIA SEGÚN EL ESTADO DEVUELTO
+            switch (data.estado) {
+                case 'solicitado':
+                    btnElement.innerText = "Solicitado";
+                    btnElement.classList.add('boton-solicitado'); // Para darle estilo gris
+                    btnElement.classList.remove('boton-siguiendo');
+                    break;
+
+                case 'siguiendo':
+                    btnElement.innerText = "Siguiendo";
+                    btnElement.classList.add('boton-siguiendo'); // Para darle estilo (ej. borde)
+                    btnElement.classList.remove('boton-solicitado');
+                    break;
+
+                case 'no_seguido':
+                    btnElement.innerText = "Seguir";
+                    // Quitamos clases especiales para que vuelva a ser el botón azul/rojo normal
+                    btnElement.classList.remove('boton-solicitado', 'boton-siguiendo');
+                    break;
+            }
+        } else {
+            // Si hubo error lógico (ej: te sigues a ti mismo)
+            console.error(data.message);
+            btnElement.innerText = textoOriginal; // Restaurar texto
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        btnElement.disabled = false;
+        btnElement.innerText = textoOriginal;
+    });
 }

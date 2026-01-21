@@ -7,14 +7,17 @@ if (!isset($_SESSION['id'])) {
 
 require '../../BD/conexiones.php';
 
+$mi_id = (int) $_SESSION['id']; 
+
 $sql = "SELECT p.id, p.imagen_url,
             (SELECT COUNT(*) FROM likes WHERE post_id = p.id) AS total_likes,
             (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) AS total_comentarios
         FROM publicaciones p
         INNER JOIN usuarios u ON p.usuario_id = u.id
-        WHERE u.privacidad = 'publica' 
-        AND p.usuario_id != '{$_SESSION['id']}'
+        WHERE u.privacidad = 0 
+        AND p.usuario_id != $mi_id 
         ORDER BY p.id DESC";
+        
 $result = $conexion->query($sql);
 ?>
 <!DOCTYPE html>
@@ -195,7 +198,7 @@ function openModal(postId){
                     }
                 });
             });
-        }, 3000);
+        }, 2000);
 
         // 🔄 Polling likes (TIEMPO REAL)
         likesInterval = setInterval(() => {
@@ -205,7 +208,7 @@ function openModal(postId){
                 document.getElementById('modalLikes')
                     .innerHTML = '🌶️ ' + data.total + ' picantes';
             });
-        }, 2000);
+        }, 1000);
     });
 }
 
