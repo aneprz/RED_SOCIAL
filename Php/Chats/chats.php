@@ -99,41 +99,87 @@ if ($chatReciente) {
         </a>
     </div>
 
-    <?php foreach ($chats as $c): ?>
-    <?php
-        if ($c['es_grupo']) {
-            $nombreChat = $c['nombre_grupo'] ?: "Grupo sin nombre";
-            $fotoPerfil = '../../../Media/foto_grupo_default.png';
-        } else {
-            $nombreChat = $c['otro_usuario'] ?: "Usuario desconocido";
-            $fotoPerfil = !empty($c['foto_perfil'])
-                ? $c['foto_perfil']    // aquí está la ruta correcta que se guarda en la BD
-                : '../../../Media/foto_default.png';
-        }
-    ?>
-    <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
+    <div id="listaChats">
+        <?php foreach ($chats as $c): ?>
+            <?php
+                if ($c['es_grupo']) {
+                    $nombreChat = $c['nombre_grupo'] ?: "Grupo sin nombre";
+                    $fotoPerfil = '../../../Media/foto_grupo_default.png';
+                } else {
+                    $nombreChat = $c['otro_usuario'] ?: "Usuario desconocido";
+                    $fotoPerfil = !empty($c['foto_perfil'])
+                        ? $c['foto_perfil']    // aquí está la ruta correcta que se guarda en la BD
+                        : '../../../Media/foto_default.png';
+                }
+            ?>
+            <div class="chat" onclick="location.href='chat.php?chat_id=<?= $c['chat_id'] ?>'">
 
-        <div class="fotoPerfil">
-            <img src="<?= htmlspecialchars($fotoPerfil) ?>" 
-                alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
-                style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
-        </div>
+                <div class="fotoPerfil">
+                    <img src="<?= htmlspecialchars($fotoPerfil) ?>" 
+                        alt="Foto de <?= htmlspecialchars($nombreChat) ?>" 
+                        style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
+                </div>
 
-        <div class="info">
-            <div class="titulo"><?= htmlspecialchars($nombreChat) ?></div>
-            <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
-            <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
-        </div>
+                <div class="info">
+                    <div class="titulo"><?= htmlspecialchars($nombreChat) ?></div>
+                    <div class="mensaje"><?= htmlspecialchars($c['ultimo_mensaje'] ?: "Sin mensajes todavía") ?></div>
+                    <div class="fecha"><?= $c['fecha_mensaje'] ?: $c['fecha_creacion'] ?></div>
+                </div>
 
-        <?php if ($c['no_leidos'] > 0): ?>
-            <div class="badge">
-                <?= $c['no_leidos'] ?>
+                <?php if ($c['no_leidos'] > 0): ?>
+                    <div class="badge">
+                        <?= $c['no_leidos'] ?>
+                    </div>
+                <?php endif; ?>
             </div>
-        <?php endif; ?>
+        <?php endforeach; ?>
     </div>
-    <?php endforeach; ?>
 
 </main>
+<script>
+function cargarChats() {
+    fetch("procesamientos/get_chats.php")
+        .then(res => res.json())
+        .then(chats => {
+            let html = "";
+
+            chats.forEach(c => {
+                let nombre = c.es_grupo == 1
+                    ? (c.nombre_grupo || "Grupo sin nombre")
+                    : (c.otro_usuario || "Usuario");
+
+                let foto = c.es_grupo == 1
+                    ? "../../../Media/foto_grupo_default.png"
+                    : (c.foto_perfil || "../../../Media/foto_default.png");
+
+                let fecha = c.fecha_mensaje || c.fecha_creacion;
+                let mensaje = c.ultimo_mensaje || "Sin mensajes todavía";
+
+                html += `
+                <div class="chat" onclick="location.href='chat.php?chat_id=${c.chat_id}'">
+                    <div class="fotoPerfil">
+                        <img src="${foto}" style="width:50px;height:50px;border-radius:50%">
+                    </div>
+                    <div class="info">
+                        <div class="titulo">${nombre}</div>
+                        <div class="mensaje">${mensaje}</div>
+                        <div class="fecha">${fecha}</div>
+                    </div>
+                    ${c.no_leidos > 0 ? `<div class="badge">${c.no_leidos}</div>` : ""}
+                </div>
+                `;
+            });
+
+            document.getElementById("listaChats").innerHTML = html;
+        });
+}
+
+// Cargar al abrir
+cargarChats();
+
+// Actualizar cada 2 segundos
+setInterval(cargarChats, 2000);
+</script>
 <!--Footer-->
 <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>

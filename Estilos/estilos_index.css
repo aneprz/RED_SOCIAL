@@ -324,3 +324,20 @@ footer {
     overflow: hidden;         /* 3. Esconde lo que se pase del ancho */
     text-overflow: ellipsis;  /* 4. Pone los puntos suspensivos (...) automáticamente */
 }
+
+/* Estilos de los botones igual que usuarioAjeno */
+.btnSeguir[data-estado="Seguir"] {
+    background-color: #28a745;
+    color: white;
+}
+.btnSeguir[data-estado="Siguiendo"] {
+    background-color: #6c757d;
+    color: white;
+}
+.btnSeguir[data-estado="Solicitado"] {
+    background-color: #ffc107;
+    color: black;
+}
+.btnSeguir:hover {
+    opacity: 0.8;
+}
