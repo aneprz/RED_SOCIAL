@@ -253,9 +253,10 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
         </div>
     </div>
     <?php endif; ?>
+</main>
 
+<?php include __DIR__ . '../../../Php/Templates/footer.php';?>
     <script>
-
         function scrollChatAlFinal() {
             const chatMensajes = document.getElementById('chat-mensajes');
             if (chatMensajes) {
@@ -266,15 +267,107 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
         // Llamar la función cuando cargue la página
         window.addEventListener('load', scrollChatAlFinal);
 
-        const btnConfig = document.getElementById('btnConfigGrupo');
-        const modal = document.getElementById('modalConfigGrupo');
-        const spanCerrar = document.querySelector('.cerrar');
-        btnConfig.addEventListener('click', () => modal.style.display='block');
-        spanCerrar.addEventListener('click', () => modal.style.display='none');
-        window.addEventListener('click', (e) => {if(e.target==modal) modal.style.display='none';});
-    </script>
-</main>
+        //Para el ajax
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Elementos Generales
+            const chatMensajes = document.getElementById('chat-mensajes');
+            const formulario = document.querySelector('.formularioMensajes');
+            const chatId = <?= json_encode($chat_id) ?>;
+            const idUsu = <?= json_encode($idUsu) ?>;
+            const esGrupo = <?= $chat['es_grupo'] ? 'true' : 'false' ?>;
+            let ultimoContenido = "";
 
-<?php include __DIR__ . '../../../Php/Templates/footer.php';?>
+            // 2. Lógica del Modal (Solo si existe)
+            const btnConfig = document.getElementById('btnConfigGrupo');
+            const modal = document.getElementById('modalConfigGrupo');
+            const spanCerrar = document.querySelector('.cerrar');
+
+            if (btnConfig && modal && spanCerrar) {
+                btnConfig.addEventListener('click', () => modal.style.display = 'block');
+                spanCerrar.addEventListener('click', () => modal.style.display = 'none');
+                window.addEventListener('click', (e) => {
+                    if (e.target == modal) modal.style.display = 'none';
+                });
+            }
+
+            // 3. Funciones de Chat
+            function escaparHtml(texto) {
+                const div = document.createElement('div');
+                div.textContent = texto;
+                return div.innerHTML;
+            }
+
+            function scrollAlFinal() {
+                if (chatMensajes) {
+                    chatMensajes.scrollTop = chatMensajes.scrollHeight;
+                }
+            }
+
+            function cargarMensajes() {
+                // Ajustamos la ruta para que sea relativa al archivo actual
+                fetch('procesamientos/get_mensajes.php?chat_id=' + chatId)
+                    .then(res => {
+                        if (!res.ok) throw new Error("Error 404/500 en get_mensajes.php");
+                        return res.json();
+                    })
+                    .then(mensajes => {
+                        const contenidoSync = JSON.stringify(mensajes);
+                        if (contenidoSync === ultimoContenido) return;
+                        ultimoContenido = contenidoSync;
+
+                        let html = '';
+                        mensajes.forEach(m => {
+                            const esTuyo = m.usuario_id == idUsu;
+                            let infoUsuario = '';
+                            if (!esTuyo && esGrupo) {
+                                infoUsuario = `<div class="infoUsuario"><span>${escaparHtml(m.username)}</span></div>`;
+                            }
+                            html += `
+                                <div class="mensaje ${esTuyo ? 'tuyo' : 'otro'}">
+                                    ${infoUsuario}
+                                    <div class="textoMensaje">
+                                        ${escaparHtml(m.texto)}<br>
+                                        <small>${m.fecha}</small>
+                                    </div>
+                                </div>`;
+                        });
+
+                        chatMensajes.innerHTML = html;
+                        scrollAlFinal();
+                    })
+                    .catch(err => console.error("Error en Fetch:", err));
+            }
+
+            // 4. Evento de Envío
+            // Busca el formulario directamente por su clase
+            const formChat = document.querySelector('.formularioMensajes'); 
+
+            if (formChat) {
+                formChat.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+
+                    fetch('procesamientos/guardarMensajes.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(() => {
+                        this.reset();
+                        if (typeof cargarMensajes === "function") {
+                            cargarMensajes();
+                        }
+                    })
+                    .catch(err => console.error("Error al enviar:", err));
+                });
+            } else {
+                console.warn("No se encontró el formulario .formularioMensajes en el DOM");
+            }
+
+            // 5. Inicio
+            scrollAlFinal();
+            cargarMensajes();
+            setInterval(cargarMensajes, 2000);
+        });
+    </script>
 </body>
 </html>
