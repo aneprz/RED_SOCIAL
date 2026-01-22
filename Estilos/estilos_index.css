@@ -86,7 +86,9 @@ footer {
 }
 
 .pieFoto{
-    margin-top: 5px;
+    margin-top: 3px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #999;
 }
 
 .fecha{
@@ -340,4 +342,50 @@ footer {
 }
 .btnSeguir:hover {
     opacity: 0.8;
+}
+
+/* Cabecera del usuario en el modal */
+.modal-user-header button {
+    background: none !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.modal-user-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid #999;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+}
+
+.modal-profile-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-username {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.modal-separator {
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+/* Asegurar que el contenedor de comentarios permita el sticky */
+#modalComentarios {
+    overflow-y: auto;
+    position: relative;
+    max-height: 600px; /* Ajusta según tu diseño */
 }

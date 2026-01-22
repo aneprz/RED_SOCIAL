@@ -268,24 +268,24 @@ if (empty($ids_sigo)) {
     <div class="modal-left" id="modalMedia"></div>
 
     <div class="modal-right">
-      <div id="modalComentarios"></div>
+        <div id="modalComentarios"></div>
 
-    <div class="info">
-        <!-- BOTÓN LIKE DEL MODAL -->
-        <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
-            <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
-        </button>
+        <div class="info">
+            <!-- BOTÓN LIKE DEL MODAL -->
+            <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
+                <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
+            </button>
 
-        <!-- CONTADOR DE PICANTES -->
-        <div id="modalLikes"></div>
-        <div id="modalFecha"></div>
-    </div>
+            <!-- CONTADOR DE PICANTES -->
+            <div id="modalLikes"></div>
+            <div id="modalFecha"></div>
+        </div>
 
-    <form id="commentForm" onsubmit="return submitComment(event)">
-        <input type="hidden" id="modalPostId">
-        <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
-        <button type="submit">Comentar</button>
-    </form>
+        <form id="commentForm" onsubmit="return submitComment(event)">
+            <input type="hidden" id="modalPostId">
+            <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
+            <button type="submit">Comentar</button>
+        </form>
     </div>
   </div>
 </div>
@@ -306,118 +306,74 @@ if (empty($ids_sigo)) {
         fetch('Php/Index/get_post.php?id=' + postId)
         .then(res => res.json())
         .then(data => {
-            if(data.error){
-                alert(data.error);
-                return;
-            }
+            if(data.error){ alert(data.error); return; }
 
             const modal = document.getElementById('postModal');
             const mediaDiv = document.getElementById('modalMedia');
-            mediaDiv.innerHTML = ''; // limpiar contenido previo
+            const comentariosDiv = document.getElementById('modalComentarios');
+            
+            mediaDiv.innerHTML = ''; 
+            comentariosDiv.innerHTML = '';
 
-            //IMAGEN O VIDEO
+            // --- NUEVA CABECERA DEL USUARIO ---
+            const userHeader = document.createElement('div');
+            userHeader.className = 'modal-user-header';
+            
+            // Validar foto de perfil
+            const fotoUrl = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
+
+            userHeader.innerHTML = 
+                `<form action="Php/Busqueda/usuarioAjeno.php" method="POST" class="modal-user-form">
+                    <input type="hidden" name="id" value="${data.usuario_id}">
+                    <button type="submit" class="modal-user-button">
+                        <img src="${fotoUrl}" alt="Perfil" class="modal-profile-img">
+                        <span class="modal-username">${data.username}</span>
+                    </button>
+                </form>`;
+            comentariosDiv.appendChild(userHeader);
+            // --- FIN CABECERA ---
+
+            // Renderizado de media (Imagen o Video)
             const ext = data.imagen_url.split('.').pop().toLowerCase();
             const mediaPath = "/Php/Crear/uploads/" + data.imagen_url;
 
             if(['mp4','webm'].includes(ext)){
                 const video = document.createElement('video');
                 video.src = mediaPath;
-                video.controls = true;
-                video.autoplay = true;
-                video.style.maxWidth = '100%';
-                video.style.maxHeight = '100%';
-                video.style.objectFit = 'contain';
-
-                // reproducir automáticamente
-                video.addEventListener('canplay', () => video.play());
-
-                // reiniciar al terminar
-                video.addEventListener('ended', () => video.play());
-
+                video.controls = true; video.autoplay = true;
+                video.style.maxWidth = '100%'; video.style.maxHeight = '100%';
                 mediaDiv.appendChild(video);
             } else {
                 const img = document.createElement('img');
                 img.src = mediaPath;
-                img.style.maxWidth = '100%';
-                img.style.maxHeight = '100%';
-                img.style.objectFit = 'contain';
+                img.style.maxWidth = '100%'; img.style.maxHeight = '100%';
                 mediaDiv.appendChild(img);
             }
 
-            //INFO DEL POST
-            document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
-            document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
-
-            //COMENTARIOS EXISTENTES
-            const comentariosDiv = document.getElementById('modalComentarios');
-            comentariosDiv.innerHTML = '';
-
+            // Cargar comentarios existentes (Debajo de la cabecera)
             data.comentarios.forEach(c => {
                 const div = document.createElement('div');
                 div.classList.add('comment');
                 div.dataset.id = c.id;
-
-                // Estructura con foto de perfil
                 div.innerHTML = `
-                <div class="comentarioUsuario">
-                    <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
-                    <div>
-                        <span class="comment-user">${c.usuario}</span>
-                        <br>
-                        <span class="comment-text">${c.texto}</span>
+                    <div class="comentarioUsuario">
+                        <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="avatar">
+                        <div>
+                            <span class="comment-user">${c.usuario}</span><br>
+                            <span class="comment-text">${c.texto}</span>
+                        </div>
                     </div>
-                </div>
                 `;
                 comentariosDiv.appendChild(div);
             });
 
-            // último comentario
-            lastCommentId = data.comentarios.length ? data.comentarios[data.comentarios.length - 1].id : 0;
-
+            // Configuración restante del modal...
+            document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
+            document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
             document.getElementById('modalPostId').value = postId;
-
-            //CONFIGURAR BOTÓN LIKE DEL MODAL
-            const modalLikeBtn = document.getElementById('modalLikeBtn');
-            const modalLikeImg = document.getElementById('modalLikeImg');
-
-            modalLikeBtn.dataset.postId = postId;
-            modalLikeImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
-
-            // mostrar modal
             modal.style.display = 'flex';
-
-            // hacer scroll al último comentario
-            comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
-
-            //NUEVOS COMENTARIOS
-            if (pollingInterval) clearInterval(pollingInterval);
-
-            pollingInterval = setInterval(() => {
-                fetch(`Php/Explorar/Procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
-                .then(res => res.json())
-                .then(comments => {
-                    comments.forEach(c => {
-                        if (!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)) {
-                            const div = document.createElement('div');
-                            div.classList.add('comment');
-                            div.dataset.id = c.id;
-                            div.innerHTML = `
-                                <img src="${c.foto_perfil}" alt="${c.usuario}'s avatar">
-                                <div>
-                                    <span class="comment-user">${c.usuario}</span>
-                                    <span class="comment-text">${c.texto}</span>
-                                </div>
-                            `;
-                            comentariosDiv.appendChild(div);
-                            lastCommentId = c.id;
-                            comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
-                        }
-                    });
-                });
-            }, 3000);
-
-        })  
-        .catch(err => console.error('Error al cargar el post:', err));
+            comentariosDiv.scrollTop = 0; // O scrollHeight si prefieres ir al final
+        });
     }
 
     function closeModal(){
