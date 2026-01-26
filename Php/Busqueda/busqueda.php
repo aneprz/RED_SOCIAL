@@ -44,6 +44,7 @@ while ($row = mysqli_fetch_assoc($res_sol)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Búsqueda de Usuarios</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_busqueda.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
