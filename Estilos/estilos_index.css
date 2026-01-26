@@ -86,7 +86,9 @@ footer {
 }
 
 .pieFoto{
-    margin-top: 5px;
+    margin-top: 3px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #999;
 }
 
 .fecha{
@@ -316,4 +318,74 @@ footer {
     display: flex;
     justify-content: center;
     gap: 15px;
+}
+
+.username-link{
+    max-width: 90px;         /* 1. Define aquí el ancho máximo (en píxeles) */
+    white-space: nowrap;      /* 2. Prohíbe que el texto salte de línea */
+    overflow: hidden;         /* 3. Esconde lo que se pase del ancho */
+    text-overflow: ellipsis;  /* 4. Pone los puntos suspensivos (...) automáticamente */
+}
+
+/* Estilos de los botones igual que usuarioAjeno */
+.btnSeguir[data-estado="Seguir"] {
+    background-color: #28a745;
+    color: white;
+}
+.btnSeguir[data-estado="Siguiendo"] {
+    background-color: #6c757d;
+    color: white;
+}
+.btnSeguir[data-estado="Solicitado"] {
+    background-color: #ffc107;
+    color: black;
+}
+.btnSeguir:hover {
+    opacity: 0.8;
+}
+
+/* Cabecera del usuario en el modal */
+.modal-user-header button {
+    background: none !important;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.modal-user-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid #999;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    margin-bottom: 10px;
+}
+
+.modal-profile-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.modal-username {
+    font-weight: bold;
+    font-size: 14px;
+    color: #333;
+}
+
+.modal-separator {
+    border: 0;
+    border-top: 1px solid #eee;
+}
+
+/* Asegurar que el contenedor de comentarios permita el sticky */
+#modalComentarios {
+    overflow-y: auto;
+    position: relative;
+    max-height: 600px; /* Ajusta según tu diseño */
 }
