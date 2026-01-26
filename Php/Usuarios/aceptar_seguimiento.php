@@ -23,6 +23,10 @@ try {
     // 3. Borrar notificación (CORREGIDO: Usamos 'follow_request')
     $stmt = $pdo->prepare("DELETE FROM notificaciones WHERE id_usuario = ? AND id_emisor = ? AND tipo = 'follow_request'");
     $stmt->execute([$mi_id, $solicitante_id]);
+
+    // 4. (Opcional) Notificar al usuario que fue aceptado
+    // Nota: Como tu base de datos no tiene un tipo 'accepted', usamos 'follow' o nada.
+    // Por ahora lo dejamos sin notificar de vuelta para no dar errores de ENUM.
     
     $pdo->commit();
     echo json_encode(['success' => true]);

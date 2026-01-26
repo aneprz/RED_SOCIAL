@@ -52,7 +52,7 @@ if (isset($_POST['id_usuario']) && isset($_POST['accion'])) {
                 $sql = "INSERT INTO solicitudes_seguimiento (solicitante_id, receptor_id, estado) VALUES ($mi_id, $id_destino, 'pendiente')";
                 if(mysqli_query($conexion, $sql)){
                     // CORRECCIÓN AQUÍ: 'follow_request' en vez de 'solicitud'
-                    $sql_n = "INSERT INTO notificaciones (id_usuario, id_emisor, tipo, fecha) VALUES ($id_destino, $mi_id, 'solicitud', NOW())";
+                    $sql_n = "INSERT INTO notificaciones (id_usuario, id_emisor, tipo, fecha) VALUES ($id_destino, $mi_id, 'follow_request', NOW())";
                     mysqli_query($conexion, $sql_n);
                 }
 
