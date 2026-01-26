@@ -33,14 +33,19 @@ $publicacionesArray = [];
 
 $id = (int)$id;
 
-$resultPost = mysqli_query(
-    $conexion,
-    "SELECT imagen_url FROM publicaciones WHERE usuario_id = $id"
-);
+// CAMBIO AQUÍ: Añadimos las subconsultas para contar likes y comentarios
+$queryPosts = "SELECT p.id, p.imagen_url,
+               (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as total_likes,
+               (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) as total_comentarios
+               FROM publicaciones p 
+               WHERE usuario_id = $id 
+               ORDER BY fecha_publicacion DESC";
+
+$resultPost = mysqli_query($conexion, $queryPosts);
 
 if ($resultPost) {
     while ($rowPost = mysqli_fetch_assoc($resultPost)) {
-        $publicacionesArray[] = $rowPost['imagen_url'];
+        $publicacionesArray[] = $rowPost;
     }
 }
 //foto_perfil
