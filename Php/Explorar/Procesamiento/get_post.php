@@ -12,6 +12,7 @@ $res = $conexion->query("
         p.id,
         p.imagen_url,
         p.fecha_publicacion,
+        p.pie_foto,  
         u.id AS usuario_id,
         u.username AS usuario,
         u.foto_perfil,

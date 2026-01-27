@@ -1,39 +1,26 @@
 <?php
+// Validar sesión
 if (!isset($_SESSION['username'])) {
-header("Location: Php/Sesiones/inicio_sesion.php");
-exit();
+    header("Location: ../Sesiones/inicio_sesion.php");
+    exit();
 }
-
-//CUANTOS ME SIGUEN
-
 
 include '../../BD/conexiones.php';
 
 $id = intval($_SESSION['id']);
 
-$resultSeguidores = mysqli_query($conexion, "SELECT COUNT(seguidor_id) AS total FROM seguidores WHERE seguido_id = $id");
+// 1. Estadísticas
+$sqlSeguidores = "SELECT COUNT(*) FROM seguidores WHERE seguido_id = $id";
+$seguidores = $conexion->query($sqlSeguidores)->fetch_column();
 
-$rowSeguidores = mysqli_fetch_assoc($resultSeguidores);
-$seguidores = $rowSeguidores['total'];
+$sqlSeguidos = "SELECT COUNT(*) FROM seguidores WHERE seguidor_id = $id";
+$seguidos = $conexion->query($sqlSeguidos)->fetch_column();
 
-//A CUANTOS SIGO
-$resultSeguidos = mysqli_query($conexion, "SELECT COUNT(seguido_id) AS total FROM seguidores WHERE seguidor_id = $id");
+$sqlPublicaciones = "SELECT COUNT(*) FROM publicaciones WHERE usuario_id = $id";
+$publicaciones = $conexion->query($sqlPublicaciones)->fetch_column();
 
-$rowSeguidos = mysqli_fetch_assoc($resultSeguidos);
-$seguidos = $rowSeguidos['total'];
-
-//CUANTAS PUBLICACIONES TENGO
-$resultPublicaciones = mysqli_query($conexion, "SELECT COUNT(usuario_id) AS total FROM publicaciones WHERE usuario_id = $id");
-
-$rowPublicaciones = mysqli_fetch_assoc($resultPublicaciones);
-$publicaciones = $rowPublicaciones['total'];
-
-//POST
+// 2. Obtener Publicaciones con Likes y Comentarios
 $publicacionesArray = [];
-
-$id = (int)$id;
-
-// CAMBIO AQUÍ: Añadimos las subconsultas para contar likes y comentarios
 $queryPosts = "SELECT p.id, p.imagen_url,
                (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as total_likes,
                (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) as total_comentarios
@@ -41,23 +28,17 @@ $queryPosts = "SELECT p.id, p.imagen_url,
                WHERE usuario_id = $id 
                ORDER BY fecha_publicacion DESC";
 
-$resultPost = mysqli_query($conexion, $queryPosts);
+$resultPost = $conexion->query($queryPosts);
 
 if ($resultPost) {
-    while ($rowPost = mysqli_fetch_assoc($resultPost)) {
+    while ($rowPost = $resultPost->fetch_assoc()) {
         $publicacionesArray[] = $rowPost;
     }
 }
-//foto_perfil
-$fotoPerfil = mysqli_query(
-    $conexion,
-    "SELECT foto_perfil AS foto FROM usuarios WHERE id = $id"
-);
 
-if ($fotoPerfil && mysqli_num_rows($fotoPerfil) > 0) {
-    $rowFoto = mysqli_fetch_assoc($fotoPerfil);
-    $_SESSION['foto_perfil'] = $rowFoto['foto'];
+// 3. Foto de perfil
+$resFoto = $conexion->query("SELECT foto_perfil FROM usuarios WHERE id = $id");
+if ($resFoto && $rowFoto = $resFoto->fetch_assoc()) {
+    $_SESSION['foto_perfil'] = $rowFoto['foto_perfil'];
 }
-
 ?>
-

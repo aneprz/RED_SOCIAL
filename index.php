@@ -152,7 +152,6 @@ if (empty($ids_sigo)) {
         <?php endif; ?>
     </div>
 
-    <!-- SUGERENCIAS -->
     <div class="sugerencias">
         <h2>Sugerencias para ti</h2>
         <?php if (!empty($sugerencias)): ?>
@@ -189,7 +188,6 @@ if (empty($ids_sigo)) {
                             style="width:40px; height:40px; border-radius:50%; object-fit:cover; margin-right:10px;"
                             onerror="this.onerror=null; this.src='/Media/foto_default.png';">
 
-                        <!-- Link al perfil -->
                         <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                             <button type="submit" class="username-link" title="<?= htmlspecialchars($user['username']) ?>"
@@ -199,7 +197,6 @@ if (empty($ids_sigo)) {
                         </form>
                     </div>
 
-                    <!-- Botón AJAX seguir -->
                     <button type="button" class="btnSeguir" data-id="<?= $user['id'] ?>" data-estado="<?= $estadoBtn ?>"
                             style="padding:5px 10px; border-radius:8px; font-weight:bold; cursor:pointer;
                                 border:none; transition:0.2s; font-size: 12px;">
@@ -260,7 +257,6 @@ if (empty($ids_sigo)) {
     </script>
 </div>
 
-<!-- MODAL PUBLICACIÓN -->
 <div class="explore-modal" id="postModal">
   <span class="close-modal" onclick="closeModal()">&times;</span>
 
@@ -271,12 +267,10 @@ if (empty($ids_sigo)) {
         <div id="modalComentarios"></div>
 
         <div class="info">
-            <!-- BOTÓN LIKE DEL MODAL -->
             <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
                 <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
             </button>
 
-            <!-- CONTADOR DE PICANTES -->
             <div id="modalLikes"></div>
             <div id="modalFecha"></div>
         </div>
@@ -301,6 +295,24 @@ if (empty($ids_sigo)) {
     });
     let pollingInterval = null;
     let lastCommentId = 0;
+
+    // Función auxiliar para renderizar comentarios (y el pie de foto)
+    function renderComment(c) {
+        // En los comentarios viene 'usuario', en el post (pie de foto) viene 'username'
+        const nombreUsuario = c.usuario || c.username; 
+        
+        return `
+            <div class="comment" data-id="${c.id}">
+                <div class="comentarioUsuario">
+                    <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="avatar">
+                    <div>
+                        <span class="comment-user">${nombreUsuario}</span>
+                        <p class="comment-text" style="white-space: pre-wrap; overflow-wrap: break-word;">${c.texto}</p>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
 
     function openModal(postId) {
         fetch('Php/Index/get_post.php?id=' + postId)
@@ -350,35 +362,42 @@ if (empty($ids_sigo)) {
                 mediaDiv.appendChild(img);
             }
 
-            // Cargar comentarios existentes (Debajo de la cabecera)
+            // ===============================================
+            // 1. INYECTAR PIE DE FOTO COMO PRIMER COMENTARIO
+            // ===============================================
+            if (data.pie_foto && data.pie_foto.trim() !== "") {
+                const pieDeFotoObj = {
+                    id: 'caption-' + data.id, // ID temporal
+                    username: data.username,  // Usamos el nombre del autor
+                    foto_perfil: data.foto_perfil,
+                    texto: data.pie_foto
+                };
+                comentariosDiv.innerHTML += renderComment(pieDeFotoObj);
+            }
+
+            // 2. Cargar comentarios existentes
             data.comentarios.forEach(c => {
-                const div = document.createElement('div');
-                div.classList.add('comment');
-                div.dataset.id = c.id;
-                div.innerHTML = `
-                    <div class="comentarioUsuario">
-                        <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="avatar">
-                        <div>
-                            <span class="comment-user">${c.usuario}</span><br>
-                            <span class="comment-text">${c.texto}</span>
-                        </div>
-                    </div>
-                `;
-                comentariosDiv.appendChild(div);
+                comentariosDiv.innerHTML += renderComment(c);
             });
 
             // Configuración restante del modal...
             document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
             document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
             document.getElementById('modalPostId').value = postId;
+            
+            // Icono Like
+            const modalImg = document.getElementById('modalLikeImg');
+            if(modalImg) modalImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+
             modal.style.display = 'flex';
-            comentariosDiv.scrollTop = 0; // O scrollHeight si prefieres ir al final
+            comentariosDiv.scrollTop = 0; 
         });
     }
 
     function closeModal(){
         const modal = document.getElementById('postModal');
         modal.style.display='none';
+        document.getElementById('modalMedia').innerHTML = ''; // Detener videos
         if(pollingInterval){ clearInterval(pollingInterval); pollingInterval=null; }
     }
 
@@ -403,21 +422,13 @@ if (empty($ids_sigo)) {
             if(data.success){
                 const comentariosDiv = document.getElementById('modalComentarios');
                 
-                // Crear nuevo div para comentario con foto de perfil
-                const div = document.createElement('div');
-                div.classList.add('comment');
-                div.dataset.id = data.comment_id;
-                div.innerHTML = `
-                    <div class="comentarioUsuario">
-                        <img class="fotoPerfilComentarios" src="${data.foto_perfil}" alt="${data.usuario}'s avatar">
-                        <div>
-                            <span class="comment-user">${data.usuario}</span>
-                            <p class="comment-text" style="white-space: pre-wrap; overflow-wrap: break-word;">${texto}</p>
-                        </div>
-                    </div>
-                `;
-                
-                comentariosDiv.appendChild(div);
+                // Usamos la función renderComment para mantener el estilo
+                comentariosDiv.innerHTML += renderComment({
+                    id: data.comment_id,
+                    foto_perfil: data.foto_perfil,
+                    usuario: data.usuario,
+                    texto: texto
+                });
                 
                 // Limpiar input
                 document.getElementById('commentText').value = '';
@@ -440,8 +451,15 @@ if (empty($ids_sigo)) {
         const btn = e.target.closest('.btnMeGusta');
         if (!btn) return;
 
-        const postId = btn.dataset.postId;
-        const img = btn.querySelector('.likeImg');
+        // Si es el botón del modal, tomamos el ID del input hidden, si es del feed, del data-attribute
+        let postId = btn.dataset.postId;
+        if (!postId && btn.id === 'modalLikeBtn') {
+            postId = document.getElementById('modalPostId').value;
+        }
+
+        if(!postId) return;
+
+        const img = btn.querySelector('img') || document.getElementById('modalLikeImg');
 
         fetch('Php/Index/toggle_like.php', {
             method: 'POST',
@@ -451,52 +469,26 @@ if (empty($ids_sigo)) {
         .then(res => res.json())
         .then(data => {
             // cambiar icono
-            img.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+            if(img) img.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
 
             // actualizar contador si existe en feed
-            const contador = btn.parentElement.querySelector('.likeCount');
-            if (contador) contador.textContent = '🌶️ ' + data.total;
+            const feedBtn = document.querySelector(`.btnMeGusta[data-post-id="${postId}"]`);
+            if (feedBtn) {
+                const contador = feedBtn.parentElement.querySelector('.likeCount'); // Si tienes contador en feed
+                const feedImg = feedBtn.querySelector('.likeImg');
+                if(feedImg) feedImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
+            }
 
             // sincronizar modal si está abierto y es el mismo post
             const modalPostId = document.getElementById('modalPostId').value;
             if (modalPostId == postId) {
                 document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
-
                 const modalImg = document.getElementById('modalLikeImg');
                 if(modalImg) modalImg.src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
             }
         })
         .catch(err => console.error(err));
     });
-
-    /* BOTÓN LIKE DEL MODAL*/
-    const modalBtn = document.getElementById('modalLikeBtn');
-    if(modalBtn){
-        modalBtn.onclick = () => {
-            const postId = document.getElementById('modalPostId').value;
-
-            fetch('Php/Index/toggle_like.php', {
-                method: 'POST',
-                headers: {'Content-Type':'application/x-www-form-urlencoded'},
-                body: 'post_id=' + postId
-            })
-            .then(res => res.json())
-            .then(data => {
-                // icono modal
-                document.getElementById('modalLikeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
-                document.getElementById('modalLikes').textContent = '🌶️ ' + data.total;
-
-                // sincronizar feed
-                const feedBtn = document.querySelector(`.btnMeGusta[data-post-id="${postId}"]`);
-                if(feedBtn){
-                    feedBtn.querySelector('.likeImg').src = data.liked ? '/Media/meGustaDado.png' : '/Media/meGusta.png';
-                    const contador = feedBtn.parentElement.querySelector('.likeCount');
-                    if(contador) contador.textContent = '🌶️ ' + data.total;
-                }
-            })
-            .catch(err => console.error(err));
-        };
-    }
 </script>
 </body>
 </html>

@@ -1,21 +1,30 @@
-html,body{
+html, body {
     height: 100%;
     margin: 0;
 }
 
-main{
+main {
     flex: 1; 
 }
+
 body {
     font-family: Arial, sans-serif;
     background-color: #fafafa;
     margin: 0;
     padding: 0;
-    margin-left: 250px ;
+    /* Ajusta este margen si tu navbar es fixed-left, si es top, quítalo */
+    margin-left: 250px; 
     background: linear-gradient(180deg, #e65a36, #c13722);
     display: flex;
     flex-direction: column;
 }
+
+a {
+    text-decoration: none !important;
+    color: inherit !important; 
+}
+
+/* ================= CONTENEDOR PERFIL ================= */
 
 .profile-container {
     max-width: 800px;
@@ -54,6 +63,7 @@ body {
     word-wrap: break-word;
     overflow-wrap: break-word;
     white-space: normal;
+    line-height: 1.4;
 }
 
 .profile-info .stats {
@@ -61,49 +71,14 @@ body {
     gap: 20px;
     font-size: 14px;
     color: #333;
+    margin-top: 10px;
 }
 
-.stats span{
+.stats span {
     color: #6B6B6B;
 }
 
-.profile-posts {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 10px;
-}
-
-
-.post {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    background-color: #000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 4px;
-    cursor: pointer; /* Agregado para indicar click */
-}
-
-
-.profile-posts .post img,
-.profile-posts .post video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.2s;
-}
-
-
-.profile-posts .post img:hover {
-    transform: scale(1.05);
-}
-a{
-    text-decoration: none !important;
-    color: inherit !important; 
-}
-
+/* Botones varios */
 .cerrarSesion {
     padding: 8px 16px;
     background-color: #D62828;
@@ -113,255 +88,289 @@ a{
     cursor: pointer;
     font-weight: bold;
 }
-
 .cerrarSesion:hover {
     background-color: #B71C1C;
 }
 
-.objetos{
-    display: flex;
-}
-
-.formCerrarSesion{
+.formCerrarSesion {
     justify-content: right;
     margin: 20px;
+    display: flex;
 }
 
-.botonEditarPerfil{
+.botonEditarPerfil {
     background-color: #E94B3C;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
     margin: 5px;
+    font-weight: bold;
 }
 
-#btnSeguir{
+#btnSeguir {
     margin-top: 10px;
     border-radius: 10px;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
 }
 
-/* ========================================================= */
-/* PEGAR AQUÍ ABAJO EL CSS DEL MODAL QUE ME DISTE DE EXPLORAR */
-/* ========================================================= */
+/* ================= GRID DE PUBLICACIONES ================= */
 
-/* Overlay y Modal Container */
-.explore-modal {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.75);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 3000;
+.profile-posts {
+    display: grid;
+    /* Ajusta el minmax según prefieras el tamaño de las miniaturas */
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px; /* Espacio entre fotos */
+    margin-top: 20px;
 }
 
-.explore-modal-content {
-    width: 90%;
-    max-width: 1000px;
-    height: 85vh;
-    background: white;
-    display: flex;
-    border-radius: 10px;
+.post {
+    position: relative; 
+    width: 100%;
+    aspect-ratio: 1 / 1; /* Hace que sean cuadrados perfectos */
+    background-color: #000;
+    cursor: pointer;
+    border-radius: 4px;
     overflow: hidden;
 }
 
-/* Media izquierda */
-.modal-left {
-    flex: 2;
-    background: black;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-left img,
-.modal-left video {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-}
-
-/* Columna derecha */
-.modal-right {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    background: #fafafa;
-    min-height: 0;
-}
-
-/* Comentarios */
-#modalComentarios {
-    flex: 1;
-    overflow-y: auto;
-    min-height: 0;
-    padding-right: 5px;
-}
-
-/* Comentario */
-.comment {
-    display: flex;
-    gap: 10px;
-    padding: 8px 0;
-    border-bottom: 1px solid #ddd;
-    font-size: 14px;
-}
-
-.comment-user {
-    font-weight: bold;
-}
-
-.comment-avatar-form button {
-    border: none;
-    background: none;
-    padding: 0;
-    cursor: pointer;
-}
-
-.comment-avatar-form img {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    object-fit: cover;
-}
-
-.comment-content {
-    display: flex;
-    flex-direction: column;
-}
-
-/* ===== USUARIO CREADOR ===== */
-
-.post-owner {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-bottom: 10px;
-    margin-bottom: 10px;
-    border-bottom: 1px solid #999;
-}
-
-.post-user {
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* ===== META POST ===== */
-
-.post-meta {
-    border-top: 1px solid #ddd;
-    padding-top: 8px;
-    margin-top: 8px;
-    font-size: 14px;
-}
-
-/* ===== BOTÓN LIKE (PNG) ===== */
-
-.like-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 4px 0;
-    display: flex;
-    align-items: center;
-}
-
-.like-btn img {
-    width: 24px;
-    height: 24px;
-    object-fit: contain;
-    pointer-events: none;
-    transition: transform 0.15s ease;
-}
-
-.like-btn:active img {
-    transform: scale(1.2);
-}
-
-
-/* ===== FORM COMENTARIO ===== */
-
-#commentForm {
-    display: flex;
-    gap: 8px;
-    border-top: 1px solid #ddd;
-    padding-top: 10px;
-}
-
-#commentForm input {
-    flex: 1;
-    padding: 8px;
-    border-radius: 20px;
-    border: 1px solid #ccc;
-    outline: none;
-}
-
-#commentForm button {
-    background: #0095f6;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    padding: 8px 14px;
-    cursor: pointer;
-}
-
-/* Botón cerrar */
-.close-modal {
-    position: fixed;
-    top: 20px;
-    right: 30px;
-    font-size: 32px;
-    color: white;
-    cursor: pointer;
-    z-index: 4000;
-}
-
-/* =========================================
-   EFECTO HOVER (COPIADO DE EXPLORAR)
-   ========================================= */
-
-/* Aseguramos que el post sea el contenedor relativo */
-.post {
-    position: relative; /* Necesario para que el overlay se posicione encima */
-    cursor: pointer;
-}
-
-/* Estilos para la imagen/video dentro del post */
-.post .media {
+/* Imagen/Video dentro del grid del perfil */
+.post .media, 
+.post img, 
+.post video {
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    transition: filter 0.3s;
-    display: block; /* Elimina espacios extra */
+    object-fit: cover; /* IMPORTANTE: 'cover' para que rellene el cuadrado sin bordes negros */
+    display: block;
+    transition: filter 0.3s, transform 0.3s;
 }
 
-/* Efecto al pasar el ratón: oscurecer imagen */
-.post:hover .media {
-    filter: brightness(0.7); /* Oscurece la imagen */
+/* Efecto Hover (Oscurecer) */
+.post:hover .media,
+.post:hover img,
+.post:hover video {
+    filter: brightness(0.7);
 }
 
-/* El Overlay (Capa invisible con los números) */
+/* Overlay con info de likes/comentarios */
 .overlay {
     position: absolute;
-    inset: 0; /* Ocupa todo el espacio (top, bottom, left, right: 0) */
+    inset: 0; /* Ocupa todo el espacio */
     display: flex;
     justify-content: center;
     align-items: center;
     opacity: 0; /* Invisible por defecto */
     transition: opacity 0.3s;
-    background-color: rgba(0, 0, 0, 0.2); /* Fondo negro muy sutil */
+    background-color: rgba(0, 0, 0, 0.2);
+    pointer-events: none; /* Permite hacer click en la foto */
 }
 
-/* Al pasar el ratón por el post, mostrar el overlay */
 .post:hover .overlay {
     opacity: 1;
 }
 
-/* Texto de los contadores */
 .overlay-info {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     font-size: 18px;
     font-weight: bold;
     color: white;
-    text-shadow: 0 2px 5px rgba(0,0,0,0.5); /* Sombra para que se lea mejor */
-    pointer-events: none; /* Para que el click traspase a la imagen */
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+/* ========================================================= */
+/* MODAL (Estilo Instagram) */
+/* ========================================================= */
+
+.explore-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85); /* Fondo oscuro */
+    display: none; /* JS lo cambia a flex */
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+    backdrop-filter: blur(5px);
+}
+
+.explore-modal-content {
+    width: 90%;
+    max-width: 1100px;
+    height: 85vh; /* Altura fija */
+    background: white;
+    display: flex;
+    border-radius: 4px;
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+/* --- Lado Izquierdo (Multimedia Grande) --- */
+.modal-left {
+    flex: 1.5; /* Ocupa el 60% del ancho */
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.modal-left img,
+.modal-left video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* IMPORTANTE: 'contain' aquí para ver la foto entera sin recortes */
+    display: block;
+}
+
+/* --- Lado Derecho (Info y Chat) --- */
+.modal-right {
+    flex: 1; /* Ocupa el 40% restante */
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-left: 1px solid #efefef;
+    min-width: 300px; /* Ancho mínimo para que no se aplaste */
+}
+
+/* Cabecera del usuario (Fija arriba) */
+.modal-user-header {
+    padding: 15px;
+    border-bottom: 1px solid #efefef;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0; /* No encoger */
+}
+
+.modal-profile-img {
+    width: 32px; height: 32px; border-radius: 50%; 
+    margin-right: 10px; object-fit: cover;
+}
+
+.modal-username { 
+    font-weight: bold; font-size: 14px; color: #262626; 
+}
+
+.modal-user-button { 
+    background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; 
+}
+
+/* Área de Comentarios (Centro con Scroll) */
+#modalComentarios {
+    flex: 1; 
+    overflow-y: auto; 
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Estilo de cada comentario (incluido el pie de foto) */
+.comment {
+    display: flex;
+    align-items: flex-start;
+    font-size: 14px;
+}
+
+.comentarioUsuario {
+    display: flex; 
+    align-items: flex-start;
+    width: 100%;
+}
+
+.fotoPerfilComentarios {
+    width: 32px; 
+    height: 32px; 
+    border-radius: 50%; 
+    margin-right: 12px; 
+    object-fit: cover; 
+    flex-shrink: 0;
+}
+
+.comment-user { 
+    font-weight: bold; 
+    margin-right: 5px; 
+    color: #262626;
+}
+
+.comment-text { 
+    color: #333; 
+    line-height: 1.4; 
+    margin: 0;
+    word-break: break-word; /* Evita que palabras largas rompan el diseño */
+}
+
+/* Footer del modal (Likes, Fecha, Input) */
+.post-meta {
+    padding: 10px 15px;
+    border-top: 1px solid #efefef;
+    flex-shrink: 0;
+}
+
+.like-btn {
+    background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 5px;
+}
+
+.like-btn svg, 
+.like-btn img {
+    width: 26px;  /* Tamaño estándar estilo Instagram */
+    height: 26px;
+    display: block; /* Elimina espacios extraños debajo */
+}
+
+#modalLikes { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
+#modalFecha { font-size: 10px; color: #8e8e8e; text-transform: uppercase; }
+
+#commentForm {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-top: 1px solid #efefef;
+    flex-shrink: 0;
+}
+
+#commentText {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    resize: none;
+    height: 18px;
+}
+
+#commentForm button {
+    background: none;
+    border: none;
+    color: #0095f6; /* Azul estilo link */
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+#commentForm button:disabled { opacity: 0.3; }
+
+/* Botón cerrar (X) */
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    font-size: 40px;
+    color: white;
+    cursor: pointer;
+    z-index: 4000;
+    text-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Responsive para móviles */
+@media (max-width: 768px) {
+    .explore-modal-content {
+        flex-direction: column;
+        height: 100%; width: 100%; max-width: 100%;
+        border-radius: 0;
+    }
+    .modal-left { flex: none; height: 50%; background: black; }
+    .modal-right { flex: 1; height: 50%; }
 }

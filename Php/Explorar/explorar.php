@@ -133,8 +133,6 @@ function openModal(postId){
                 ? '../../Media/meGustaDado.png'
                 : '../../Media/meGusta.png';
 
-
-
         const mediaDiv = document.getElementById('modalMedia');
         mediaDiv.innerHTML = '';
 
@@ -172,6 +170,24 @@ function openModal(postId){
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
 
+        // --- NUEVA LÓGICA: EL PIE DE FOTO COMO PRIMER COMENTARIO ---
+        if (data.pie_foto && data.pie_foto.trim() !== "") {
+            // Creamos un objeto falso simulando ser un comentario
+            // Usamos los datos del dueño del post (data.usuario, data.foto_perfil)
+            // y el texto es el pie de foto.
+            const pieDeFotoComoComentario = {
+                id: 'caption-' + data.id, // ID único temporal
+                usuario_id: data.usuario_id,
+                usuario: data.usuario,
+                foto_perfil: data.foto_perfil,
+                texto: data.pie_foto
+            };
+            
+            // Lo añadimos primero usando tu función renderComment existente
+            comentariosDiv.innerHTML += renderComment(pieDeFotoComoComentario);
+        }
+        // -----------------------------------------------------------
+
         data.comentarios.forEach(c=>{
             comentariosDiv.innerHTML += renderComment(c);
         });
@@ -186,7 +202,7 @@ function openModal(postId){
         if(pollingInterval) clearInterval(pollingInterval);
         if(likesInterval) clearInterval(likesInterval);
 
-        // 🔄 Polling comentarios
+        // Polling comentarios
         pollingInterval = setInterval(() => {
             fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
@@ -200,7 +216,7 @@ function openModal(postId){
             });
         }, 2000);
 
-        // 🔄 Polling likes (TIEMPO REAL)
+        // Polling likes
         likesInterval = setInterval(() => {
             fetch(`procesamiento/get_likes.php?post_id=${postId}`)
             .then(res => res.json())

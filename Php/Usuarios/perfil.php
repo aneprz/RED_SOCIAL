@@ -6,9 +6,11 @@ if (!isset($_SESSION['username'])) {
 }
 
 include 'procesar_perfil.php';
-$foto_perfil = $_SESSION['foto_perfil'];
-$nombreusu = $_SESSION['username'] ?? '';
-$biografia = $_SESSION['biografia'] ?? '';
+
+// Evitar warnings si no hay sesión
+$foto_perfil = $_SESSION['foto_perfil'] ?? '/Media/foto_default.png';
+$nombreusu   = $_SESSION['username'] ?? '';
+$biografia   = $_SESSION['biografia'] ?? '';
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,10 +26,10 @@ $biografia = $_SESSION['biografia'] ?? '';
         <div class="objetos">
             <div class="profile-container">
                 <div class="profile-header">
-                    <img src="<?= $foto_perfil ?>" alt="Foto de perfil">
+                    <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
                     <div class="profile-info">
-                        <h2><?php echo $nombreusu; ?></h2>
-                        <p class="bio"><?php echo $biografia; ?></p>
+                        <h2><?= htmlspecialchars($nombreusu) ?></h2>
+                        <p class="bio"><?php echo nl2br(htmlspecialchars($biografia)); ?></p>
                         <div class="stats">
                             <span><strong><?= $publicaciones ?></strong> publicaciones</span>
                             <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
@@ -39,39 +41,37 @@ $biografia = $_SESSION['biografia'] ?? '';
                 <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
                 
                 <div class="profile-posts">
-                <?php if (!empty($publicacionesArray)): ?>
-                    <?php foreach ($publicacionesArray as $post): ?>
-                        <?php
-                            $urlImagen = $post['imagen_url'];
-                            $idPost = $post['id'];
+                    <?php if (!empty($publicacionesArray)): ?>
+                        <?php foreach ($publicacionesArray as $post): ?>
+                            <?php
+                                $url = $post['imagen_url'];
+                                $pid = $post['id'];
+                                $likes = $post['total_likes'];
+                                $coments = $post['total_comentarios'];
+                                
+                                $ruta = "../Crear/uploads/" . htmlspecialchars($url);
+                                $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+                            ?>
                             
-                            // Nuevas variables (si son null, ponemos 0)
-                            $likes = $post['total_likes'] ?? 0;
-                            $comentarios = $post['total_comentarios'] ?? 0;
+                            <div class="post" onclick="openModal(<?= $pid ?>)">
+                                <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                                    <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video> 
+                                <?php else: ?>
+                                    <img class="media" src="<?= $ruta ?>" alt="Post">
+                                <?php endif; ?>
 
-                            $ruta = "../Crear/uploads/" . htmlspecialchars($urlImagen);
-                            $ext = strtolower(pathinfo($urlImagen, PATHINFO_EXTENSION));
-                        ?>
-                        
-                        <div class="post" onclick="openModal(<?= $idPost ?>)">
-                            <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                                <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video> 
-                            <?php else: ?>
-                                <img class="media" src="<?= $ruta ?>" alt="Post">
-                            <?php endif; ?>
-
-                            <div class="overlay">
-                                <div class="overlay-info">
-                                    <span>🌶️ <?= $likes ?></span>
-                                    <span>💬 <?= $comentarios ?></span>
+                                <div class="overlay">
+                                    <div class="overlay-info">
+                                        <span>🌶️ <?= $likes ?></span>
+                                        <span>💬 <?= $coments ?></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>No hay publicaciones todavía</p>
-                <?php endif; ?>
-            </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p>No hay publicaciones todavía</p>
+                    <?php endif; ?>
+                </div>
             </div>
             
             <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
@@ -87,22 +87,22 @@ $biografia = $_SESSION['biografia'] ?? '';
         <div class="modal-left" id="modalMedia"></div>
 
         <div class="modal-right">
-          <div class="post-owner" id="modalOwner"></div>
+          <div id="modalHeaderContainer"></div>
 
           <div id="modalComentarios"></div>
 
           <div class="post-meta">
-            <button id="likeBtn" class="like-btn" onclick="toggleLike()">
-               <img id="likeImg" src="../../Media/meGusta.png" alt="like">
+            <button id="likeBtn" style="background:none; border:none; cursor:pointer;" onclick="toggleLike()">
+               <img id="likeImg" src="../../Media/meGusta.png" width="28">
             </button>
-            <div id="modalLikes"></div>
-            <div id="modalFecha"></div>
+            <div id="modalLikes" style="font-weight:bold; margin-top:5px;"></div>
+            <div id="modalFecha" style="font-size:12px; color:#888;"></div>
           </div>
 
           <form id="commentForm" onsubmit="return submitComment(event)">
             <input type="hidden" id="modalPostId">
-            <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
-            <button type="submit">Comentar</button>
+            <input type="text" id="commentText" placeholder="Añade un comentario..." required>
+            <button type="submit">Publicar</button>
           </form>
         </div>
       </div>
@@ -111,182 +111,184 @@ $biografia = $_SESSION['biografia'] ?? '';
     <?php include __DIR__ . '/../Templates/footer.php';?>
 
     <script>
-    // IMPORTANTE: Ajusta esta ruta a donde tengas tus archivos de procesamiento
-    // (get_post.php, add_comment.php, etc.)
-    const RUTA_PROCESAMIENTO = '../Explorar/procesamiento/';
+    // RUTAS: Ajustamos para que apunte a la carpeta Explorar que ya funciona
+    const RUTA_BASE = '../Explorar/procesamiento/'; 
 
     let pollingInterval = null;
     let likesInterval = null;
     let lastCommentId = 0;
     let currentPostId = null;
-    let likedByUser = false;
 
-    // Render HTML de un comentario
-    function renderComment(c){
+    // Función auxiliar para generar HTML de comentario (o pie de foto)
+    function renderCommentHTML(c) {
+        // En los comentarios la API devuelve 'usuario', en el post devuelve 'usuario' o 'username'
+        const nombre = c.usuario || c.username; 
+        
         return `
         <div class="comment" data-id="${c.id}">
-            <form action="../Busqueda/usuarioAjeno.php" method="POST" class="comment-avatar-form">
-                <input type="hidden" name="id" value="${c.usuario_id}">
-                <button type="submit">
-                    <img src="${c.foto_perfil}" alt="perfil">
-                </button>
-            </form>
-            <div class="comment-content">
-                <span class="comment-user">${c.usuario}</span>
-                <span style="color:#333;">${c.texto}</span>
+            <div class="comentarioUsuario">
+                <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="perfil">
+                <div>
+                    <span class="comment-user">${nombre}</span>
+                    <p class="comment-text">${c.texto}</p>
+                </div>
             </div>
         </div>`;
     }
 
-    // Abrir Modal
     function openModal(postId){
-        fetch(RUTA_PROCESAMIENTO + 'get_post.php?id=' + postId)
+        fetch(RUTA_BASE + 'get_post.php?id=' + postId)
         .then(res => res.json())
         .then(data => {
-
             currentPostId = postId;
-            likedByUser = data.liked > 0;
-
-            // Icono Like
-            document.getElementById('likeImg').src = likedByUser 
-                ? '../../Media/meGustaDado.png' 
-                : '../../Media/meGusta.png';
-
-            // Multimedia (Video o Imagen)
+            
+            // 1. Multimedia
             const mediaDiv = document.getElementById('modalMedia');
             mediaDiv.innerHTML = '';
             const ext = data.imagen_url.split('.').pop().toLowerCase();
-            const ruta = "../Crear/uploads/" + data.imagen_url;
+            const rutaImg = "../Crear/uploads/" + data.imagen_url;
 
             if(['mp4','webm'].includes(ext)){
-                const video = document.createElement('video');
-                video.src = ruta;
-                video.controls = true;
-                video.autoplay = true;
-                video.loop = true;
-                mediaDiv.appendChild(video);
+                mediaDiv.innerHTML = `<video src="${rutaImg}" controls autoplay loop></video>`;
             } else {
-                const img = document.createElement('img');
-                img.src = ruta;
-                mediaDiv.appendChild(img);
+                mediaDiv.innerHTML = `<img src="${rutaImg}">`;
             }
 
-            // Dueño del post
-            document.getElementById('modalOwner').innerHTML = `
-                <form action="../Busqueda/usuarioAjeno.php" method="POST" class="comment-avatar-form">
-                    <input type="hidden" name="id" value="${data.usuario_id}">
-                    <button type="submit">
-                        <img src="${data.foto_perfil}" alt="perfil">
-                    </button>
-                </form>
-                <span class="post-user">${data.usuario}</span>
+            // 2. Cabecera del Usuario (Fija arriba)
+            const headerDiv = document.getElementById('modalHeaderContainer');
+            // Validar ruta foto
+            const fotoUser = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
+            
+            headerDiv.innerHTML = `
+                <div class="modal-user-header">
+                    <form action="../Busqueda/usuarioAjeno.php" method="POST" style="display:flex; align-items:center;">
+                        <input type="hidden" name="id" value="${data.usuario_id}">
+                        <button class="modal-user-button" type="submit">
+                            <img class="modal-profile-img" src="${fotoUser}">
+                            <span class="modal-username">${data.usuario}</span>
+                        </button>
+                    </form>
+                </div>
             `;
 
-            // Info extra
-            document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' picantes';
-            document.getElementById('modalFecha').innerHTML = '📅 ' + data.fecha_publicacion;
-
-            // Cargar comentarios
+            // 3. Comentarios + PIE DE FOTO
             const comentariosDiv = document.getElementById('modalComentarios');
             comentariosDiv.innerHTML = '';
+
+            // [LÓGICA PIE DE FOTO] -> Lo mostramos como el PRIMER comentario
+            if (data.pie_foto && data.pie_foto.trim() !== "") {
+                const pieObj = {
+                    id: 'caption', // ID ficticio
+                    usuario: data.usuario, // El dueño del post
+                    foto_perfil: fotoUser,
+                    texto: data.pie_foto
+                };
+                comentariosDiv.innerHTML += renderCommentHTML(pieObj);
+            }
+
+            // Renderizar el resto de comentarios reales
             data.comentarios.forEach(c => {
-                comentariosDiv.innerHTML += renderComment(c);
+                comentariosDiv.innerHTML += renderCommentHTML(c);
             });
 
-            lastCommentId = data.comentarios.length 
-                ? data.comentarios[data.comentarios.length - 1].id 
-                : 0;
-
+            // 4. Datos Footer
+            const likeImg = document.getElementById('likeImg');
+            likeImg.src = (data.liked > 0) ? '../../Media/meGustaDado.png' : '../../Media/meGusta.png';
+            document.getElementById('modalLikes').innerText = '🌶️ ' + data.total_likes + ' picantes';
+            document.getElementById('modalFecha').innerText = '📅 ' + data.fecha_publicacion;
             document.getElementById('modalPostId').value = postId;
+
+            // Mostrar
             document.getElementById('postModal').style.display = 'flex';
 
-            // Reiniciar intervalos
-            if(pollingInterval) clearInterval(pollingInterval);
-            if(likesInterval) clearInterval(likesInterval);
-
-            // Polling Comentarios
-            pollingInterval = setInterval(() => {
-                fetch(`${RUTA_PROCESAMIENTO}get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
-                .then(res => res.json())
-                .then(comments => {
-                    comments.forEach(c => {
-                        if(!comentariosDiv.querySelector(`.comment[data-id="${c.id}"]`)){
-                            comentariosDiv.innerHTML += renderComment(c);
-                            lastCommentId = c.id;
-                        }
-                    });
-                });
-            }, 2000);
-
-            // Polling Likes
-            likesInterval = setInterval(() => {
-                fetch(`${RUTA_PROCESAMIENTO}get_likes.php?post_id=${postId}`)
-                .then(res => res.json())
-                .then(data => {
-                    document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total + ' picantes';
-                });
-            }, 1000);
-        });
-    }
-
-    // Toggle Like
-    function toggleLike(){
-        fetch(RUTA_PROCESAMIENTO + 'toggle_like.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'post_id='+currentPostId
+            // Polling
+            iniciarPolling(postId, data.comentarios);
         })
-        .then(res => res.json())
-        .then(data => {
-            likedByUser = data.liked;
-            document.getElementById('likeImg').src = likedByUser 
-                ? '../../Media/meGustaDado.png' 
-                : '../../Media/meGusta.png';
-            document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total + ' picantes';
-        });
+        .catch(err => console.error(err));
     }
 
-    // Cerrar Modal
     function closeModal(){
         document.getElementById('postModal').style.display = 'none';
-        document.getElementById('modalMedia').innerHTML = ''; 
+        document.getElementById('modalMedia').innerHTML = '';
         if(pollingInterval) clearInterval(pollingInterval);
         if(likesInterval) clearInterval(likesInterval);
     }
 
-    // Click fuera para cerrar
     document.getElementById('postModal').addEventListener('click', e => {
-        if (e.target.id === 'postModal') closeModal();
+        if(e.target.id === 'postModal') closeModal();
     });
 
-    // Enviar Comentario
+    function toggleLike(){
+        fetch(RUTA_BASE + 'toggle_like.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'post_id=' + currentPostId
+        })
+        .then(res => res.json())
+        .then(data => {
+            const img = document.getElementById('likeImg');
+            img.src = data.liked ? '../../Media/meGustaDado.png' : '../../Media/meGusta.png';
+            document.getElementById('modalLikes').innerText = '🌶️ ' + data.total + ' picantes';
+        });
+    }
+
     function submitComment(e){
         e.preventDefault();
-        const input = document.getElementById('commentText');
-        const texto = input.value.trim();
-        if(!texto) return;
+        const txt = document.getElementById('commentText').value.trim();
+        if(!txt) return;
 
-        fetch(RUTA_PROCESAMIENTO + 'add_comment.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'post_id='+currentPostId+'&texto='+encodeURIComponent(texto)
+        fetch(RUTA_BASE + 'add_comment.php', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: 'post_id=' + currentPostId + '&texto=' + encodeURIComponent(txt)
         })
-        .then(res=>res.json())
-        .then(data=>{
+        .then(res => res.json())
+        .then(data => {
             if(data.success){
-                const comentariosDiv = document.getElementById('modalComentarios');
-                comentariosDiv.innerHTML += renderComment({
+                const div = document.getElementById('modalComentarios');
+                div.innerHTML += renderCommentHTML({
                     id: data.comment_id,
                     usuario: data.usuario,
-                    usuario_id: data.usuario_id,
                     foto_perfil: data.foto_perfil,
-                    texto: texto
+                    texto: txt
                 });
-                input.value='';
+                document.getElementById('commentText').value = '';
+                div.scrollTop = div.scrollHeight;
                 lastCommentId = data.comment_id;
-                comentariosDiv.scrollTop = comentariosDiv.scrollHeight;
             }
         });
+    }
+
+    function iniciarPolling(postId, initialComments){
+        if(pollingInterval) clearInterval(pollingInterval);
+        if(likesInterval) clearInterval(likesInterval);
+
+        // Ultimo ID
+        if(initialComments && initialComments.length > 0){
+            lastCommentId = initialComments[initialComments.length - 1].id;
+        } else {
+            lastCommentId = 0;
+        }
+
+        pollingInterval = setInterval(() => {
+            fetch(`${RUTA_BASE}get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
+            .then(res => res.json())
+            .then(comments => {
+                const div = document.getElementById('modalComentarios');
+                comments.forEach(c => {
+                    div.innerHTML += renderCommentHTML(c);
+                    lastCommentId = c.id;
+                });
+            });
+        }, 2000);
+
+        likesInterval = setInterval(() => {
+            fetch(`${RUTA_BASE}get_likes.php?post_id=${postId}`)
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById('modalLikes').innerText = '🌶️ ' + data.total + ' picantes';
+            });
+        }, 1000);
     }
     </script>
 </body>

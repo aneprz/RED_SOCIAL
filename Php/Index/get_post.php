@@ -5,14 +5,14 @@ if(!isset($_SESSION['id'])){
     exit;
 }
 
-require __DIR__ . '/../../BD/conexiones.php'; // ruta a tu PDO
+require __DIR__ . '/../../BD/conexiones.php'; 
 
 $post_id = intval($_GET['id'] ?? 0);
-$usuario_id = intval($_SESSION['id']); // <-- Usuario actual
+$usuario_id = intval($_SESSION['id']); 
 
-// Post
+// Consultamos el Post incluyendo el pie_foto
 $stmt = $pdo->prepare("
-    SELECT p.id, p.usuario_id, p.imagen_url, p.pie_foto, p.ubicacion, p.fecha_publicacion, p.sals,
+    SELECT p.id, p.usuario_id, p.imagen_url, p.pie_foto, p.ubicacion, p.fecha_publicacion, 
            u.username, u.foto_perfil
     FROM publicaciones p
     JOIN usuarios u ON p.usuario_id = u.id
@@ -26,17 +26,17 @@ if(!$post){
     exit;
 }
 
-// ===== TOTAL DE LIKES =====
+// Total Likes
 $stmtLikes = $pdo->prepare("SELECT COUNT(*) AS total FROM likes WHERE post_id = :id");
 $stmtLikes->execute(['id' => $post_id]);
 $total_likes = $stmtLikes->fetchColumn() ?? 0;
 
-// ===== SI EL USUARIO YA DIO LIKE =====
+// Si yo di like
 $stmtUserLike = $pdo->prepare("SELECT COUNT(*) AS liked FROM likes WHERE post_id = :id AND usuario_id = :uid");
 $stmtUserLike->execute(['id' => $post_id, 'uid' => $usuario_id]);
 $liked = $stmtUserLike->fetchColumn() > 0;
 
-// Comentarios con foto de perfil
+// Comentarios
 $stmtC = $pdo->prepare("
     SELECT c.id, c.texto, u.username AS usuario, u.foto_perfil
     FROM comentarios c
@@ -47,17 +47,19 @@ $stmtC = $pdo->prepare("
 $stmtC->execute(['id'=>$post_id]);
 $comentarios = $stmtC->fetchAll(PDO::FETCH_ASSOC);
 
-// Ajustar ruta de la foto de perfil
+// Asegurar ruta de foto en comentarios
 foreach($comentarios as &$c){
     $c['foto_perfil'] = !empty($c['foto_perfil']) ? $c['foto_perfil'] : '/Media/foto_default.png';
 }
 unset($c);
 
-$post['comentarios'] = $comentarios;
+// Asegurar ruta de foto del dueño del post
+$post['foto_perfil'] = !empty($post['foto_perfil']) ? $post['foto_perfil'] : '/Media/foto_default.png';
 
-// 🔹 AGREGAR TOTAL DE LIKES Y SI EL USUARIO YA DIO LIKE
+$post['comentarios'] = $comentarios;
 $post['total_likes'] = $total_likes;
 $post['liked'] = $liked;
 
 header('Content-Type: application/json');
 echo json_encode($post);
+?>

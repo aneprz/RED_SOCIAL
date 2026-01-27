@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (!isset($_SESSION['username'])) {
-    header("Location: Php/Sesiones/inicio_sesion.php");
+    header("Location: ../Sesiones/inicio_sesion.php");
     exit();
 }
 
@@ -11,7 +11,7 @@ if (!isset($_POST['id'])) die("ID de usuario no válida.");
 
 $id = intval($_POST['id']);
 
-// 1. Datos del usuario
+// 1. Datos del usuario a visitar
 $stmt = $pdo->prepare("SELECT foto_perfil, username, bio, privacidad FROM usuarios WHERE id = ?");
 $stmt->execute([$id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -35,7 +35,7 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM publicaciones WHERE usuario_id = ?")
 $stmt->execute([$id]);
 $publicaciones = $stmt->fetchColumn();
 
-// 3. Publicaciones (MODIFICADO: Traemos ID, URL y Contadores)
+// 3. Publicaciones (Traemos contadores para el Grid)
 $stmt = $pdo->prepare("
     SELECT p.id, p.imagen_url,
     (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as total_likes,
@@ -72,7 +72,7 @@ if ($miId != $id) {
 <title>Perfil de <?= htmlspecialchars($nombreusu) ?></title>
 <link rel="stylesheet" href="../../Estilos/estilos_perfil.css">
 <style>
-    /* Estilos específicos del botón seguir (inline como lo tenías) */
+    /* Estilos específicos del botón seguir */
     #btnSeguir {
         padding: 8px 16px;
         border: none;
@@ -97,7 +97,7 @@ if ($miId != $id) {
                     <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
                     <div class="profile-info">
                         <h2><?= htmlspecialchars($nombreusu) ?></h2>
-                        <p class="bio"><?= htmlspecialchars($biografia) ?></p>
+                        <p class="bio"><?= nl2br(htmlspecialchars($biografia)) ?></p>
                         <div class="stats">
                             <span><strong><?= $publicaciones ?></strong> publicaciones</span>
                             <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
@@ -150,7 +150,8 @@ if ($miId != $id) {
         <div class="modal-left" id="modalMedia"></div>
 
         <div class="modal-right">
-          <div class="post-owner" id="modalOwner"></div>
+          <div id="modalHeaderContainer"></div>
+
           <div id="modalComentarios"></div>
           
           <div class="post-meta">
@@ -163,8 +164,8 @@ if ($miId != $id) {
 
           <form id="commentForm" onsubmit="return submitComment(event)">
             <input type="hidden" id="modalPostId">
-            <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
-            <button type="submit">Comentar</button>
+            <input type="text" id="commentText" placeholder="Añade un comentario..." required>
+            <button type="submit">Publicar</button>
           </form>
         </div>
       </div>
@@ -210,8 +211,9 @@ if ($miId != $id) {
         }
     });
 
-    // 2. SCRIPT MODAL (Ajustado para Busqueda)
-    // Ruta hacia la carpeta de procesamiento (../Explorar/procesamiento/)
+    // 2. SCRIPT MODAL (Con lógica de pie de foto)
+    
+    // Ruta hacia la carpeta de Explorar donde están los PHP
     const RUTA_PROCESAMIENTO = '../Explorar/procesamiento/';
 
     let pollingInterval = null;
@@ -220,18 +222,19 @@ if ($miId != $id) {
     let currentPostId = null;
     let likedByUser = false;
 
+    // Función auxiliar para renderizar comentarios
     function renderComment(c){
+        // En los comentarios la API devuelve 'usuario', en el post devuelve 'usuario' o 'username'
+        const nombre = c.usuario || c.username; 
+        
         return `
         <div class="comment" data-id="${c.id}">
-            <form action="usuarioAjeno.php" method="POST" class="comment-avatar-form">
-                <input type="hidden" name="id" value="${c.usuario_id}">
-                <button type="submit">
-                    <img src="${c.foto_perfil}" alt="perfil">
-                </button>
-            </form>
-            <div class="comment-content">
-                <span class="comment-user">${c.usuario}</span>
-                <span style="color:#333;">${c.texto}</span>
+            <div class="comentarioUsuario">
+                <img class="fotoPerfilComentarios" src="${c.foto_perfil}" alt="perfil">
+                <div>
+                    <span class="comment-user">${nombre}</span>
+                    <p class="comment-text">${c.texto}</p>
+                </div>
             </div>
         </div>`;
     }
@@ -247,38 +250,55 @@ if ($miId != $id) {
                 ? '../../Media/meGustaDado.png' 
                 : '../../Media/meGusta.png';
 
+            // 1. Multimedia
             const mediaDiv = document.getElementById('modalMedia');
             mediaDiv.innerHTML = '';
-            // Ajustamos ruta de uploads
+            // Ajustamos ruta de uploads (desde Busqueda -> Crear)
             const ruta = '../Crear/uploads/' + data.imagen_url;
             const ext = data.imagen_url.split('.').pop().toLowerCase();
 
             if(['mp4','webm'].includes(ext)){
-                const video = document.createElement('video');
-                video.src = ruta;
-                video.controls = true; video.autoplay = true; video.loop = true;
-                mediaDiv.appendChild(video);
+                mediaDiv.innerHTML = `<video src="${ruta}" controls autoplay loop style="width:100%; height:100%; object-fit:contain;"></video>`;
             } else {
-                const img = document.createElement('img');
-                img.src = ruta;
-                mediaDiv.appendChild(img);
+                mediaDiv.innerHTML = `<img src="${ruta}" style="width:100%; height:100%; object-fit:contain;">`;
             }
 
-            document.getElementById('modalOwner').innerHTML = `
-                <form action="usuarioAjeno.php" method="POST" class="comment-avatar-form">
-                    <input type="hidden" name="id" value="${data.usuario_id}">
-                    <button type="submit">
-                        <img src="${data.foto_perfil}" alt="perfil">
-                    </button>
-                </form>
-                <span class="post-user">${data.usuario}</span>
+            // 2. Cabecera (Usuario del Post)
+            const headerDiv = document.getElementById('modalHeaderContainer');
+            // Validar ruta foto
+            const fotoUser = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
+            
+            headerDiv.innerHTML = `
+                <div class="modal-user-header">
+                    <form action="usuarioAjeno.php" method="POST" style="display:flex; align-items:center;">
+                        <input type="hidden" name="id" value="${data.usuario_id}">
+                        <button class="modal-user-button" type="submit">
+                            <img class="modal-profile-img" src="${fotoUser}">
+                            <span class="modal-username">${data.usuario}</span>
+                        </button>
+                    </form>
+                </div>
             `;
 
             document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' picantes';
             document.getElementById('modalFecha').innerHTML = '📅 ' + data.fecha_publicacion;
 
+            // 3. Comentarios + PIE DE FOTO
             const comentariosDiv = document.getElementById('modalComentarios');
             comentariosDiv.innerHTML = '';
+
+            // [LÓGICA CLAVE] Si hay pie de foto, lo ponemos primero
+            if (data.pie_foto && data.pie_foto.trim() !== "") {
+                const pieObj = {
+                    id: 'caption-' + data.id, // ID ficticio
+                    usuario: data.usuario,    // El dueño del post
+                    foto_perfil: fotoUser,
+                    texto: data.pie_foto      // El texto es el pie de foto
+                };
+                comentariosDiv.innerHTML += renderComment(pieObj);
+            }
+
+            // Renderizar comentarios reales
             data.comentarios.forEach(c => {
                 comentariosDiv.innerHTML += renderComment(c);
             });
@@ -293,6 +313,7 @@ if ($miId != $id) {
             if(pollingInterval) clearInterval(pollingInterval);
             if(likesInterval) clearInterval(likesInterval);
 
+            // Polling Comentarios
             pollingInterval = setInterval(() => {
                 fetch(`${RUTA_PROCESAMIENTO}get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
                 .then(res => res.json())
@@ -306,6 +327,7 @@ if ($miId != $id) {
                 });
             }, 2000);
 
+            // Polling Likes
             likesInterval = setInterval(() => {
                 fetch(`${RUTA_PROCESAMIENTO}get_likes.php?post_id=${postId}`)
                 .then(res => res.json())
