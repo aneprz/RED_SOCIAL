@@ -5,7 +5,7 @@
 }
 
 .main {
-    flex: 3;
+    flex: 2;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -33,7 +33,6 @@ body{
     align-items: flex-start;
 }
 
-.main { flex: 3; }
 .sidebar { flex: 1; }
 
 .suggestion { margin-bottom: 10px; }
@@ -45,14 +44,13 @@ footer {
 }
 
 .container { display: flex; gap: 20px; padding: 20px; }
-.main { flex: 3; }
 
 .sugerencias { 
     flex: 1; 
-    margin: 20px auto;
     padding: 20px;
     border-radius: 8px;
-    border: 2px solid #b2a49f
+    border: 2px solid #b2a49f;
+    margin-left: auto;
 }
 
 .sugerencias h2{
@@ -68,6 +66,7 @@ footer {
     border-radius: 8px;
 
     width: 100%;       /* ocupa todo lo que le permita el parent */
+    min-height: 400px;
     max-width: 600px;  /* tamaño máximo */
     display: flex;
     flex-direction: column;
@@ -83,6 +82,7 @@ footer {
     max-height: 400px;
     object-fit: cover;
     border-radius: 8px;
+    margin: auto 0; /* 'auto' arriba y abajo centra el elemento en el espacio disponible */
 }
 
 .pieFoto{
@@ -122,7 +122,7 @@ footer {
 
 .botonesPublicacion{
     display: flex;
-    margin-top: 5px;
+    margin-top: auto; /* <--- ESTA ES LA CLAVE */
 }
 /* MODAL */
 /* ================= MODAL INDEX (igual a explorar) ================= */
@@ -247,7 +247,6 @@ footer {
 
 /* Previsualización de comentarios debajo del pie de foto */
 .preview-comentarios {
-    margin-top: 5px;
     margin-bottom: 5px;
     font-size: 13px;
     color: #333;
@@ -388,4 +387,92 @@ footer {
     overflow-y: auto;
     position: relative;
     max-height: 600px; /* Ajusta según tu diseño */
+}
+
+/* --- MEDIA QUERIES--- */
+@media (min-width: 1441px ) and (max-width: 2000px) {
+
+} 
+
+@media (min-width: 2001px){
+    .post{
+        zoom: 1.6; /* Esto hará que el div crezca y empuje al que tiene debajo */
+    }
+
+    .sugerencias{
+        zoom: 1.0;
+    }
+
+    .post img, .post video{
+        max-height: 300px;
+    }
+}
+
+/*Laptop L predeterminado*/
+
+@media (max-width: 1200px){
+    .post{
+        height: 550px;
+    }
+
+    .post img,
+    .post video {
+        max-height: 350px;
+    }
+
+    *{
+        font-size: 17px;
+    }
+}
+
+@media (max-width: 992px)and (min-width: 769px){
+    /* 1. Evita que la sidebar y las sugerencias "empujen" demasiado hacia el centro */
+    .sidebar, .sugerencias {
+        flex: 0 0 180px;   /* Forzamos un ancho fijo y pequeño para los laterales */
+        margin: 0;         /* Quitamos márgenes que puedan estar empujando */
+    }
+
+    /* 2. Quitamos el espacio sobrante del contenedor principal */
+    .content {
+        gap: 10px;         /* Reducimos el espacio entre columnas al mínimo */
+        justify-content: center; /* Centramos el conjunto para que los huecos sean iguales */
+    }
+
+    /* 3. El post ahora ocupará el espacio que dejan los laterales sin separarse */
+    .main {
+        flex: 2;           /* El post se estira para llenar el hueco */
+        width: auto;
+    }
+
+    .post {
+        zoom: 1.0;         /* El zoom 1.2 era el que creaba el espacio fantasma */
+        max-width: 100%;   /* Que use todo el ancho del .main */
+        margin-left: 0;    /* Aseguramos que no haya margen izquierdo */
+    }
+
+    .sugerencias{
+        zoom: 0.6;
+    }
+}
+
+@media(max-width: 769px){
+    /* Ajustamos el post para que no se deforme sin zoom */
+    .post {
+        zoom: 1.0; 
+        height: auto; /* Para que el contenido no se corte */
+    }
+
+    /* Ajustamos la columna de sugerencias */
+    .sugerencias {
+        zoom: 0.6;       /* Un poco más pequeño para que quepa bien en tablet */
+    }
+
+    .content{
+        margin-top: 50px;
+    }
+}
+
+/*Mobile S*/
+@media (max-width: 320px){
+    
 }

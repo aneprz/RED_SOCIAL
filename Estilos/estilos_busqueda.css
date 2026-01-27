@@ -135,3 +135,34 @@ tbody td[colspan="3"] {
         margin-top: 10px;
     }
 }
+
+/* --- MEDIA QUERIES--- */
+/*4K*/
+@media (min-width: 1441px) {
+
+} 
+
+/*Laptop L*/
+@media (max-width: 1440px){
+
+}
+
+/*Laptop*/
+@media (max-width: 768px){
+
+}
+
+/*Mobile L*/
+@media (max-width: 425px){
+
+}
+
+/*Mobile M*/
+@media(max-width: 375px){
+
+}
+
+/*Mobile S*/
+@media (max-width: 320px){
+    
+}

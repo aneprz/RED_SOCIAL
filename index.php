@@ -110,7 +110,7 @@ if (empty($ids_sigo)) {
                         : '/Media/foto_default.png';
                 ?>
                 <div class="post">
-                    <div style="display:flex; align-items:center; margin-bottom:5px;">
+                    <div class="encabezadoPost" style="display:flex; align-items:center; margin-bottom:5px;">
                         <img src="<?= htmlspecialchars($fotoPerfil) ?>" alt="Perfil"
                              style="width:20px; height:20px; border-radius:50%; object-fit:cover; margin-right:10px;">
                         <strong><?= htmlspecialchars($post['username']) ?></strong>

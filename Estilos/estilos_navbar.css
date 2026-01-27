@@ -86,7 +86,6 @@ body {
 /* ---- RESPONSIVE ---- */
 @media (max-width: 768px) {
   .sidebar { display:none; }
-  .main { margin-left: 0; padding-top: 80px; }
 }
 
 /* Topbar for mobile */
@@ -107,6 +106,13 @@ body {
   padding: 8px 16px;
 
   z-index: 1040;
+}
+
+.offcanvas{
+  color: white;
+  background-color: #B9372A;
+  border-right: 6px solid #802015;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 @media (min-width:768px) {
@@ -500,4 +506,54 @@ body {
     font-size: 12px;
     font-weight: 600;
     flex-shrink: 0; /* Evita que el botón se aplaste si el texto es muy largo */
+}
+
+/* --- MEDIA QUERIES--- */
+/*4K*/
+@media (min-width: 2001px) {
+  *{
+    zoom: 1.1;
+  }
+} 
+
+/*Laptop L*/
+@media (max-width: 992px){
+  :root {
+      --sidebar-width: 200px; /* Reducimos el ancho automáticamente */
+    }
+    
+    .nav-item-custom {
+      padding: 8px 10px; /* Achicamos los botones para que quepan */
+      font-size: 0.9rem;
+    }
+
+    .marca{
+      font-size: 17px;
+    }
+
+    .sidebar{
+      flex: 0 0 180px;   /* Forzamos un ancho fijo y pequeño para los laterales */
+    }
+}
+
+/*Laptop*/
+@media (max-width: 769px){
+  .main{
+    margin: 0;
+  }
+}
+
+/*Mobile L*/
+@media (max-width: 425px){
+
+}
+
+/*Mobile M*/
+@media(max-width: 375px){
+
+}
+
+/*Mobile S*/
+@media (max-width: 320px){
+    
 }
