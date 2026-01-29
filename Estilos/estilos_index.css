@@ -40,11 +40,14 @@ body{
 .container { display: flex; gap: 20px; padding: 20px; }
 
 .sugerencias { 
+    color: #FFF8F5;
+    background-color: #B9372A;
     flex: 1; 
     padding: 20px;
     border-radius: 8px;
-    border: 2px solid #b2a49f;
+    border: 6px solid #802015;
     margin-left: auto;
+    box-shadow: none !important;
 }
 
 .sugerencias h2{
@@ -330,8 +333,8 @@ body{
     color: white;
 }
 .btnSeguir[data-estado="Solicitado"] {
-    background-color: #ffc107;
-    color: black;
+    background-color: #e2ab06;
+    color: white;
 }
 .btnSeguir:hover {
     opacity: 0.8;
@@ -366,7 +369,6 @@ body{
 }
 
 .modal-username {
-    font-weight: bold;
     font-size: 14px;
     color: #333;
 }
@@ -478,7 +480,7 @@ body{
     }
 }
 
-@media(max-width: 769px){
+@media(max-width: 769px) {
     /* Ajustamos el post para que no se deforme sin zoom */
     .post {
         zoom: 1.0; 
@@ -495,7 +497,30 @@ body{
     }
 }
 
-/*Mobile S*/
-@media (max-width: 320px){
-    
+@media (max-width: 540px){
+    .sugerencias{
+        zoom: 0.5;
+    }
+}
+
+@media (max-width: 440px){
+    .sugerencias{
+        zoom: 0.4;
+    }
+
+    .post {
+        zoom: 0.7; 
+        height: auto; /* Para que el contenido no se corte */
+    }
+}
+
+@media (max-width: 370px){
+    .sugerencias{
+        zoom: 0.3;
+    }
+
+    .post {
+        zoom: 0.6; 
+        height: auto; /* Para que el contenido no se corte */
+    }
 }

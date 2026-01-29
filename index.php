@@ -152,7 +152,7 @@ if (empty($ids_sigo)) {
         <?php endif; ?>
     </div>
 
-    <div class="sugerencias">
+    <div class="sugerencias" style="background-color: #B9372A;">
         <h2>Sugerencias para ti</h2>
         <?php if (!empty($sugerencias)): ?>
             <?php foreach($sugerencias as $user): ?>
@@ -191,7 +191,7 @@ if (empty($ids_sigo)) {
                         <form action="Php/Busqueda/usuarioAjeno.php" method="POST" style="display:inline;">
                             <input type="hidden" name="id" value="<?= $user['id'] ?>">
                             <button type="submit" class="username-link" title="<?= htmlspecialchars($user['username']) ?>"
-                                    style="border:none; background:none; padding:0; cursor:pointer; font-weight:bold; color:#333;">
+                                    style="border:none; background:none; padding:0; cursor:pointer; color:#e3e3e3;">
                                 <?= htmlspecialchars($user['username']) ?>
                             </button>
                         </form>

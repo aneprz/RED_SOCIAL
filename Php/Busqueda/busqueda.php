@@ -65,14 +65,14 @@ while ($row = mysqli_fetch_assoc($res_sol)) {
                 <?php foreach ($usuarios as $usuario): ?>
                     <tr>
                         <td>
-                            <form action="usuarioAjeno.php" method="POST" style="display:inline;">
+                            <form class="lineaUsuario" action="usuarioAjeno.php" method="POST" style="display:inline;">
                                 <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
                                 <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
                                     <img src="<?= htmlspecialchars($usuario['foto_perfil']) ?>" width="50" alt="Foto de perfil">
+                                    <span class="nombreDeUsuario"><?= htmlspecialchars($usuario['username']) ?></span>
                                 </button>
                             </form>
                         </td>
-                        <td><?= htmlspecialchars($usuario['username']) ?></td>
                         <td>
                             <form method="post" action="procesar_busqueda.php">
                                 <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
@@ -80,15 +80,15 @@ while ($row = mysqli_fetch_assoc($res_sol)) {
 
                                 <?php if (in_array($usuario['id'], $seguidores_actuales)): ?>
                                     <input type="hidden" name="accion" value="suprimir">
-                                    <button type="submit" class="btn-siguiendo">Siguiendo</button>
+                                    <button type="submit" class="btnUsuario btn-siguiendo">Siguiendo</button>
 
                                 <?php elseif (in_array($usuario['id'], $solicitados_actuales)): ?>
                                     <input type="hidden" name="accion" value="suprimir">
-                                    <button type="submit" class="btn-pendiente" style="background-color: #95a5a6;">Pendiente</button>
+                                    <button type="submit" class="btnUsuario btn-pendiente">Pendiente</button>
 
                                 <?php else: ?>
                                     <input type="hidden" name="accion" value="seguir">
-                                    <button type="submit" class="btn-seguir">Seguir</button>
+                                    <button type="submit" class="btnUsuario btn-seguir">Seguir</button>
                                 <?php endif; ?>
                             </form>
                         </td>
