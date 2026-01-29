@@ -236,3 +236,33 @@ body {
     cursor: pointer;
     z-index: 4000;
 }
+/* === FOOTER EN EXPLORAR === */
+.site-footer {
+    background: #222;
+    color: #c1c1c1;
+    padding: 20px;
+    text-align: center;
+    margin-left: 250px; 
+    width: auto;
+    margin-top: 20px;
+}
+
+.container-footer {
+    display: flex;
+    flex-direction: column; /* <--- Mismo cambio aquí */
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+    font-size: 16px;
+}
+
+.container-footer p {
+    margin: 0;
+}
+
+.footer-nav a {
+    color: #c1c1c1;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
