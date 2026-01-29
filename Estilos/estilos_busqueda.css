@@ -8,13 +8,21 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     justify-content: center;
-    padding: 50px 20px;
     min-height: 100vh;
-    margin-left: 250px ;
     background-color: #F6E3DC !important;
 }
 
+/* Este es el contenedor donde debe ir tu tabla en el HTML */
+.main {
+    margin-left: 250px; /* Ya lo tienes en el CSS del navbar */
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ESTO CENTRA LA TABLA REALMENTE */
+}
+
 .tabla-seguidores {
+    margin-top: 20px;
     width: 500px;
     background-color: #fff;
     border: 1px solid #dbdbdb;
@@ -234,15 +242,30 @@ tbody td[colspan="3"] {
     }
 }
 
-@media (max-width: 767px){
+@media (max-width: 768px){
     .tabla-seguidores{
-        margin-top: 50px;
+        margin-top: 70px;
         zoom: 0.7;
     }
 }
 
 @media (max-width: 550px){
     .tabla-seguidores{
+        margin-top: 70px;
         zoom: 0.7;
+    }
+}
+
+@media (max-width: 410px){
+    .tabla-seguidores{
+        margin-top: 70px;
+        zoom: 0.6;
+    }
+}
+
+@media (max-width: 360px){
+    .tabla-seguidores{
+        margin-top: 90px;
+        zoom: 0.5;
     }
 }

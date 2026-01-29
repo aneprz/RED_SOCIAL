@@ -49,59 +49,60 @@ while ($row = mysqli_fetch_assoc($res_sol)) {
 <body>
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
 
-<div class="tabla-seguidores">
+<div class="main">
+    <div class="tabla-seguidores">
 
-    <!-- FORMULARIO DE BÚSQUEDA -->
-    <form method="get" action="">
-        <input type="text" name="busqueda" placeholder="Buscar usuario..." 
-               value="<?= htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8') ?>">
-        <button type="submit">Buscar</button>
-    </form>
+        <!-- FORMULARIO DE BÚSQUEDA -->
+        <form method="get" action="">
+            <input type="text" name="busqueda" placeholder="Buscar usuario..." 
+                value="<?= htmlspecialchars($busqueda, ENT_QUOTES, 'UTF-8') ?>">
+            <button type="submit">Buscar</button>
+        </form>
 
-    <!-- TABLA DE RESULTADOS -->
-    <table>
-        <tbody>
-            <?php if (!empty($usuarios)): ?>
-                <?php foreach ($usuarios as $usuario): ?>
+        <!-- TABLA DE RESULTADOS -->
+        <table>
+            <tbody>
+                <?php if (!empty($usuarios)): ?>
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <tr>
+                            <td>
+                                <form class="lineaUsuario" action="usuarioAjeno.php" method="POST" style="display:inline;">
+                                    <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
+                                    <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
+                                        <img src="<?= htmlspecialchars($usuario['foto_perfil']) ?>" width="50" alt="Foto de perfil">
+                                        <span class="nombreDeUsuario"><?= htmlspecialchars($usuario['username']) ?></span>
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form method="post" action="procesar_busqueda.php">
+                                    <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
+                                    <input type="hidden" name="busqueda" value="<?= htmlspecialchars($busqueda) ?>">
+
+                                    <?php if (in_array($usuario['id'], $seguidores_actuales)): ?>
+                                        <input type="hidden" name="accion" value="suprimir">
+                                        <button type="submit" class="btnUsuario btn-siguiendo">Siguiendo</button>
+
+                                    <?php elseif (in_array($usuario['id'], $solicitados_actuales)): ?>
+                                        <input type="hidden" name="accion" value="suprimir">
+                                        <button type="submit" class="btnUsuario btn-pendiente">Pendiente</button>
+
+                                    <?php else: ?>
+                                        <input type="hidden" name="accion" value="seguir">
+                                        <button type="submit" class="btnUsuario btn-seguir">Seguir</button>
+                                    <?php endif; ?>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                <?php else: ?>
                     <tr>
-                        <td>
-                            <form class="lineaUsuario" action="usuarioAjeno.php" method="POST" style="display:inline;">
-                                <input type="hidden" name="id" value="<?= $usuario['id'] ?>">
-                                <button type="submit" style="border:none; background:none; padding:0; cursor:pointer;">
-                                    <img src="<?= htmlspecialchars($usuario['foto_perfil']) ?>" width="50" alt="Foto de perfil">
-                                    <span class="nombreDeUsuario"><?= htmlspecialchars($usuario['username']) ?></span>
-                                </button>
-                            </form>
-                        </td>
-                        <td>
-                            <form method="post" action="procesar_busqueda.php">
-                                <input type="hidden" name="id_usuario" value="<?= $usuario['id'] ?>">
-                                <input type="hidden" name="busqueda" value="<?= htmlspecialchars($busqueda) ?>">
-
-                                <?php if (in_array($usuario['id'], $seguidores_actuales)): ?>
-                                    <input type="hidden" name="accion" value="suprimir">
-                                    <button type="submit" class="btnUsuario btn-siguiendo">Siguiendo</button>
-
-                                <?php elseif (in_array($usuario['id'], $solicitados_actuales)): ?>
-                                    <input type="hidden" name="accion" value="suprimir">
-                                    <button type="submit" class="btnUsuario btn-pendiente">Pendiente</button>
-
-                                <?php else: ?>
-                                    <input type="hidden" name="accion" value="seguir">
-                                    <button type="submit" class="btnUsuario btn-seguir">Seguir</button>
-                                <?php endif; ?>
-                            </form>
-                        </td>
+                        <td colspan="3" style="text-align:center;">No se encontraron usuarios</td>
                     </tr>
-                <?php endforeach; ?>
-            <?php else: ?>
-                <tr>
-                    <td colspan="3" style="text-align:center;">No se encontraron usuarios</td>
-                </tr>
-            <?php endif; ?>
-        </tbody>
-    </table>
+                <?php endif; ?>
+            </tbody>
+        </table>
+    </div>
 </div>
-
 </body>
 </html>
