@@ -37,12 +37,6 @@ body{
 
 .suggestion { margin-bottom: 10px; }
 
-footer {
-    background: #f0f0f0;
-    padding: 15px;
-    text-align: center;
-}
-
 .container { display: flex; gap: 20px; padding: 20px; }
 
 .sugerencias { 
@@ -389,6 +383,35 @@ footer {
     overflow-y: auto;
     position: relative;
     max-height: 600px; /* Ajusta según tu diseño */
+}
+/* === FOOTER EN INDEX === */
+.site-footer {
+    background: #222;
+    color: #c1c1c1;
+    padding: 20px;
+    text-align: center;
+    margin-left: 250px; 
+    width: auto;
+}
+
+.container-footer {
+    display: flex;
+    flex-direction: column; /* <--- ESTO PONE UNO DEBAJO DE OTRO */
+    justify-content: center;
+    gap: 10px;              /* Espacio entre el texto de arriba y los enlaces */
+    align-items: center;
+    font-size: 16px;
+}
+
+/* Quitamos el margen por defecto del párrafo para que no quede muy separado */
+.container-footer p {
+    margin: 0;
+}
+
+.footer-nav a {
+    color: #c1c1c1;
+    text-decoration: none;
+    margin: 0 10px; /* Separación horizontal entre 'Sobre' y 'Contacto' */
 }
 
 /* --- MEDIA QUERIES--- */
