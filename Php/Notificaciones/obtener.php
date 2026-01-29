@@ -41,6 +41,28 @@ try {
     $stmt->execute(['mi_id' => $mi_id]);
     $notificaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    // --- NUEVO: Asignar textos según el tipo de notificación ---
+    foreach ($notificaciones as &$notif) {
+        // Inicializamos una variable para el texto
+        $notif['mensaje_texto'] = '';
+
+        if ($notif['tipo'] === 'etiqueta') {
+            // El texto exacto que pediste
+            $notif['mensaje_texto'] = "te ha etiquetado para que colabores en una publicación";
+        } 
+        elseif ($notif['tipo'] === 'like') {
+            $notif['mensaje_texto'] = "le ha dado like a tu publicación";
+        }
+        elseif ($notif['tipo'] === 'follow') {
+            $notif['mensaje_texto'] = "ha comenzado a seguirte";
+        }
+        else {
+            // Texto por defecto si hay otro tipo
+            $notif['mensaje_texto'] = "interactuó contigo";
+        }
+    }
+    unset($notif); // Romper la referencia del foreach
+
     // 3. SUGERENCIAS (CORREGIDO EL ERROR DE PARÁMETRO DOBLE)
     $sugerencias = [];
     if (count($notificaciones) < 5) {
