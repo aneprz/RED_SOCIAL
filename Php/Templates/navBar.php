@@ -123,10 +123,10 @@
     </div>
     <div class="offcanvas-body">
       <a href="../../index.php" class="nav-item-custom active d-block mb-2">Inicio</a>
-      <a href="../Busqueda/busqueda.php" class="nav-item-custom active d-block mb-2">Búsqueda</a>
-      <a href="../Explorar/explorar.php" class="nav-item-custom active d-block mb-2">Explorar</a>
-      <a href="../Saals/saals.php" class="nav-item-custom active d-block mb-2">Sals</a>
-      <a href="../Chats/chats.php" class="nav-item-custom active d-block mb-2">Chats</a>
+      <a href="../../Php/Busqueda/busqueda.php" class="nav-item-custom active d-block mb-2">Búsqueda</a>
+      <a href="../../Php/Explorar/explorar.php" class="nav-item-custom active d-block mb-2">Explorar</a>
+      <a href="../../Php/Saals/saals.php" class="nav-item-custom active d-block mb-2">Sals</a>
+      <a href="../../Php/Chats/chats.php" class="nav-item-custom active d-block mb-2">Chats</a>
       <a href="#" class="nav-item-custom d-block mb-2" onclick="abrirNotificaciones(event); bootstrap.Offcanvas.getInstance(document.getElementById('menuMovil')).hide()">Notificaciones</a>
       <a href="#" class="nav-item-custom d-block mb-2" id="abrirCrearMovil">Crear</a>
     </div>

@@ -22,6 +22,7 @@ body {
     padding: 25px 20px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transition: transform 0.2s;
+    table-layout: fixed; /* <--- CRUCIAL: evita que las celdas crezcan sin control */
 }
 
 .tabla-seguidores:hover {
@@ -54,23 +55,32 @@ form input[type="text"]:focus {
 }
 
 form button {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     padding: 8px 16px;
     border-radius: 0 6px 6px 0;
-    background-color: #0095f6;
+    background-color: #E94B3C;
     color: #fff;
     border: none;
-    font-weight: bold;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
+.lineaUsuario button{
+    width: 100%;          /* Ocupa toda su celda */
+    max-width: 100%;
+    overflow: hidden;     /* Necesario para el hijo */
+}
+
 form button:hover {
-    background-color: #0073cc;
+    background-color: #b83b2f;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed; /* <--- CRUCIAL: evita que las celdas crezcan sin control */
 }
 
 tbody tr {
@@ -86,6 +96,18 @@ tbody td {
     padding: 10px 5px;
     vertical-align: middle;
     text-align: center;
+    overflow: hidden; /* Seguridad extra */
+}
+
+/* Celda 1 (Foto + Nombre): Le damos mucho espacio */
+tbody td:nth-child(1) {
+    width: 70%; 
+}
+
+/* Celda 2 (Botón Seguir): Ancho fijo para que no se mueva */
+tbody td:nth-child(2) {
+    width: 130px;
+    text-align: right;
 }
 
 tbody img {
@@ -96,7 +118,6 @@ tbody img {
 }
 
 tbody button {
-    background-color: #0095f6;
     color: #fff;
     border: none;
     padding: 6px 12px;
@@ -106,8 +127,40 @@ tbody button {
     transition: background-color 0.2s;
 }
 
-tbody button:hover {
-    background-color: #0073cc;
+.btn-siguiendo{
+    background-color: #6c757d;
+}
+
+.btn-siguiendo:hover{
+    background-color: #575e65;
+}
+
+.btn-seguir{
+    background-color: #28a745 !important;
+}
+
+.btn-seguir:hover{
+    background-color: #1f8236;
+}
+
+.btn-pendiente{
+    background-color: #e2ab06;
+}
+
+.btn-pendiente:hover{
+    background-color: #c09106;
+}
+
+.nombreDeUsuario{
+    color: black; 
+    margin-left: 10px;
+    display: inline-block; /* O block */
+    flex: 1;               /* Toma todo el espacio sobrante tras la foto */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: left;
+    min-width: 0;          /* TRUCO: permite que el flex-item se encoja */
 }
 
 tbody td[colspan="3"] {
@@ -116,53 +169,80 @@ tbody td[colspan="3"] {
     font-style: italic;
 }
 
-@media (max-width: 550px) {
-    .tabla-seguidores {
-        width: 100%;
-        padding: 20px 15px;
-    }
-
-    form {
-        flex-direction: column;
-    }
-
-    form input[type="text"], form button {
-        width: 100%;
-        border-radius: 6px;
-    }
-
-    form button {
-        margin-top: 10px;
-    }
-}
-
 /* --- MEDIA QUERIES--- */
-/*4K*/
-@media (min-width: 1441px) {
+@media (min-width: 2500px) {
+    .tabla-seguidores{
+        zoom: 1.5;
+    }
 
+    .btnUsuario{
+        zoom: 0.9;
+    }
+
+    .nombreDeUsuario{
+        font-size: 12px;
+    }
 } 
 
-/*Laptop L*/
-@media (max-width: 1440px){
+@media (max-width: 2449px) and (min-width:1999px){
+    .tabla-seguidores{
+        zoom: 1.3;
+    }
 
+    .btnUsuario{
+        zoom: 0.8;
+    }
+
+    .nombreDeUsuario{
+        font-size: 12px;
+    }
 }
 
-/*Laptop*/
-@media (max-width: 768px){
-
+@media (max-width: 2000px){
+    .tabla-seguidores{
+        zoom: 1.6;
+    }
 }
 
-/*Mobile L*/
-@media (max-width: 425px){
-
+@media (max-width: 1680px){
+    .tabla-seguidores{
+        zoom: 1.4;
+    }
 }
 
-/*Mobile M*/
-@media(max-width: 375px){
-
+@media(max-width: 1360px){
+    .tabla-seguidores{
+        zoom: 1.1;
+    }
 }
 
-/*Mobile S*/
-@media (max-width: 320px){
-    
+@media (max-width: 1170px){
+    .tabla-seguidores{
+        zoom: 1.0;
+    }
+}
+
+@media (max-width: 1050px){
+    .tabla-seguidores{
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 870px){
+    .tabla-seguidores{
+        zoom: 0.7;
+    }
+}
+
+@media (max-width: 767px){
+    .tabla-seguidores{
+        margin-top: 50px;
+        zoom: 0.7;
+    }
+}
+
+@media (max-width: 550px){
+    .tabla-seguidores{
+        zoom: 0.7;
+    }
 }
