@@ -156,18 +156,26 @@ $biografia   = $_SESSION['biografia'] ?? '';
 
             // 2. Cabecera del Usuario (Fija arriba)
             const headerDiv = document.getElementById('modalHeaderContainer');
-            // Validar ruta foto
             const fotoUser = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
             
+            // CAMBIO: Estructura Flex para separar usuario (izquierda) y basura (derecha)
             headerDiv.innerHTML = `
-                <div class="modal-user-header">
-                    <form action="../Busqueda/usuarioAjeno.php" method="POST" style="display:flex; align-items:center;">
-                        <input type="hidden" name="id" value="${data.usuario_id}">
-                        <button class="modal-user-button" type="submit">
-                            <img class="modal-profile-img" src="${fotoUser}">
-                            <span class="modal-username">${data.usuario}</span>
-                        </button>
-                    </form>
+                <div style="display:flex; justify-content: space-between; align-items: center; width: 100%; padding-right: 15px;">
+                    
+                    <div class="modal-user-header">
+                        <form action="../Busqueda/usuarioAjeno.php" method="POST" style="display:flex; align-items:center; margin:0;">
+                            <input type="hidden" name="id" value="${data.usuario_id}">
+                            <button class="modal-user-button" type="submit">
+                                <img class="modal-profile-img" src="${fotoUser}">
+                                <span class="modal-username">${data.usuario}</span>
+                            </button>
+                        </form>
+                    </div>
+
+                    <img src="../../Media/basura.png" 
+                         onclick="confirmarBorrado(${postId})" 
+                         style="cursor:pointer; width:20px; height:20px;" 
+                         title="Eliminar publicación">
                 </div>
             `;
 
@@ -289,6 +297,32 @@ $biografia   = $_SESSION['biografia'] ?? '';
                 document.getElementById('modalLikes').innerText = '🌶️ ' + data.total + ' picantes';
             });
         }, 1000);
+    }
+    function confirmarBorrado(postId) {
+        const confirmar = confirm("¿Estás seguro de borrar esta publicación? No se podrá recuperar.");
+        
+        if (confirmar) {
+            // Llamamos al archivo que acabamos de crear en la misma carpeta
+            fetch('eliminar_post.php', { 
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: 'post_id=' + postId
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert("Publicación eliminada.");
+                    closeModal();
+                    location.reload(); // Recargamos para que desaparezca de la cuadrícula
+                } else {
+                    alert("Error: " + (data.error || "No se pudo eliminar"));
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("Error de conexión");
+            });
+        }
     }
     </script>
 </body>
