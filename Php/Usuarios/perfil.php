@@ -8,7 +8,7 @@ if (!isset($_SESSION['username'])) {
 include 'procesar_perfil.php';
 
 // Evitar warnings si no hay sesión
-$foto_perfil = $_SESSION['foto_perfil'] ?? '/Media/foto_default.png';
+$foto_perfil = $_SESSION['foto_perfil'] ?? '../../Media/foto_default.png';
 $nombreusu   = $_SESSION['username'] ?? '';
 $biografia   = $_SESSION['biografia'] ?? '';
 ?>
@@ -19,61 +19,59 @@ $biografia   = $_SESSION['biografia'] ?? '';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Perfil</title>
   <link rel="stylesheet" href="../../Estilos/estilos_perfil.css">
+  <link rel="icon" href="../../Media/logo.png">
 </head>
 <body>
     <?php include __DIR__ . '/../Templates/navBar.php';?>
     <main>
-        <div class="objetos">
-            <div class="profile-container">
-                <div class="profile-header">
-                    <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
-                    <div class="profile-info">
-                        <h2><?= htmlspecialchars($nombreusu) ?></h2>
-                        <p class="bio"><?php echo nl2br(htmlspecialchars($biografia)); ?></p>
-                        <div class="stats">
-                            <span><strong><?= $publicaciones ?></strong> publicaciones</span>
-                            <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
-                            <a href="tablaSeguidos.php"><span><strong><?= $seguidos ?></strong> siguiendo</span></a>
-                        </div>
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
+                <div class="profile-info">
+                    <h2><?= htmlspecialchars($nombreusu) ?></h2>
+                    <p class="bio"><?php echo nl2br(htmlspecialchars($biografia)); ?></p>
+                    <div class="stats">
+                        <span><strong><?= $publicaciones ?></strong> publicaciones</span>
+                        <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
+                        <a href="tablaSeguidos.php"><span><strong><?= $seguidos ?></strong> siguiendo</span></a>
                     </div>
                 </div>
+            </div>
 
-                <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
-                
-                <div class="profile-posts">
-                    <?php if (!empty($publicacionesArray)): ?>
-                        <?php foreach ($publicacionesArray as $post): ?>
-                            <?php
-                                $url = $post['imagen_url'];
-                                $pid = $post['id'];
-                                $likes = $post['total_likes'];
-                                $coments = $post['total_comentarios'];
-                                
-                                $ruta = "../Crear/uploads/" . htmlspecialchars($url);
-                                $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
-                            ?>
+            <div><a href="editar_perfil.php"><button class="botonEditarPerfil">Editar perfil</button></a></div>
+            
+            <div class="profile-posts">
+                <?php if (!empty($publicacionesArray)): ?>
+                    <?php foreach ($publicacionesArray as $post): ?>
+                        <?php
+                            $url = $post['imagen_url'];
+                            $pid = $post['id'];
+                            $likes = $post['total_likes'];
+                            $coments = $post['total_comentarios'];
                             
-                            <div class="post" onclick="openModal(<?= $pid ?>)">
-                                <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                                    <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video> 
-                                <?php else: ?>
-                                    <img class="media" src="<?= $ruta ?>" alt="Post">
-                                <?php endif; ?>
+                            $ruta = "../Crear/uploads/" . htmlspecialchars($url);
+                            $ext = strtolower(pathinfo($url, PATHINFO_EXTENSION));
+                        ?>
+                        
+                        <div class="post" onclick="openModal(<?= $pid ?>)">
+                            <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                                <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video> 
+                            <?php else: ?>
+                                <img class="media" src="<?= $ruta ?>" alt="Post">
+                            <?php endif; ?>
 
-                                <div class="overlay">
-                                    <div class="overlay-info">
-                                        <span>🌶️ <?= $likes ?></span>
-                                        <span>💬 <?= $coments ?></span>
-                                    </div>
+                            <div class="overlay">
+                                <div class="overlay-info">
+                                    <span>🌶️ <?= $likes ?></span>
+                                    <span>💬 <?= $coments ?></span>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No hay publicaciones todavía</p>
-                    <?php endif; ?>
-                </div>
+                        </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No hay publicaciones todavía</p>
+                <?php endif; ?>
             </div>
-            
             <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
                 <button type="submit" class="cerrarSesion">Cerrar sesión</button>
             </form>
@@ -107,9 +105,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
         </div>
       </div>
     </div>
-
-    <?php include __DIR__ . '/../Templates/footer.php';?>
-
     <script>
     // RUTAS: Ajustamos para que apunte a la carpeta Explorar que ya funciona
     const RUTA_BASE = '../Explorar/procesamiento/'; 
@@ -325,5 +320,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
         }
     }
     </script>
+<?php include __DIR__ . '/../Templates/footer.php';?>
 </body>
 </html>

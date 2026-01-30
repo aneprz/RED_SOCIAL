@@ -107,5 +107,6 @@ if ($accion === 'anterior') {
             </div>
         </div>
     </div>
+    <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
 </html>

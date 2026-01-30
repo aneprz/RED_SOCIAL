@@ -136,6 +136,7 @@ if ($chatReciente) {
     </div>
 
 </main>
+<?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 <script>
     function cargarChats() {
         fetch("procesamientos/get_chats.php")

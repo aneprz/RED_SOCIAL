@@ -64,7 +64,7 @@ textarea {
 button {
     margin-top: 10px;
     padding: 10px;
-    background: #E94B3C;
+    background: #28a745;
     color: white;
     border: none;
     border-radius: 8px;
@@ -73,7 +73,7 @@ button {
 }
 
 button:hover {
-    background: #ba3b2f;
+    background: #228f3c;
 }
 
 .switch-label {

@@ -3,8 +3,9 @@ html, body {
     margin: 0;
 }
 
-main {
-    flex: 1; 
+main{
+    display: flex;
+    justify-content: center;
 }
 
 body {
@@ -27,12 +28,14 @@ a {
 /* ================= CONTENEDOR PERFIL ================= */
 
 .profile-container {
-    max-width: 800px;
+    max-width: 1200px;
     margin: 20px auto;
+    margin-left: 250px;
     background-color: #FFF8F5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 5px 5px 30px rgb(40, 40, 40);
+    position: absolute; /* Esto lo saca del flujo normal y lo permite mover libremente */
 }
 
 .profile-header {
@@ -96,10 +99,15 @@ a {
     justify-content: right;
     margin: 20px;
     display: flex;
+
+    position: absolute; /* Esto lo saca del flujo normal y lo permite mover libremente */
+    top: 20px;          /* Distancia desde el techo */
+    right: 40px;        /* Distancia desde la derecha */
+    z-index: 100;       /* Nos aseguramos de que esté por encima de otros elementos */
 }
 
 .botonEditarPerfil {
-    background-color: #E94B3C;
+    background-color: #28a745;
     color: white;
     border: none;
     padding: 8px 16px;
@@ -107,6 +115,10 @@ a {
     cursor: pointer;
     margin: 5px;
     font-weight: bold;
+}
+
+.botonEditarPerfil:hover{
+    background-color: #22903c;
 }
 
 #btnSeguir {
@@ -180,6 +192,18 @@ a {
     font-weight: bold;
     color: white;
     text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+footer {
+    background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
+    color: rgb(226, 226, 226);
+    padding: 20px; /* Un poco de espacio */
+    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
+    width: calc(100% - 250px); /* Ajustar ancho */
+    flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
+
+    /* ESTA ES LA CLAVE PARA QUE BAJE */
+    margin-top: auto;
 }
 
 /* ========================================================= */
@@ -364,6 +388,7 @@ a {
     text-shadow: 0 0 10px rgba(0,0,0,0.5);
 }
 
+/*MEDIA QUERYS*/
 /* Responsive para móviles */
 @media (max-width: 768px) {
     .explore-modal-content {
@@ -373,4 +398,102 @@ a {
     }
     .modal-left { flex: none; height: 50%; background: black; }
     .modal-right { flex: 1; height: 50%; }
+}
+
+@media (max-width: 2270px){
+    .profile-container{
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 2001px){
+    .profile-container{
+        zoom: 1.1;
+    }
+}
+
+@media (max-width: 1720px){
+    .profile-container{
+        zoom: 0.9;
+        margin-left: 300px;
+    }
+}
+
+@media (max-width: 1420px){
+    .profile-container{
+        zoom: 0.8;
+        
+    }
+}
+
+@media (max-width: 1280px){
+    .profile-container{
+        zoom: 0.7;
+        margin-left: 350px;
+    }
+}
+
+@media (max-width: 1140px){
+    .profile-container{
+        zoom: 0.6;
+        margin-left: 400px;
+    }
+}
+
+@media (max-width: 1020px){
+    .profile-container{
+        zoom: 0.5;
+        margin-left: 500px;
+    }
+}
+
+@media (max-width: 993px){
+    .profile-container{
+        zoom: 0.5;
+        margin-left: 390px;
+    }
+
+    footer{
+        margin-left: 200px;
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 860px){
+    .profile-container{
+        zoom: 0.4;
+        margin-left: 500px;
+    }
+}
+
+@media (max-width: 768px){
+    .profile-container{
+        zoom: 0.5;
+        margin-left: 0px;
+        margin-top: 13%;
+    }
+}
+
+@media (max-width: 630px){
+    .profile-container{
+        zoom: 0.4;
+        margin-left: 0px;
+        margin-top: 200px;
+    }
+}
+
+@media (max-width: 510px){
+    .profile-container{
+        zoom: 0.3;
+        margin-left: 0px;
+        margin-top: 250px;
+    }
+}
+
+@media (max-width: 390px){
+    .profile-container{
+        zoom: 0.2;
+        margin-left: 0px;
+        margin-top: 350px;
+    }
 }

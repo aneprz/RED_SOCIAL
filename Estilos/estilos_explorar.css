@@ -7,6 +7,21 @@ html,body {
 body{
     flex-direction: column; /* Alinea contenido y footer verticalmente */
     min-height: 100vh;      /* Asegura que el body ocupe toda la pantalla */
+
+    display: flex;           /* Necesario para que margin-top: auto funcione */
+    min-height: 100vh;       /* OBLIGATORIO: La altura mínima es el 100% de la ventana */
+}
+
+footer {
+    background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
+    color: rgb(226, 226, 226);
+    padding: 20px; /* Un poco de espacio */
+    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
+    width: calc(100% - 250px); /* Ajustar ancho */
+    flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
+
+    /* ESTA ES LA CLAVE PARA QUE BAJE */
+    margin-top: auto;
 }
 
 /* Este es el contenedor donde debe ir tu tabla en el HTML */
@@ -293,7 +308,10 @@ body{
         margin-top: 50px;
     }
 
-}
+    footer{
+        margin-left: 100px;
+    }
+}   
 
 @media (max-width: 768px){
     .grid{

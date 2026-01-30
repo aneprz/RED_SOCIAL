@@ -300,5 +300,6 @@ function submitComment(e){
     });
 }
 </script>
+<?php include __DIR__ . '/../Templates/footer.php'; ?>
 </body>
 </html>
