@@ -25,7 +25,7 @@ $token = $_SESSION['nuevo_chat_token'];
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Nuevo chat</title>
-<link rel="stylesheet" href="../../../Estilos/estilos_chats.css">
+<link rel="stylesheet" href="../../../Estilos/estilos_nuevoChat.css">
 <link rel="icon" type="image/png" href="/Media/logo.png">
 <style>
 .usuario-opcion { cursor: pointer; padding: 5px; }
@@ -70,7 +70,6 @@ $token = $_SESSION['nuevo_chat_token'];
     <button class="crearChat" type="submit">Crear Chat</button>
 </form>
 </main>
-
 <script>
 const usuarios = <?= json_encode($usuarios) ?>;
 const tipoChatSelect = document.getElementById('tipoChat');
@@ -204,7 +203,6 @@ form.addEventListener('submit', e => {
     });
 });
 </script>
-
 <?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
 </html>
