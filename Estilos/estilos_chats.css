@@ -157,3 +157,40 @@ form{
     min-width: 20px;
     text-align: center;
 }
+
+@media(max-width: 993px){
+    main{
+        margin-left: 200px;
+    }
+}
+
+@media(max-width: 768px){
+    main{
+        margin-left: 0px;
+        margin-top: 50px;
+    }
+}
+
+@media(max-width: 560px){
+    main{
+        margin-left: 0px;
+        margin-top: 75px;
+        zoom: 0.8;
+    }
+}
+
+@media(max-width: 460px){
+    main{
+        margin-left: 0px;
+        margin-top: 95px;
+        zoom: 0.6;
+    }
+}
+
+@media(max-width: 340px){
+    main{
+        margin-left: 0px;
+        margin-top: 115px;
+        zoom: 0.5;
+    }
+}
