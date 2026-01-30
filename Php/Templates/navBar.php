@@ -8,7 +8,6 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../Estilos/estilos_navbar.css">
-  <link rel="stylesheet" href="../../Estilos/notificaciones.css">
 </head>
 <body>
 
@@ -67,7 +66,9 @@
       <a href="#" class="nav-item-custom">Más</a>
     </div>
 
-  </aside> <div id="modalNotificaciones" class="modal-notificaciones">
+  </aside> 
+  <!--NOTIFICACIONES-->
+  <div id="modalNotificaciones" class="modal-notificaciones">
     <div class="modal-content-notif">
       <span class="close-notif" onclick="cerrarNotificaciones()">&times;</span>
       <h2 style="margin-top:0; font-size:1.2rem; border-bottom:1px solid #333; padding-bottom:10px;">Notificaciones</h2>

@@ -535,25 +535,20 @@ body {
       flex: 0 0 180px;   /* Forzamos un ancho fijo y pequeño para los laterales */
     }
 }
-
-/*Laptop*/
+ 
 @media (max-width: 769px){
   .main{
     margin: 0;
   }
 }
 
-/*Mobile L*/
-@media (max-width: 425px){
+@media (max-width: 450px){
+  .notif-info{
+    font-size: 10px;
+  }
 
-}
-
-/*Mobile M*/
-@media(max-width: 375px){
-
-}
-
-/*Mobile S*/
-@media (max-width: 320px){
-    
+  .notificacion-item{
+    margin: 0px !important;
+    padding: 0px !important;
+  }
 }
