@@ -15,9 +15,14 @@ main h2{
 }
 
 main{
+    display: flex;
+    flex-direction: column; /* Alinea los hijos en columna */
     flex: 1; /* Esto empuja el footer hacia abajo */
     flex-direction: column;
     background-color: rgb(21, 21, 21);
+    margin-left: 250px; /* <--- Cambia 250px por el ancho real de tu navbar */
+    height: 100vh; /* Ocupa el 100% de la ventana del navegador */
+    overflow: hidden;       /* Evita que el main tenga scroll propio */
 }
 
 .volver{
@@ -45,13 +50,29 @@ main{
     object-fit: cover;
 }
 
+.barraMensajes{
+    border-radius: 15px;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 30px;
+    margin-right: 10px;
+}
+
+.botonEnviarMensaje{
+    margin-right: 30px;
+    padding: 5px;
+    color: white;
+    border: 3px solid #802015;
+    border-radius: 15px;
+}
+
 #chat-mensajes{
     flex: 1; /* Ocupa todo el espacio disponible */
     overflow-y: auto; /* Scroll si hay muchos mensajes */
     padding: 10px;
     margin-bottom: 10px;
     overflow-y: auto;    /* permite scroll vertical */
-    height: 68vh;
+    height: 80vh;
 }
 
 .formularioMensajes{
@@ -109,7 +130,7 @@ form button:hover{
     align-items: flex-start;
     margin-bottom: 10px;
 }
-
+ 
 .infoUsuario {
     display: flex;
     flex-direction: column;
@@ -250,4 +271,39 @@ form button:hover{
     border: none;
     color: #fff;
     cursor: pointer;
+}
+
+@media (min-width: 2000px){
+    #chat-mensajes{
+        height: 55vh;
+    }
+}
+
+@media(max-width: 993px){
+    main{
+        margin-left: 200px;
+    }
+}
+
+@media(max-width: 768px){
+    main{
+        margin-left: 0px;
+        margin-top: 60px;
+    }
+
+    *{
+        font-size: 15px;
+    }
+}
+
+@media(max-width: 460px){
+    *{
+        font-size: 13px;
+    }
+}
+
+@media(max-width: 370px){
+    *{
+        font-size: 11px;
+    }
 }
