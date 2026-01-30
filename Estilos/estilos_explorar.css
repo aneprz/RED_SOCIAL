@@ -1,6 +1,5 @@
-body {
+html,body {
     margin: 0;
-    background: #fafafa;
     font-family: Arial, sans-serif;
     height: 100%;
 }
@@ -257,8 +256,9 @@ body{
     color: #c1c1c1;
     padding: 20px;
     text-align: center;
-    margin-left: 250px; 
-    width: auto;
+    margin-left: 250px; /* Mismo margen que el .main */
+    width: calc(100% - 250px); /* Ocupa solo el hueco visible */
+    box-sizing: border-box;
     margin-top: 20px;
 }
 
@@ -281,3 +281,22 @@ body{
     margin: 0 10px;
 }
 
+/*MEDIA QUERYS*/
+@media (max-width: 2000px){
+    .grid{
+        margin-top: 50px;
+    }
+}
+
+@media (max-width: 992px){
+    .grid{
+        margin-top: 50px;
+    }
+
+}
+
+@media (max-width: 768px){
+    .grid{
+        margin-top: 50px;
+    }
+}
