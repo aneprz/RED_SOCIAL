@@ -1,18 +1,20 @@
 /* Reset y body */
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    margin: 0 !important;
+    padding: 0 !important;
     background-color: #F6E3DC !important;
+}
+
+.main{
+    display: flex;
+    justify-content: center;
 }
 
 /* Contenedor que ocupa toda la pantalla y centra el contenido */
 .reels-screen {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     min-height: calc(100vh - 70px); /* Resta altura del navbar si es fijo */
-    padding-top: 70px; /* Ajusta si tu navbar es fijo */
+    margin-top: 50px;
 }
 
 /* Contenedor del video + controles */
@@ -20,7 +22,6 @@ body {
     display: flex;
     align-items: center; /* Centra verticalmente */
     gap: 20px; /* Espacio entre video y controles */
-    margin-left: 15em;
 }
 
 /* Contenedor del video */
@@ -62,6 +63,7 @@ body {
     background-color: #0073cc;
 }
 
+/*MEDIA QUERYS*/
 /* Responsive para móviles */
 @media (max-width: 900px) {
     .reel-container {
@@ -72,5 +74,56 @@ body {
         flex-direction: row;
         margin-top: 15px;
         gap: 10px;
+    }
+}
+
+@media (min-width: 2000px) {
+    .reels-screen{
+        zoom: 1.1;
+    }
+}
+
+@media (min-width: 1601px) {
+    .reels-screen{
+        zoom: 1.2;
+    }
+}
+
+@media (max-width: 1600px) {
+    .reels-screen{
+        zoom: 1.2;
+    }
+}
+
+@media (max-width: 1100px) {
+    .reels-screen{
+        zoom: 1.1;
+    }
+}
+
+@media (max-width: 940px) {
+    .reels-screen{
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 768px) {
+    .reels-screen{
+        margin-top: 80px;
+        zoom: 0.9;
+    }
+}
+
+@media (max-width: 520px) {
+    .reels-screen{
+        margin-top: 80px;
+        zoom: 0.7;
+    }
+}
+
+@media (max-width: 400px) {
+    .reels-screen{
+        margin-top: 80px;
+        zoom: 0.5;
     }
 }

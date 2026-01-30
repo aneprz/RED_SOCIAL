@@ -23,73 +23,75 @@ $result = $conexion->query($sql);
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Explorar</title>
-<link rel="stylesheet" href="../../Estilos/estilos_explorar.css">
+    <meta charset="UTF-8">
+    <title>Explorar</title>
+    <link rel="stylesheet" href="../../Estilos/estilos_explorar.css">
 </head>
 <body>
 
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
 
-<div class="grid">
-<?php while($post = $result->fetch_assoc()): ?>
-<?php
-    $ruta = "../Crear/uploads/".$post['imagen_url']; 
-    $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
-?>
-<div class="grid-item" onclick="openModal(<?= $post['id'] ?>)">
-    <div class="media-wrapper">
-        <?php if(in_array($ext,['mp4','webm'])): ?>
-            <video class="media hover-video" src="<?= $ruta ?>" loop></video>
-        <?php else: ?>
-            <img class="media" src="<?= $ruta ?>" alt="post">
-        <?php endif; ?>
-        <div class="overlay">
-            <div class="overlay-info">
-                <span>🌶️ <?= $post['total_likes'] ?></span>
-                <span>💬 <?= $post['total_comentarios'] ?></span>
+<div class="main">
+    <div class="grid">
+        <?php while($post = $result->fetch_assoc()): ?>
+        <?php
+            $ruta = "../Crear/uploads/".$post['imagen_url']; 
+            $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
+        ?>
+        <div class="grid-item" onclick="openModal(<?= $post['id'] ?>)">
+            <div class="media-wrapper">
+                <?php if(in_array($ext,['mp4','webm'])): ?>
+                    <video class="media hover-video" src="<?= $ruta ?>" loop></video>
+                <?php else: ?>
+                    <img class="media" src="<?= $ruta ?>" alt="post">
+                <?php endif; ?>
+                <div class="overlay">
+                    <div class="overlay-info">
+                        <span>🌶️ <?= $post['total_likes'] ?></span>
+                        <span>💬 <?= $post['total_comentarios'] ?></span>
+                    </div>
+                </div>
             </div>
         </div>
+        <?php endwhile; ?>
     </div>
-</div>
-<?php endwhile; ?>
-</div>
 
-<!-- MODAL -->
-<div class="explore-modal" id="postModal">
-  <span class="close-modal" onclick="closeModal()">&times;</span>
+    <!-- MODAL -->
+    <div class="explore-modal" id="postModal">
+    <span class="close-modal" onclick="closeModal()">&times;</span>
 
-  <div class="explore-modal-content">
-    <div class="modal-left" id="modalMedia"></div>
+    <div class="explore-modal-content">
+        <div class="modal-left" id="modalMedia"></div>
 
-    <div class="modal-right">
+        <div class="modal-right">
 
-      <!-- USUARIO CREADOR -->
-      <div class="post-owner" id="modalOwner"></div>
+        <!-- USUARIO CREADOR -->
+        <div class="post-owner" id="modalOwner"></div>
 
-      <!-- COMENTARIOS -->
-      <div id="modalComentarios"></div>
+        <!-- COMENTARIOS -->
+        <div id="modalComentarios"></div>
 
-      <!-- META -->
-      <div class="post-meta">
-        <button id="likeBtn" class="like-btn" onclick="toggleLike()">
-        <img id="likeImg" src="../../Media/like_off.png" alt="like">
-        </button>
+        <!-- META -->
+        <div class="post-meta">
+            <button id="likeBtn" class="like-btn" onclick="toggleLike()">
+            <img id="likeImg" src="../../Media/like_off.png" alt="like">
+            </button>
 
 
-        <div id="modalLikes"></div>
-        <div id="modalFecha"></div>
-      </div>
+            <div id="modalLikes"></div>
+            <div id="modalFecha"></div>
+        </div>
 
-      <!-- FORM -->
-      <form id="commentForm" onsubmit="return submitComment(event)">
-        <input type="hidden" id="modalPostId">
-        <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
-        <button type="submit">Comentar</button>
-      </form>
+        <!-- FORM -->
+        <form id="commentForm" onsubmit="return submitComment(event)">
+            <input type="hidden" id="modalPostId">
+            <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
+            <button type="submit">Comentar</button>
+        </form>
 
+        </div>
     </div>
-  </div>
+    </div>
 </div>
 
 <script>
@@ -298,7 +300,5 @@ function submitComment(e){
     });
 }
 </script>
-
-<?php include __DIR__ . '/../Templates/footer.php'; ?>
 </body>
 </html>

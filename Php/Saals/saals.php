@@ -82,31 +82,30 @@ if ($accion === 'anterior') {
     <title>Reels</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_saals.css">
 </head>
-<body>
-
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>
+<body>
+    <div class="main">
+        <div class="reels-screen">
+            <div class="reel-container">
+                <div class="reel-video-wrapper">
+                    <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay loop></video>
+                </div>
 
-<div class="reels-screen">
-    <div class="reel-container">
-        <div class="reel-video-wrapper">
-            <video src="/Php/Crear/uploads/<?= $reel['imagen_url'] ?>" autoplay loop></video>
-        </div>
+                <div class="reel-controls">
+                    <?php if ($_SESSION['reel_index'] > 0): ?>
+                    <form method="get">
+                        <input type="hidden" name="accion" value="anterior">
+                        <button type="submit">⬆</button>
+                    </form>
+                    <?php endif; ?>
 
-        <div class="reel-controls">
-            <?php if ($_SESSION['reel_index'] > 0): ?>
-            <form method="get">
-                <input type="hidden" name="accion" value="anterior">
-                <button type="submit">⬆</button>
-            </form>
-            <?php endif; ?>
-
-            <form method="get">
-                <input type="hidden" name="accion" value="siguiente">
-                <button type="submit">⬇</button>
-            </form>
+                    <form method="get">
+                        <input type="hidden" name="accion" value="siguiente">
+                        <button type="submit">⬇</button>
+                    </form>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-
 </body>
 </html>

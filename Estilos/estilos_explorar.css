@@ -2,6 +2,21 @@ body {
     margin: 0;
     background: #fafafa;
     font-family: Arial, sans-serif;
+    height: 100%;
+}
+
+body{
+    flex-direction: column; /* Alinea contenido y footer verticalmente */
+    min-height: 100vh;      /* Asegura que el body ocupe toda la pantalla */
+}
+
+/* Este es el contenedor donde debe ir tu tabla en el HTML */
+.main {
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ESTO CENTRA LA TABLA REALMENTE */
+    flex: 1; /* Esto hace que el contenido principal crezca y empuje el footer hacia abajo */
 }
 
 /* ================= GRID ================= */
