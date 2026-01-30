@@ -17,7 +17,7 @@ $sql = $pdo->prepare("
         m.fecha AS fecha_mensaje,
         c.fecha_creacion,
 
-        (
+        ( 
             SELECT COUNT(*) 
             FROM mensajes m2
             WHERE m2.chat_id = c.id
@@ -137,50 +137,48 @@ if ($chatReciente) {
 
 </main>
 <script>
-function cargarChats() {
-    fetch("procesamientos/get_chats.php")
-        .then(res => res.json())
-        .then(chats => {
-            let html = "";
+    function cargarChats() {
+        fetch("procesamientos/get_chats.php")
+            .then(res => res.json())
+            .then(chats => {
+                let html = "";
 
-            chats.forEach(c => {
-                let nombre = c.es_grupo == 1
-                    ? (c.nombre_grupo || "Grupo sin nombre")
-                    : (c.otro_usuario || "Usuario");
+                chats.forEach(c => {
+                    let nombre = c.es_grupo == 1
+                        ? (c.nombre_grupo || "Grupo sin nombre")
+                        : (c.otro_usuario || "Usuario");
 
-                let foto = c.es_grupo == 1
-                    ? "../../../Media/foto_grupo_default.png"
-                    : (c.foto_perfil || "../../../Media/foto_default.png");
+                    let foto = c.es_grupo == 1
+                        ? "../../../Media/foto_grupo_default.png"
+                        : (c.foto_perfil || "../../../Media/foto_default.png");
 
-                let fecha = c.fecha_mensaje || c.fecha_creacion;
-                let mensaje = c.ultimo_mensaje || "Sin mensajes todavía";
+                    let fecha = c.fecha_mensaje || c.fecha_creacion;
+                    let mensaje = c.ultimo_mensaje || "Sin mensajes todavía";
 
-                html += `
-                <div class="chat" onclick="location.href='chat.php?chat_id=${c.chat_id}'">
-                    <div class="fotoPerfil">
-                        <img src="${foto}" style="width:50px;height:50px;border-radius:50%">
+                    html += `
+                    <div class="chat" onclick="location.href='chat.php?chat_id=${c.chat_id}'">
+                        <div class="fotoPerfil">
+                            <img src="${foto}" style="width:50px;height:50px;border-radius:50%">
+                        </div>
+                        <div class="info">
+                            <div class="titulo">${nombre}</div>
+                            <div class="mensaje">${mensaje}</div>
+                            <div class="fecha">${fecha}</div>
+                        </div>
+                        ${c.no_leidos > 0 ? `<div class="badge">${c.no_leidos}</div>` : ""}
                     </div>
-                    <div class="info">
-                        <div class="titulo">${nombre}</div>
-                        <div class="mensaje">${mensaje}</div>
-                        <div class="fecha">${fecha}</div>
-                    </div>
-                    ${c.no_leidos > 0 ? `<div class="badge">${c.no_leidos}</div>` : ""}
-                </div>
-                `;
+                    `;
+                });
+
+                document.getElementById("listaChats").innerHTML = html;
             });
+    }
 
-            document.getElementById("listaChats").innerHTML = html;
-        });
-}
+    // Cargar al abrir
+    cargarChats();
 
-// Cargar al abrir
-cargarChats();
-
-// Actualizar cada 2 segundos
-setInterval(cargarChats, 2000);
+    // Actualizar cada 2 segundos
+    setInterval(cargarChats, 2000);
 </script>
-<!--Footer-->
-<?php include __DIR__ . '../../../Php/Templates/footer.php';?>
 </body>
 </html>

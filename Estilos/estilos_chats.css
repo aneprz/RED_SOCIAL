@@ -4,13 +4,11 @@
     box-sizing: border-box; /* incluye padding y border en el ancho total */
 }
 
-html, body {
-    overflow-x: hidden; /* evita scroll horizontal */
-}
-
 html,body{
     height: 100%;
     margin: 0;
+    overflow-x: hidden; /* evita scroll horizontal */
+    background-color: rgb(21, 21, 21); /* Pon el mismo color que tu main */
 }
 
 body { 
@@ -80,6 +78,13 @@ main h2{
 main{
     flex: 1; /* Esto empuja el footer hacia abajo */
     background-color: rgb(21, 21, 21);
+    margin-left: 250px; /* <--- Cambia 250px por el ancho real de tu navbar */
+    min-height: 100vh;  /* Esto obliga al main a medir, al menos, toda la pantalla */
+}
+
+#listaChats {
+    width: 100%;
+    max-width: 100%;
 }
 
 .btn-nuevo-chat{
