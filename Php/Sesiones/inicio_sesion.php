@@ -7,6 +7,7 @@
     <title>Inicio sesión - Salsagram</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../../Estilos/estilos_sesiones.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
     <div class="container d-flex justify-content-center my-5">

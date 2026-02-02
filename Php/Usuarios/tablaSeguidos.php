@@ -12,6 +12,7 @@ $id = intval($_SESSION['id']);
     <meta charset="UTF-8">
     <title>Siguiendo</title>
     <link rel="stylesheet" href="../../../Estilos/estilos_tablas_perfil.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
 <?php include __DIR__ . '/../Templates/navBar.php'; ?>

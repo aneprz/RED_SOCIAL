@@ -62,7 +62,7 @@ if ($miId != $id) {
     if ($yaSigo > 0) $estadoBtn = 'Siguiendo';
     elseif ($yaSolicite > 0) $estadoBtn = 'Solicitado';
     else $estadoBtn = 'Seguir';
-}
+} 
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -92,56 +92,54 @@ if ($miId != $id) {
     <?php include __DIR__ . '/../Templates/navBar.php'; ?>
     
     <main>
-        <div class="objetos">
-            <div class="profile-container">
-                <div class="profile-header">
-                    <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
-                    <div class="profile-info">
-                        <h2><?= htmlspecialchars($nombreusu) ?></h2>
-                        <p class="bio"><?= nl2br(htmlspecialchars($biografia)) ?></p>
-                        <div class="stats">
-                            <span><strong><?= $publicaciones ?></strong> publicaciones</span>
-                            <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
-                            <a href="tablaSeguidos.php"><span><strong><?= $seguidos ?></strong> siguiendo</span></a>
-                        </div>
-                        <?php if ($miId != $id): ?>
-                            <button id="btnSeguir" data-id="<?= $id ?>" data-estado="<?= $estadoBtn ?>"><?= $estadoBtn ?></button>
-                        <?php endif; ?>
+        <div class="profile-container">
+            <div class="profile-header">
+                <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
+                <div class="profile-info">
+                    <h2><?= htmlspecialchars($nombreusu) ?></h2>
+                    <p class="bio"><?= nl2br(htmlspecialchars($biografia)) ?></p>
+                    <div class="stats">
+                        <span><strong><?= $publicaciones ?></strong> publicaciones</span>
+                        <a href="tablaSeguidores.php"><span><strong><?= $seguidores ?></strong> seguidores</span></a>
+                        <a href="tablaSeguidos.php"><span><strong><?= $seguidos ?></strong> siguiendo</span></a>
                     </div>
-                </div>
-
-                <div class="profile-posts">
-                    <?php if (!empty($publicacionesArray)): ?>
-                        <?php foreach ($publicacionesArray as $post):
-                            $ruta = '/Php/Crear/uploads/' . htmlspecialchars($post['imagen_url']);
-                            $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
-                            $idPost = $post['id'];
-                            $likes = $post['total_likes'];
-                            $coments = $post['total_comentarios'];
-                        ?>
-                        
-                        <div class="post" onclick="openModal(<?= $idPost ?>)">
-                            <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                                <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
-                            <?php else: ?>
-                                <img class="media" src="<?= $ruta ?>" alt="Post">
-                            <?php endif; ?>
-
-                            <div class="overlay">
-                                <div class="overlay-info">
-                                    <span>🌶️ <?= $likes ?></span>
-                                    <span>💬 <?= $coments ?></span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <?php endforeach; ?>
-                    <?php else: ?>
-                        <p>No hay publicaciones todavía</p>
+                    <?php if ($miId != $id): ?>
+                        <button id="btnSeguir" data-id="<?= $id ?>" data-estado="<?= $estadoBtn ?>"><?= $estadoBtn ?></button>
                     <?php endif; ?>
                 </div>
             </div>
-        </div>
+
+            <div class="profile-posts">
+                <?php if (!empty($publicacionesArray)): ?>
+                    <?php foreach ($publicacionesArray as $post):
+                        $ruta = '/Php/Crear/uploads/' . htmlspecialchars($post['imagen_url']);
+                        $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
+                        $idPost = $post['id'];
+                        $likes = $post['total_likes'];
+                        $coments = $post['total_comentarios'];
+                    ?>
+                    
+                    <div class="post" onclick="openModal(<?= $idPost ?>)">
+                        <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                            <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
+                        <?php else: ?>
+                            <img class="media" src="<?= $ruta ?>" alt="Post">
+                        <?php endif; ?>
+
+                        <div class="overlay">
+                            <div class="overlay-info">
+                                <span>🌶️ <?= $likes ?></span>
+                                <span>💬 <?= $coments ?></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <p>No hay publicaciones todavía</p>
+                <?php endif; ?>
+            </div>
+        </div> 
     </main>
 
     <div class="explore-modal" id="postModal">

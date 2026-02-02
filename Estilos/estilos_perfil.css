@@ -4,8 +4,10 @@ html, body {
 }
 
 main{
+    flex: 1; /* Esto empuja el footer hacia abajo si hay poco contenido */
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
 }
 
 body {
@@ -13,8 +15,9 @@ body {
     background-color: #fafafa;
     margin: 0;
     padding: 0;
+    min-height: 100vh; /* O '100vh' para pantalla completa */
     /* Ajusta este margen si tu navbar es fixed-left, si es top, quítalo */
-    margin-left: 250px; 
+    margin-left: 300px; 
     background: linear-gradient(180deg, #e65a36, #c13722);
     display: flex;
     flex-direction: column;
@@ -30,12 +33,10 @@ a {
 .profile-container {
     max-width: 1200px;
     margin: 20px auto;
-    margin-left: 250px;
     background-color: #FFF8F5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 5px 5px 30px rgb(40, 40, 40);
-    position: absolute; /* Esto lo saca del flujo normal y lo permite mover libremente */
 }
 
 .profile-header {
@@ -201,6 +202,7 @@ footer {
     margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
     width: calc(100% - 250px); /* Ajustar ancho */
     flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
+    box-sizing: border-box; /* Para que el padding no rompa el ancho */
 
     /* ESTA ES LA CLAVE PARA QUE BAJE */
     margin-top: auto;
@@ -465,7 +467,7 @@ footer {
         margin-left: 500px;
     }
 }
-
+ 
 @media (max-width: 768px){
     .profile-container{
         zoom: 0.5;

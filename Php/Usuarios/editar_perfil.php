@@ -14,8 +14,8 @@ $privacidad=$_SESSION['privacidad'];
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Perfil</title>
-      <link rel="stylesheet" href="../../Estilos/estilos_editar_perfil.css">
-
+    <link rel="stylesheet" href="../../Estilos/estilos_editar_perfil.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
     <div class="profile-container">

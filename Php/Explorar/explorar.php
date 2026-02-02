@@ -26,6 +26,7 @@ $result = $conexion->query($sql);
     <meta charset="UTF-8">
     <title>Explorar</title>
     <link rel="stylesheet" href="../../Estilos/estilos_explorar.css">
+    <link rel="icon" type="image/png" href="/Media/logo.png">
 </head>
 <body>
 
