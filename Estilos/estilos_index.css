@@ -132,6 +132,7 @@ body{
     justify-content: center;
     align-items: center;
     z-index: 3000;
+    min-height: 100vh;
 }
 
 .explore-modal-content {
@@ -168,6 +169,10 @@ body{
     padding: 15px;
     background: #fafafa;
     min-height: 0;
+}
+
+.modalAbajo{
+    margin-top: auto; /* EL TRUCO MÁGICO */
 }
 
 /* Info superior */
@@ -431,6 +436,10 @@ body{
     .post img, .post video{
         max-height: 300px;
     }
+
+    .explore-modal{
+        zoom: 0.8;
+    }
 }
 
 /*Laptop L predeterminado*/
@@ -504,7 +513,7 @@ body{
         margin-left: 0px;
     }
 }
-
+ 
 @media (max-width: 540px){
     .sugerencias{
         zoom: 0.5;

@@ -266,20 +266,22 @@ if (empty($ids_sigo)) {
     <div class="modal-right">
         <div id="modalComentarios"></div>
 
-        <div class="info">
-            <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
-                <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
-            </button>
+        <div class="modalAbajo">
+            <div class="info">
+                <button id="modalLikeBtn" class="btnMeGusta" data-post-id="">
+                    <img id="modalLikeImg" src="/Media/meGusta.png" width="28">
+                </button>
 
-            <div id="modalLikes"></div>
-            <div id="modalFecha"></div>
+                <div id="modalLikes"></div>
+                <div id="modalFecha"></div>
+            </div>
+
+            <form id="commentForm" onsubmit="return submitComment(event)">
+                <input type="hidden" id="modalPostId">
+                <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
+                <button type="submit">Comentar</button>
+            </form>
         </div>
-
-        <form id="commentForm" onsubmit="return submitComment(event)">
-            <input type="hidden" id="modalPostId">
-            <input maxlength="100" type="text" id="commentText" placeholder="Escribe un comentario..." required>
-            <button type="submit">Comentar</button>
-        </form>
     </div>
   </div>
 </div>
