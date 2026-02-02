@@ -124,7 +124,7 @@ function renderComment(c){
 }
 
 function openModal(postId){
-    fetch('procesamiento/get_post.php?id='+postId)
+    fetch('Procesamiento/get_post.php?id='+postId)
     .then(res => res.json())
     .then(data => {
 
@@ -207,7 +207,7 @@ function openModal(postId){
 
         // Polling comentarios
         pollingInterval = setInterval(() => {
-            fetch(`procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
+            fetch(`Procesamiento/get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
             .then(res => res.json())
             .then(comments => {
                 comments.forEach(c => {
@@ -221,7 +221,7 @@ function openModal(postId){
 
         // Polling likes
         likesInterval = setInterval(() => {
-            fetch(`procesamiento/get_likes.php?post_id=${postId}`)
+            fetch(`Procesamiento/get_likes.php?post_id=${postId}`)
             .then(res => res.json())
             .then(data => {
                 document.getElementById('modalLikes')
@@ -232,7 +232,7 @@ function openModal(postId){
 }
 
 function toggleLike(){
-    fetch('procesamiento/toggle_like.php',{
+    fetch('Procesamiento/toggle_like.php',{
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body:'post_id='+currentPostId
@@ -280,7 +280,7 @@ function submitComment(e){
     const texto = commentText.value.trim();
     if(!texto) return;
 
-    fetch('procesamiento/add_comment.php',{
+    fetch('Procesamiento/add_comment.php',{
         method:'POST',
         headers:{'Content-Type':'application/x-www-form-urlencoded'},
         body:'post_id='+currentPostId+'&texto='+encodeURIComponent(texto)

@@ -213,7 +213,7 @@ if ($miId != $id) {
     // 2. SCRIPT MODAL (Con lógica de pie de foto)
     
     // Ruta hacia la carpeta de Explorar donde están los PHP
-    const RUTA_PROCESAMIENTO = '../Explorar/procesamiento/';
+    const RUTA_PROCESAMIENTO = '../Explorar/Procesamiento/';
 
     let pollingInterval = null;
     let likesInterval = null;
