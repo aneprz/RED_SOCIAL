@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const openBtn = document.getElementById("abrirCrear");
+  // 1. CAMBIO PRINCIPAL: Seleccionamos AMBOS botones
+  const openBtnDesktop = document.getElementById("abrirCrear");
+  const openBtnMobile = document.getElementById("abrirCrearMovil");
+  
   const modalRoot = document.getElementById("modal");
   const overlay = document.getElementById("modalOverlay");
   const closeBtn = document.getElementById("closeModal");
@@ -15,12 +18,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const postForm = document.getElementById("postForm");
   const suggestionsBox = document.getElementById("tagSuggestions");
 
-  if (!openBtn || !modalRoot) return;
+  // Si no hay modal, no hacemos nada. Quitamos la comprobación de botón único.
+  if (!modalRoot) return;
 
   let tags = [];
   let tagCounter = 0;
 
-  openBtn.addEventListener("click", (e) => { e.preventDefault(); openModal(); });
+  // 2. FUNCIÓN PARA ABRIR MODAL (Y cerrar menú móvil si hace falta)
+  function handleOpenModal(e) {
+    e.preventDefault();
+    openModal();
+
+    // Lógica extra: Cerrar el menú lateral de móvil si está abierto
+    const menuMovil = document.getElementById('menuMovil');
+    if (menuMovil && menuMovil.classList.contains('show')) {
+        // Como usas Bootstrap 5, obtenemos la instancia y la ocultamos
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(menuMovil);
+        if (bsOffcanvas) bsOffcanvas.hide();
+    }
+  }
+
+  // 3. ASIGNAR EVENTOS A LOS DOS BOTONES (Si existen)
+  if (openBtnDesktop) openBtnDesktop.addEventListener("click", handleOpenModal);
+  if (openBtnMobile) openBtnMobile.addEventListener("click", handleOpenModal);
+
   function openModal(){
     modalRoot.style.display = "flex";
     modalRoot.setAttribute("aria-hidden","false");
@@ -33,13 +54,17 @@ document.addEventListener("DOMContentLoaded", () => {
     modalRoot.setAttribute("aria-hidden","true");
     document.body.style.overflow = "";
     resetAll();
-    openBtn.focus?.();
+    // Intentamos devolver el foco al botón de escritorio si existe
+    if(openBtnDesktop) openBtnDesktop.focus?.();
   }
 
   closeBtn?.addEventListener("click", closeModal);
   overlay?.addEventListener("click", closeModal);
   cancelUploadBtn?.addEventListener("click", closeModal);
-  document.addEventListener("keydown", (e) => { if(e.key === "Escape" && modalRoot.style.display==="flex") closeModal(); });
+  
+  document.addEventListener("keydown", (e) => { 
+      if(e.key === "Escape" && modalRoot.style.display==="flex") closeModal(); 
+  });
 
   fileInput.addEventListener("change", (e) => {
     const files = e.target.files;
