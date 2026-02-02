@@ -130,6 +130,7 @@
       <a href="../../Php/Chats/chats.php" class="nav-item-custom active d-block mb-2">Chats</a>
       <a href="#" class="nav-item-custom d-block mb-2" onclick="abrirNotificaciones(event); bootstrap.Offcanvas.getInstance(document.getElementById('menuMovil')).hide()">Notificaciones</a>
       <a href="#" class="nav-item-custom d-block mb-2" id="abrirCrearMovil">Crear</a>
+      <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom active d-block mb-2">Perfil</a>
     </div>
   </div>
 

@@ -454,8 +454,8 @@ footer {
     }
 
     footer{
-        margin-left: 200px;
-        width: 100% !important;
+        margin-left: 200px; /* Para que se alinee con el contenido, no con el borde izq */
+        width: calc(100% - 200px); /* Ajustar ancho */ 
     }
 }
 
@@ -471,6 +471,11 @@ footer {
         zoom: 0.5;
         margin-left: 0px;
         margin-top: 13%;
+    }
+
+    footer{
+        margin-left: 0px; /* Para que se alinee con el contenido, no con el borde izq */
+        width: calc(100% - 0px); /* Ajustar ancho */
     }
 }
 

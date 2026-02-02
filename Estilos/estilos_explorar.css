@@ -16,7 +16,6 @@ footer {
     background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
     color: rgb(226, 226, 226);
     padding: 20px; /* Un poco de espacio */
-    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
     width: calc(100% - 250px); /* Ajustar ancho */
     flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
 
@@ -308,13 +307,19 @@ footer {
         margin-top: 50px;
     }
 
-    footer{
-        margin-left: 100px;
+    .site-footer{
+        margin-left: 200px;
+        width: calc(100% - 200px); /* Ocupa solo el hueco visible */
     }
 }   
 
 @media (max-width: 768px){
     .grid{
         margin-top: 50px;
+    }
+
+    .site-footer{
+        margin-left: 0px;
+        width: calc(100% - 0px); /* Ocupa solo el hueco visible */
     }
 }

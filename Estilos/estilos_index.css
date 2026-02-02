@@ -478,6 +478,10 @@ body{
     .sugerencias{
         zoom: 0.6;
     }
+
+    .site-footer{
+        margin-left: 200px;
+    }
 }
 
 @media(max-width: 769px) {
@@ -494,6 +498,10 @@ body{
 
     .content{
         margin-top: 50px;
+    }
+
+    .site-footer{
+        margin-left: 0px;
     }
 }
 
