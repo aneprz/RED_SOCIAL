@@ -107,7 +107,7 @@ $biografia   = $_SESSION['biografia'] ?? '';
     </div>
     <script>
     // RUTAS: Ajustamos para que apunte a la carpeta Explorar que ya funciona
-    const RUTA_BASE = '../Explorar/procesamiento/'; 
+    const RUTA_BASE = '../Explorar/Procesamiento/'; 
 
     let pollingInterval = null;
     let likesInterval = null;
