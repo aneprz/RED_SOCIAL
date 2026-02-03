@@ -352,16 +352,9 @@ if (empty($ids_sigo)) {
             const mediaPath = "/Php/Crear/uploads/" + data.imagen_url;
 
             if(['mp4','webm'].includes(ext)){
-                const video = document.createElement('video');
-                video.src = mediaPath;
-                video.controls = true; video.autoplay = true;
-                video.style.maxWidth = '100%'; video.style.maxHeight = '100%';
-                mediaDiv.appendChild(video);
+                mediaDiv.innerHTML = `<video src="${mediaPath}" controls autoplay loop onloadedmetadata="this.volume=0.2" style="width:100%; height:100%; object-fit:contain;"></video>`;
             } else {
-                const img = document.createElement('img');
-                img.src = mediaPath;
-                img.style.maxWidth = '100%'; img.style.maxHeight = '100%';
-                mediaDiv.appendChild(img);
+                mediaDiv.innerHTML = `<img src="${mediaPath}" style="width:100%; height:100%; object-fit:contain;">`;
             }
 
             // ===============================================
