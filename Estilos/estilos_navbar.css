@@ -480,13 +480,17 @@ body {
 }
 
 .btn-aceptar { 
-    background-color: #10b981; /* Verde moderno */
+    background-color: #e2ab06; /* Verde moderno */
     color: white; 
 }
 
 .btn-seguir { 
-    background-color: #5255ff; /* Azul consistente */
+    background-color: #28a745;
     color: white; 
+}
+
+.btn-seguir:hover{
+    background-color: #23923d;
 }
 
 .btn-gris {
@@ -563,6 +567,11 @@ body {
 @media (max-width: 450px){
   .notif-info{
     font-size: 10px;
+  }
+
+  .btn-aceptar, .btn-seguir{
+    font-size: 10px;
+    padding: 5px !important;
   }
 
   .notificacion-item{

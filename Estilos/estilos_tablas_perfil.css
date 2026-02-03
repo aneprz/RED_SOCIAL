@@ -4,7 +4,7 @@ body {
     display: flex;
     justify-content: center;
     padding-top: 50px;
-}
+} 
 
 .tabla-seguidores {
     width: 500px;
@@ -49,15 +49,15 @@ tbody img {
 }
 
 button {
-    background-color: #0095f6;
+    background-color: #6c757d;
     color: #fff;
     border: none;
-    padding: 5px 12px;
-    border-radius: 4px;
+    padding: 6px 14px;
+    border-radius: 10px !important;
     cursor: pointer;
     font-weight: bold;
 }
 
 button:hover {
-    background-color: #0073cc;
+    background-color: #5e666c;
 }
