@@ -18,7 +18,49 @@ $stmt->execute([$id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$usuario) die("Usuario no encontrado.");
 
-$foto_perfil = '/' . ltrim($usuario['foto_perfil'], '/');
+// --- LÓGICA INFALIBLE PARA FOTOS ---
+
+$foto_db = $usuario['foto_perfil'];
+
+// A) Rutas para el navegador (HTML)
+$ruta_web_default = '/Media/foto_default.png'; 
+// Asegúrate de que esta es la carpeta donde se guardan las subidas:
+$ruta_web_uploads = '/Php/Crear/uploads/'; 
+
+// B) Rutas para el servidor (Disco Duro) para comprobar si existe
+$root = $_SERVER['DOCUMENT_ROOT']; // Esto suele ser C:/xampp/htdocs o /var/www/html
+
+// Limpiamos el nombre de la foto de la BD
+$nombre_foto = trim($foto_db ?? '');
+
+$usar_default = true; // Asumimos que usaremos la default por seguridad
+
+if (!empty($nombre_foto)) {
+    // Construimos la ruta física donde DEBERÍA estar la imagen
+    // Si en la BD guardas "imagen.png", buscamos en ".../uploads/imagen.png"
+    // Si en la BD guardas "/Php/Crear/uploads/imagen.png", úsala tal cual.
+    
+    if (strpos($nombre_foto, '/') === false) {
+        // Caso normal: solo nombre de archivo en BD
+        $ruta_fisica_chequeo = $root . $ruta_web_uploads . $nombre_foto;
+        $ruta_final_web = $ruta_web_uploads . $nombre_foto;
+    } else {
+        // Caso raro: ruta completa en BD
+        $ruta_fisica_chequeo = $root . $nombre_foto;
+        $ruta_final_web = $nombre_foto;
+    }
+
+    // EL GRAN TRUCO: Preguntamos al servidor si el archivo existe
+    if (file_exists($ruta_fisica_chequeo)) {
+        $foto_perfil = $ruta_final_web;
+        $usar_default = false;
+    }
+}
+
+if ($usar_default) {
+    $foto_perfil = $ruta_web_default;
+}
+
 $nombreusu = $usuario['username'];
 $biografia = $usuario['bio'];
 $esPrivada = $usuario['privacidad']; // Asumo que 1 = Privada, 0 = Pública
