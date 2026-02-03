@@ -331,7 +331,7 @@ body{
 /* Estilos de los botones igual que usuarioAjeno */
 .btnSeguir[data-estado="Seguir"] {
     background-color: #28a745;
-    color: white;
+    color: white; 
 }
 .btnSeguir[data-estado="Siguiendo"] {
     background-color: #6c757d;

@@ -20,7 +20,7 @@ $id = intval($_SESSION['id']);
 <div class="tabla-seguidores">
     <h2>Siguiendo</h2>
     <table>
-        <tbody>
+        <tbody> 
             <?php
             include '../../BD/conexiones.php';
             $query = "SELECT u.foto_perfil, u.username, u.id 
@@ -48,7 +48,7 @@ $id = intval($_SESSION['id']);
                                 <input type='hidden' name='id_usuario' value='$usuario_id'>
                                 <input type='hidden' name='accion' value='suprimir'>
                                 <input type='hidden' name='pagina_origen' value='" . basename($_SERVER['PHP_SELF']) . "'>
-                                <button type='submit'>Suprimir</button>
+                                <button type='submit'>Siguiendo</button>
                             </form>
                           </td>";
                     echo "</tr>";
