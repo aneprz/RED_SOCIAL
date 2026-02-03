@@ -95,8 +95,7 @@ if ($stmt->execute()) {
         $mail->CharSet = 'UTF-8';
         $mail->Subject = 'Confirma tu registro en Salsagram 💃';
         
-        // Fíjate bien: RED_SOCIAL (Mayusc), Php (Mayusc P), Sesiones (Mayusc S)
-        $link = "http://54.227.147.179/RED_SOCIAL/Php/Sesiones/confirmar.php?email=$email&token=$token";
+        $link = "http://54.227.147.179/Php/Sesiones/confirmar.php?email=$email&token=$token";
 
         $mail->Body = "
             <div style='font-family: sans-serif; text-align: center; padding: 20px;'>
