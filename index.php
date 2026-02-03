@@ -118,7 +118,7 @@ if (empty($ids_sigo)) {
                     <em class="fecha"><?= htmlspecialchars($post['fecha_publicacion']) ?></em>
 
                     <?php if (in_array($ext, ['mp4','webm'])): ?>
-                        <video class="hover-video" src="<?= htmlspecialchars($archivoRuta) ?>" loop style="width:50%; border-radius:8px;"></video>
+                        <video class="hover-video" src="<?= htmlspecialchars($archivoRuta) ?>" loop onloadedmetadata="this.volume=0.2" style="width:50%; border-radius:8px;"></video>
                     <?php else: ?>
                         <img src="<?= htmlspecialchars($archivoRuta) ?>" alt="Post" style="width:100%; border-radius:8px;">
                     <?php endif; ?>

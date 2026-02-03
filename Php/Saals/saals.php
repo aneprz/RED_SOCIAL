@@ -118,6 +118,7 @@ if (!$reel) {
                         autoplay 
                         loop  
                         playsinline 
+                        onloadedmetadata="this.volume=0.2"
                     >
                         Tu navegador no soporta videos.
                     </video>
