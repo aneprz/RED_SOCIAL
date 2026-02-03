@@ -61,11 +61,6 @@
     </a>
 
     <a href="../../Php/Usuarios/perfil.php" class="nav-item-custom">Perfil</a>
-
-    <div class="mt-auto">
-      <a href="#" class="nav-item-custom">Más</a>
-    </div>
-
   </aside> 
   <!--NOTIFICACIONES-->
   <div id="modalNotificaciones" class="modal-notificaciones">

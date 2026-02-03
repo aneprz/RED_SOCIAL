@@ -7,7 +7,7 @@ main{
     flex: 1; /* Esto empuja el footer hacia abajo si hay poco contenido */
     width: 100%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 body {
@@ -32,11 +32,17 @@ a {
 
 .profile-container {
     max-width: 1200px;
-    margin: 20px auto;
+    width: 100%;      /* NUEVO: Para que intente llenar el hueco */
+    margin: 0;        /* CAMBIO: Quitamos '20px auto', el main y el padding ya se encargan */
     background-color: #FFF8F5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 5px 5px 30px rgb(40, 40, 40);
+    position: relative;
+
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: 250px;
 }
 
 .profile-header {
@@ -99,11 +105,9 @@ a {
 .formCerrarSesion {
     justify-content: right;
     margin: 20px;
-    display: flex;
-
     position: absolute; /* Esto lo saca del flujo normal y lo permite mover libremente */
-    top: 20px;          /* Distancia desde el techo */
-    right: 40px;        /* Distancia desde la derecha */
+    top: 30px;          /* Distancia desde el techo */
+    right: 30px;        /* Distancia desde la derecha */
     z-index: 100;       /* Nos aseguramos de que esté por encima de otros elementos */
 }
 
@@ -402,29 +406,43 @@ footer {
     .modal-right { flex: 1; height: 50%; }
 }
 
-@media (max-width: 2270px){
+@media (min-width: 2270px){
     .profile-container{
-        zoom: 0.9;
+        zoom: 1.0;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        margin-left: 250px;
     }
+}
+
+@media (max-width: 2270px) and (min-width: 2001){
+    .profile-container{
+        zoom: 1.0;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        margin-left: 250px;
+    }   
 }
 
 @media (max-width: 2001px){
     .profile-container{
         zoom: 1.1;
+        margin-top: 50px;
+        margin-bottom: 50px;
+        margin-left: 250px;
     }
 }
 
 @media (max-width: 1720px){
     .profile-container{
         zoom: 0.9;
-        margin-left: 300px;
     }
 }
 
 @media (max-width: 1420px){
     .profile-container{
         zoom: 0.8;
-        
+        margin-left: 300px;
     }
 }
 
@@ -445,14 +463,12 @@ footer {
 @media (max-width: 1020px){
     .profile-container{
         zoom: 0.5;
-        margin-left: 500px;
     }
 }
 
 @media (max-width: 993px){
     .profile-container{
         zoom: 0.5;
-        margin-left: 390px;
     }
 
     footer{
