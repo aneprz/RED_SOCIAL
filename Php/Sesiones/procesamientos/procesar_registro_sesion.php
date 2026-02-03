@@ -96,12 +96,12 @@ if ($stmt->execute()) {
         $mail->Subject = 'Confirma tu registro en Salsagram 💃';
         
         // Enlace de confirmación (Usando tu IP de AWS)
-        $link = "http://54.227.147.179/Php/Login/confirmar.php?email=$email&token=$token";
+        $link = "http://54.227.147.179/RED_SOCIAL/Php/Login/confirmar.php?email=$email&token=$token";
 
         $mail->Body = "
             <div style='font-family: sans-serif; text-align: center; padding: 20px;'>
                 <h2 style='color: #d63384;'>¡Bienvenido a Salsagram, $nombreUsu!</h2>
-                <p>Estás a un paso de empezar a bailar.</p>
+                <p>Estás a un paso de empezar a chatear.</p>
                 <p>Haz clic en el botón para activar tu cuenta:</p>
                 <br>
                 <a href='$link' style='background-color: #d63384; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold;'>CONFIRMAR CUENTA</a>
@@ -113,7 +113,7 @@ if ($stmt->execute()) {
         $mail->send();
 
         // ÉXITO
-        $_SESSION['success'] = "¡Registro correcto! Hemos enviado un correo a <b>$email</b>. Por favor, revísalo para activar tu cuenta.";
+        $_SESSION['success'] = "¡Registro correcto! Hemos enviado un correo a $email. Por favor, revísalo para activar tu cuenta.";
         header("Location: ../registro_sesion.php"); // Volvemos al registro para mostrar el mensaje
         exit();
 
