@@ -95,7 +95,7 @@ if ($stmt->execute()) {
         $mail->CharSet = 'UTF-8';
         $mail->Subject = 'Confirma tu registro en Salsagram 💃';
         
-        // Enlace de confirmación (Usando tu IP de AWS)
+        // Fíjate bien: RED_SOCIAL (Mayusc), Php (Mayusc P), Sesiones (Mayusc S)
         $link = "http://54.227.147.179/RED_SOCIAL/Php/Sesiones/confirmar.php?email=$email&token=$token";
 
         $mail->Body = "
