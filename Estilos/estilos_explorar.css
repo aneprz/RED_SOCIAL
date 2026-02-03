@@ -302,6 +302,47 @@ footer {
     }
 }
 
+@media (max-width: 1100px){
+    /* 1. Cambiamos la dirección a columna (uno encima de otro) */
+    .explore-modal-content {
+        flex-direction: column;
+        width: 95%;      /* Un poco más ancho en móviles */
+        height: 90vh;    /* Aprovechamos más altura */
+        max-height: 90vh;
+    }
+
+    /* 2. Ajustamos la caja de la imagen/video */
+    .modal-left {
+        flex: 0 0 40%;   /* Ocupa el 40% de la altura del modal (fijo) */
+        width: 100%;     /* Ancho completo */
+        background: #000;
+    }
+
+    /* 3. Ajustamos la columna derecha (comentarios) */
+    .modal-right {
+        flex: 1;         /* Ocupa el resto del espacio (60%) */
+        width: 100%;     /* Ancho completo */
+        overflow-y: hidden; /* Para que el scroll lo tenga solo #modalComentarios */
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* 4. Aseguramos que la imagen/video se contenga bien */
+    .modal-left img, 
+    .modal-left video {
+        max-height: 100%;
+        max-width: 100%;
+        width: auto;     /* Auto para mantener proporción */
+        height: auto;
+    }
+    
+    /* 5. Ajustes estéticos para móvil */
+    .modal-user-header {
+        padding-top: 0 !important;
+        margin-top: 0 !important;
+    }
+}
+
 @media (max-width: 992px){
     .grid{
         margin-top: 50px;
@@ -321,5 +362,23 @@ footer {
     .site-footer{
         margin-left: 0px;
         width: calc(100% - 0px); /* Ocupa solo el hueco visible */
+    }
+
+    .explore-modal{
+        zoom: 0.8;
+    }
+}
+
+@media (max-width: 440px){
+    .post-meta{
+        zoom: 0.7;
+    }
+
+    .modalComentarios{
+        zoom: 0.7 !important;
+    }
+    
+    .post-owner{
+        zoom: 0.7;
     }
 }

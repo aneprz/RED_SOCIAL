@@ -402,6 +402,11 @@ body {
     max-width: 500px;
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+
+    max-height: 85vh;       /* Nunca ocupará más del 85% de la altura de la pantalla */
+    display: flex;          /* Usamos flex para organizar título y lista */
+    flex-direction: column; /* Uno debajo del otro */
+    position: relative;     /* Para posicionar elementos si hace falta */
 }
 
 /* Botón cerrar (X) */
@@ -451,6 +456,14 @@ body {
     color: #fff;
 }
 
+/* NUEVO: Esto hace que solo la lista de notificaciones tenga scroll */
+.notificaciones-list {
+    overflow-y: auto;       /* Scroll vertical si hace falta */
+    padding-right: 5px;     /* Espacio para que la barra de scroll no tape texto */
+    margin-top: 10px;       /* Separación con el título */
+    flex-grow: 1;           /* Ocupa el espacio restante */
+}
+
 /* Botones de acción dentro de notificaciones */
 .btn-accion {
     padding: 6px 12px;
@@ -494,6 +507,11 @@ body {
     font-size: 14px;
     line-height: 1.4;
     padding-right: 10px; /* Un poco de aire entre texto y botón */
+
+    /* NUEVO: La magia para evitar desbordamientos en Flexbox */
+    min-width: 0;           /* Permite al contenedor encogerse más allá del contenido */
+    word-wrap: break-word;  /* Rompe palabras largas si es necesario */
+    overflow-wrap: break-word;
 }
 
 /* CAMBIO CLAVE: Forzar al botón a irse a la derecha */
