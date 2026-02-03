@@ -86,7 +86,7 @@ $result = $conexion->query($sql);
         <!-- FORM -->
         <form id="commentForm" onsubmit="return submitComment(event)">
             <input type="hidden" id="modalPostId">
-            <input type="text" id="commentText" placeholder="Escribe un comentario..." required>
+            <input type="text" id="commentText" placeholder="Escribe un comentario..." maxlenght="100" required>
             <button type="submit">Comentar</button>
         </form>
 
