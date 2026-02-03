@@ -201,15 +201,15 @@ if ($mostrarPublicaciones) {
                         
                         <div class="post" onclick="openModal(<?= $idPost ?>)">
                             <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                                <video 
-                                    class="media" 
-                                    src="<?= $ruta ?>" 
-                                    muted 
-                                    loop 
-                                    onmouseover="this.play()" 
-                                    onmouseout="this.pause()" 
-                                    onloadedmetadata="this.volume=0.2">
-                                </video>
+                            <video 
+                                class="media" 
+                                src="<?= $ruta ?>" 
+                                muted 
+                                loop 
+                                onmouseover="this.play()" 
+                                onmouseout="this.pause()" 
+                                onloadedmetadata="this.volume=0.2">
+                            </video>
                             <?php else: ?>
                                 <img class="media" src="<?= $ruta ?>" alt="Post">
                             <?php endif; ?>
@@ -341,7 +341,7 @@ if ($mostrarPublicaciones) {
             const ruta = '../Crear/uploads/' + data.imagen_url;
             const ext = data.imagen_url.split('.').pop().toLowerCase();
             if(['mp4','webm'].includes(ext)){
-                mediaDiv.innerHTML = `<video src="${rutaImg}" controls autoplay loop onloadedmetadata="this.volume=0.2" style="width:100%; height:100%; object-fit:contain;"></video>`;
+                mediaDiv.innerHTML = `<video src="${ruta}" controls autoplay loop style="width:100%; height:100%; object-fit:contain;"></video>`;
             } else {
                 mediaDiv.innerHTML = `<img src="${ruta}" style="width:100%; height:100%; object-fit:contain;">`;
             }
