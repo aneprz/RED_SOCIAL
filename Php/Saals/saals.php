@@ -34,7 +34,6 @@ if ($accion === 'siguiente') {
             OR p.imagen_url LIKE '%.MP4'
             OR p.imagen_url LIKE '%.mov'
             OR p.imagen_url LIKE '%.MOV'
-            OR p.imagen_url LIKE '%.webm'
         )
         ORDER BY RAND()
         LIMIT 1
