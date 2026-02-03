@@ -152,7 +152,7 @@ $biografia   = $_SESSION['biografia'] ?? '';
             const rutaImg = "../Crear/uploads/" + data.imagen_url;
 
             if(['mp4','webm'].includes(ext)){
-                mediaDiv.innerHTML = `<video src="${rutaImg}" controls autoplay loop></video>`;
+                mediaDiv.innerHTML = `<video src="${rutaImg}" controls autoplay loop  onloadedmetadata="this.volume=0.2" ></video>`;
             } else {
                 mediaDiv.innerHTML = `<img src="${rutaImg}">`;
             }
