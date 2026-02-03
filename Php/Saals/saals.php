@@ -116,10 +116,8 @@ if (!$reel) {
                     <video 
                         src="../Crear/uploads/<?= htmlspecialchars($reel['imagen_url']) ?>" 
                         autoplay 
-                        loop 
-                        muted 
+                        loop  
                         playsinline 
-                        controls
                     >
                         Tu navegador no soporta videos.
                     </video>
