@@ -25,6 +25,9 @@ $biografia   = $_SESSION['biografia'] ?? '';
     <?php include __DIR__ . '/../Templates/navBar.php';?>
     <main>
         <div class="profile-container">
+            <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
+                <button type="submit" class="cerrarSesion">Cerrar sesión</button>
+            </form>
             <div class="profile-header">
                 <img src="<?= htmlspecialchars($foto_perfil) ?>" alt="Foto de perfil">
                 <div class="profile-info">
@@ -72,9 +75,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
                     <p>No hay publicaciones todavía</p>
                 <?php endif; ?>
             </div>
-            <form class="formCerrarSesion" action="../Sesiones/procesamientos/procesar_cerrar_sesion.php" method="post">
-                <button type="submit" class="cerrarSesion">Cerrar sesión</button>
-            </form>
         </div>
     </main>
 
@@ -107,7 +107,7 @@ $biografia   = $_SESSION['biografia'] ?? '';
     </div>
     <script>
     // RUTAS: Ajustamos para que apunte a la carpeta Explorar que ya funciona
-    const RUTA_BASE = '../Explorar/procesamiento/'; 
+    const RUTA_BASE = '../Explorar/Procesamiento/'; 
 
     let pollingInterval = null;
     let likesInterval = null;

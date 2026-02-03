@@ -10,6 +10,7 @@ include '../../BD/conexiones.php';
 if (!isset($_POST['id'])) die("ID de usuario no válida.");
 
 $id = intval($_POST['id']);
+$miId = $_SESSION['id']; // Obtenemos tu ID aquí para usarlo en las comprobaciones
 
 // 1. Datos del usuario a visitar
 $stmt = $pdo->prepare("SELECT foto_perfil, username, bio, privacidad FROM usuarios WHERE id = ?");
@@ -17,10 +18,52 @@ $stmt->execute([$id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$usuario) die("Usuario no encontrado.");
 
-$foto_perfil = '/' . ltrim($usuario['foto_perfil'], '/');
+// --- LÓGICA INFALIBLE PARA FOTOS ---
+
+$foto_db = $usuario['foto_perfil'];
+
+// A) Rutas para el navegador (HTML)
+$ruta_web_default = '/Media/foto_default.png'; 
+// Asegúrate de que esta es la carpeta donde se guardan las subidas:
+$ruta_web_uploads = '/Php/Crear/uploads/'; 
+
+// B) Rutas para el servidor (Disco Duro) para comprobar si existe
+$root = $_SERVER['DOCUMENT_ROOT']; // Esto suele ser C:/xampp/htdocs o /var/www/html
+
+// Limpiamos el nombre de la foto de la BD
+$nombre_foto = trim($foto_db ?? '');
+
+$usar_default = true; // Asumimos que usaremos la default por seguridad
+
+if (!empty($nombre_foto)) {
+    // Construimos la ruta física donde DEBERÍA estar la imagen
+    // Si en la BD guardas "imagen.png", buscamos en ".../uploads/imagen.png"
+    // Si en la BD guardas "/Php/Crear/uploads/imagen.png", úsala tal cual.
+    
+    if (strpos($nombre_foto, '/') === false) {
+        // Caso normal: solo nombre de archivo en BD
+        $ruta_fisica_chequeo = $root . $ruta_web_uploads . $nombre_foto;
+        $ruta_final_web = $ruta_web_uploads . $nombre_foto;
+    } else {
+        // Caso raro: ruta completa en BD
+        $ruta_fisica_chequeo = $root . $nombre_foto;
+        $ruta_final_web = $nombre_foto;
+    }
+
+    // EL GRAN TRUCO: Preguntamos al servidor si el archivo existe
+    if (file_exists($ruta_fisica_chequeo)) {
+        $foto_perfil = $ruta_final_web;
+        $usar_default = false;
+    }
+}
+
+if ($usar_default) {
+    $foto_perfil = $ruta_web_default;
+}
+
 $nombreusu = $usuario['username'];
 $biografia = $usuario['bio'];
-$esPrivada = $usuario['privacidad'];
+$esPrivada = $usuario['privacidad']; // Asumo que 1 = Privada, 0 = Pública
 
 // 2. Estadísticas
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM seguidores WHERE seguido_id = ?");
@@ -35,26 +78,20 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM publicaciones WHERE usuario_id = ?")
 $stmt->execute([$id]);
 $publicaciones = $stmt->fetchColumn();
 
-// 3. Publicaciones (Traemos contadores para el Grid)
-$stmt = $pdo->prepare("
-    SELECT p.id, p.imagen_url,
-    (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as total_likes,
-    (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) as total_comentarios
-    FROM publicaciones p 
-    WHERE usuario_id = ? 
-    ORDER BY fecha_publicacion DESC
-");
-$stmt->execute([$id]);
-$publicacionesArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// --- CAMBIO: Mover la lógica de seguimiento ANTES de cargar publicaciones ---
 
-// 4. Estado del botón Seguir
-$miId = $_SESSION['id'];
+// 3. Estado del botón Seguir y Verificación de "Ya Sigo"
 $estadoBtn = '';
+$yaSigo = 0;
+$yaSolicite = 0;
+
 if ($miId != $id) {
+    // Comprobar si ya le sigo
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM seguidores WHERE seguidor_id = ? AND seguido_id = ?");
     $stmt->execute([$miId, $id]);
     $yaSigo = $stmt->fetchColumn();
 
+    // Comprobar si he solicitado
     $stmt = $pdo->prepare("SELECT COUNT(*) FROM solicitudes_seguimiento WHERE solicitante_id = ? AND receptor_id = ?");
     $stmt->execute([$miId, $id]);
     $yaSolicite = $stmt->fetchColumn();
@@ -62,8 +99,38 @@ if ($miId != $id) {
     if ($yaSigo > 0) $estadoBtn = 'Siguiendo';
     elseif ($yaSolicite > 0) $estadoBtn = 'Solicitado';
     else $estadoBtn = 'Seguir';
-} 
+}
+
+// 4. Lógica de Privacidad: ¿Debemos mostrar las fotos?
+$mostrarPublicaciones = false;
+
+if ($miId == $id) {
+    $mostrarPublicaciones = true; // Es mi propio perfil
+} elseif ($esPrivada == 0) {
+    $mostrarPublicaciones = true; // Es pública
+} elseif ($esPrivada == 1 && $yaSigo > 0) {
+    $mostrarPublicaciones = true; // Es privada pero lo sigo
+}
+// Si es privada (1) y no sigo ($yaSigo == 0), se queda en false.
+
+
+// 5. Cargar Publicaciones (Solo si $mostrarPublicaciones es TRUE)
+$publicacionesArray = [];
+
+if ($mostrarPublicaciones) {
+    $stmt = $pdo->prepare("
+        SELECT p.id, p.imagen_url,
+        (SELECT COUNT(*) FROM likes WHERE post_id = p.id) as total_likes,
+        (SELECT COUNT(*) FROM comentarios WHERE post_id = p.id) as total_comentarios
+        FROM publicaciones p 
+        WHERE usuario_id = ? 
+        ORDER BY fecha_publicacion DESC
+    ");
+    $stmt->execute([$id]);
+    $publicacionesArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -73,19 +140,30 @@ if ($miId != $id) {
 <link rel="stylesheet" href="../../Estilos/estilos_perfil.css">
 <link rel="icon" type="image/png" href="/Media/logo.png">
 <style>
-    /* Estilos específicos del botón seguir */
+    /* Estilos del botón seguir */
     #btnSeguir {
-        padding: 8px 16px;
-        border: none;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background 0.2s, color 0.2s;
+        padding: 8px 16px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s;
     }
     #btnSeguir[data-estado="Seguir"] { background-color: #28a745; color: white; }
     #btnSeguir[data-estado="Siguiendo"] { background-color: #6c757d; color: white; }
     #btnSeguir[data-estado="Solicitado"] { background-color: #ffc107; color: black; }
     #btnSeguir:hover { opacity: 0.8; }
+
+    /* Estilos para cuenta privada */
+    .private-account-msg {
+        width: 100%;
+        text-align: center;
+        padding: 40px 20px;
+        color: #666;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        grid-column: 1 / -1; /* Ocupa todo el ancho del grid */
+    }
+    .private-icon {
+        font-size: 40px;
+    }
 </style>
 </head>
 <body>
@@ -110,33 +188,46 @@ if ($miId != $id) {
             </div>
 
             <div class="profile-posts">
-                <?php if (!empty($publicacionesArray)): ?>
-                    <?php foreach ($publicacionesArray as $post):
-                        $ruta = '/Php/Crear/uploads/' . htmlspecialchars($post['imagen_url']);
-                        $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
-                        $idPost = $post['id'];
-                        $likes = $post['total_likes'];
-                        $coments = $post['total_comentarios'];
-                    ?>
+                <?php if ($mostrarPublicaciones): ?>
                     
-                    <div class="post" onclick="openModal(<?= $idPost ?>)">
-                        <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                            <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
-                        <?php else: ?>
-                            <img class="media" src="<?= $ruta ?>" alt="Post">
-                        <?php endif; ?>
+                    <?php if (!empty($publicacionesArray)): ?>
+                        <?php foreach ($publicacionesArray as $post):
+                            $ruta = '/Php/Crear/uploads/' . htmlspecialchars($post['imagen_url']);
+                            $ext = strtolower(pathinfo($post['imagen_url'], PATHINFO_EXTENSION));
+                            $idPost = $post['id'];
+                            $likes = $post['total_likes'];
+                            $coments = $post['total_comentarios'];
+                        ?>
+                        
+                        <div class="post" onclick="openModal(<?= $idPost ?>)">
+                            <?php if (in_array($ext, ['mp4', 'webm'])): ?>
+                                <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
+                            <?php else: ?>
+                                <img class="media" src="<?= $ruta ?>" alt="Post">
+                            <?php endif; ?>
 
-                        <div class="overlay">
-                            <div class="overlay-info">
-                                <span>🌶️ <?= $likes ?></span>
-                                <span>💬 <?= $coments ?></span>
+                            <div class="overlay">
+                                <div class="overlay-info">
+                                    <span>🌶️ <?= $likes ?></span>
+                                    <span>💬 <?= $coments ?></span>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="private-account-msg">
+                            <span class="private-icon">📷</span>
+                            <h3>Aún no hay publicaciones</h3>
+                        </div>
+                    <?php endif; ?>
+
                 <?php else: ?>
-                    <p>No hay publicaciones todavía</p>
+                    <div class="private-account-msg">
+                        <span class="private-icon">🔒</span>
+                        <h3>Esta cuenta es privada</h3>
+                        <p>Sigue a este usuario para ver sus fotos y videos.</p>
+                    </div>
                 <?php endif; ?>
             </div>
         </div> 
@@ -144,15 +235,11 @@ if ($miId != $id) {
 
     <div class="explore-modal" id="postModal">
       <span class="close-modal" onclick="closeModal()">&times;</span>
-
       <div class="explore-modal-content">
         <div class="modal-left" id="modalMedia"></div>
-
         <div class="modal-right">
           <div id="modalHeaderContainer"></div>
-
           <div id="modalComentarios"></div>
-          
           <div class="post-meta">
             <button id="likeBtn" class="like-btn" onclick="toggleLike()">
                <img id="likeImg" src="../../Media/meGusta.png" alt="like">
@@ -160,7 +247,6 @@ if ($miId != $id) {
             <div id="modalLikes"></div>
             <div id="modalFecha"></div>
           </div>
-
           <form id="commentForm" onsubmit="return submitComment(event)">
             <input type="hidden" id="modalPostId">
             <input type="text" id="commentText" placeholder="Añade un comentario..." required>
@@ -173,6 +259,8 @@ if ($miId != $id) {
     <?php include __DIR__ . '/../Templates/footer.php'; ?>
 
     <script>
+    // ... (Mantén todo tu código JavaScript aquí intacto) ...
+    // Solo copia el script que ya tenías en tu mensaje original
     // 1. SCRIPT BOTÓN SEGUIR
     document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btnSeguir');
@@ -210,22 +298,16 @@ if ($miId != $id) {
         }
     });
 
-    // 2. SCRIPT MODAL (Con lógica de pie de foto)
-    
-    // Ruta hacia la carpeta de Explorar donde están los PHP
-    const RUTA_PROCESAMIENTO = '../Explorar/procesamiento/';
-
+    // 2. SCRIPT MODAL (El mismo que tenías)
+    const RUTA_PROCESAMIENTO = '../Explorar/Procesamiento/';
     let pollingInterval = null;
     let likesInterval = null;
     let lastCommentId = 0;
     let currentPostId = null;
     let likedByUser = false;
 
-    // Función auxiliar para renderizar comentarios
     function renderComment(c){
-        // En los comentarios la API devuelve 'usuario', en el post devuelve 'usuario' o 'username'
         const nombre = c.usuario || c.username; 
-        
         return `
         <div class="comment" data-id="${c.id}">
             <div class="comentarioUsuario">
@@ -244,29 +326,20 @@ if ($miId != $id) {
         .then(data => {
             currentPostId = postId;
             likedByUser = data.liked > 0;
+            document.getElementById('likeImg').src = likedByUser ? '../../Media/meGustaDado.png' : '../../Media/meGusta.png';
 
-            document.getElementById('likeImg').src = likedByUser 
-                ? '../../Media/meGustaDado.png' 
-                : '../../Media/meGusta.png';
-
-            // 1. Multimedia
             const mediaDiv = document.getElementById('modalMedia');
             mediaDiv.innerHTML = '';
-            // Ajustamos ruta de uploads (desde Busqueda -> Crear)
             const ruta = '../Crear/uploads/' + data.imagen_url;
             const ext = data.imagen_url.split('.').pop().toLowerCase();
-
             if(['mp4','webm'].includes(ext)){
                 mediaDiv.innerHTML = `<video src="${ruta}" controls autoplay loop style="width:100%; height:100%; object-fit:contain;"></video>`;
             } else {
                 mediaDiv.innerHTML = `<img src="${ruta}" style="width:100%; height:100%; object-fit:contain;">`;
             }
 
-            // 2. Cabecera (Usuario del Post)
             const headerDiv = document.getElementById('modalHeaderContainer');
-            // Validar ruta foto
             const fotoUser = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
-            
             headerDiv.innerHTML = `
                 <div class="modal-user-header">
                     <form action="usuarioAjeno.php" method="POST" style="display:flex; align-items:center;">
@@ -276,35 +349,19 @@ if ($miId != $id) {
                             <span class="modal-username">${data.usuario}</span>
                         </button>
                     </form>
-                </div>
-            `;
-
+                </div>`;
             document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total_likes + ' picantes';
             document.getElementById('modalFecha').innerHTML = '📅 ' + data.fecha_publicacion;
 
-            // 3. Comentarios + PIE DE FOTO
             const comentariosDiv = document.getElementById('modalComentarios');
             comentariosDiv.innerHTML = '';
-
-            // [LÓGICA CLAVE] Si hay pie de foto, lo ponemos primero
             if (data.pie_foto && data.pie_foto.trim() !== "") {
-                const pieObj = {
-                    id: 'caption-' + data.id, // ID ficticio
-                    usuario: data.usuario,    // El dueño del post
-                    foto_perfil: fotoUser,
-                    texto: data.pie_foto      // El texto es el pie de foto
-                };
-                comentariosDiv.innerHTML += renderComment(pieObj);
+                comentariosDiv.innerHTML += renderComment({
+                    id: 'caption-' + data.id, usuario: data.usuario, foto_perfil: fotoUser, texto: data.pie_foto
+                });
             }
-
-            // Renderizar comentarios reales
-            data.comentarios.forEach(c => {
-                comentariosDiv.innerHTML += renderComment(c);
-            });
-
-            lastCommentId = data.comentarios.length 
-                ? data.comentarios[data.comentarios.length - 1].id 
-                : 0;
+            data.comentarios.forEach(c => comentariosDiv.innerHTML += renderComment(c));
+            lastCommentId = data.comentarios.length ? data.comentarios[data.comentarios.length - 1].id : 0;
 
             document.getElementById('modalPostId').value = postId;
             document.getElementById('postModal').style.display = 'flex';
@@ -312,7 +369,6 @@ if ($miId != $id) {
             if(pollingInterval) clearInterval(pollingInterval);
             if(likesInterval) clearInterval(likesInterval);
 
-            // Polling Comentarios
             pollingInterval = setInterval(() => {
                 fetch(`${RUTA_PROCESAMIENTO}get_new_comments.php?post_id=${postId}&last_id=${lastCommentId}`)
                 .then(res => res.json())
@@ -325,30 +381,20 @@ if ($miId != $id) {
                     });
                 });
             }, 2000);
-
-            // Polling Likes
             likesInterval = setInterval(() => {
                 fetch(`${RUTA_PROCESAMIENTO}get_likes.php?post_id=${postId}`)
                 .then(res => res.json())
-                .then(data => {
-                    document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total + ' picantes';
-                });
+                .then(data => document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total + ' picantes');
             }, 1000);
         });
     }
 
     function toggleLike(){
         fetch(RUTA_PROCESAMIENTO + 'toggle_like.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'post_id='+currentPostId
-        })
-        .then(res => res.json())
-        .then(data => {
+            method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'post_id='+currentPostId
+        }).then(res => res.json()).then(data => {
             likedByUser = data.liked;
-            document.getElementById('likeImg').src = likedByUser 
-                ? '../../Media/meGustaDado.png' 
-                : '../../Media/meGusta.png';
+            document.getElementById('likeImg').src = likedByUser ? '../../Media/meGustaDado.png' : '../../Media/meGusta.png';
             document.getElementById('modalLikes').innerHTML = '🌶️ ' + data.total + ' picantes';
         });
     }
@@ -359,32 +405,20 @@ if ($miId != $id) {
         if(pollingInterval) clearInterval(pollingInterval);
         if(likesInterval) clearInterval(likesInterval);
     }
-
-    document.getElementById('postModal').addEventListener('click', e => {
-        if (e.target.id === 'postModal') closeModal();
-    });
+    document.getElementById('postModal').addEventListener('click', e => { if (e.target.id === 'postModal') closeModal(); });
 
     function submitComment(e){
         e.preventDefault();
         const input = document.getElementById('commentText');
         const texto = input.value.trim();
         if(!texto) return;
-
         fetch(RUTA_PROCESAMIENTO + 'add_comment.php',{
-            method:'POST',
-            headers:{'Content-Type':'application/x-www-form-urlencoded'},
-            body:'post_id='+currentPostId+'&texto='+encodeURIComponent(texto)
-        })
-        .then(res=>res.json())
-        .then(data=>{
+            method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:'post_id='+currentPostId+'&texto='+encodeURIComponent(texto)
+        }).then(res=>res.json()).then(data=>{
             if(data.success){
                 const comentariosDiv = document.getElementById('modalComentarios');
                 comentariosDiv.innerHTML += renderComment({
-                    id: data.comment_id,
-                    usuario: data.usuario,
-                    usuario_id: data.usuario_id,
-                    foto_perfil: data.foto_perfil,
-                    texto: texto
+                    id: data.comment_id, usuario: data.usuario, usuario_id: data.usuario_id, foto_perfil: data.foto_perfil, texto: texto
                 });
                 input.value='';
                 lastCommentId = data.comment_id;

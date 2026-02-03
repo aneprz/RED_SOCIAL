@@ -17,6 +17,13 @@
                 <h2>Iniciar sesión</h2>
             </div>
 
+            <?php
+            session_start();
+            if (isset($_SESSION['error_login'])) {
+                echo '<div class="alert alert-danger" role="alert">' . $_SESSION['error_login'] . '</div>';
+                unset($_SESSION['error_login']); // Borrar el mensaje tras mostrarlo
+            }
+            ?>
             <form action="procesamientos/procesar_inicio_sesion.php" method="post">
                 <div class="mb-3">
                     <label for="username_login" class="form-label">Nombre de Usuario:</label>

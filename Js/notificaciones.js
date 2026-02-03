@@ -83,7 +83,7 @@ function cargarContenidoNotificaciones() {
                             <div class="notif-info">
                                 <strong>${item.username}</strong> quiere seguirte.
                             </div>
-                            <button class="btn-accion btn-aceptar" onclick="aceptarSolicitud(${item.usuario_origen_id})">Aceptar</button>
+                            <button class="btn-accion btn-aceptar" onclick="aceptarSolicitud(${item.usuario_origen_id})">Aceptar solicitud</button>
                         </div>`;
                 }
                 // 2. Follow
