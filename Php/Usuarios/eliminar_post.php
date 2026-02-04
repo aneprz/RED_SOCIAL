@@ -23,13 +23,11 @@ if ($row = $resultado->fetch_assoc()) {
     $imagen = $row['imagen_url'];
 
     // 2. Eliminar de la Base de Datos
-    // (Asumimos que tu BD borra likes/comentarios en cascada. Si no, habría que borrar esos primero)
     $stmtDelete = $conexion->prepare("DELETE FROM publicaciones WHERE id = ?");
     $stmtDelete->bind_param("i", $post_id);
 
     if ($stmtDelete->execute()) {
         // 3. Eliminar el archivo físico de la carpeta uploads
-        // Ruta relativa desde Php/Usuarios hacia Php/Crear/uploads
         $ruta_archivo = __DIR__ . '/../Crear/uploads/' . $imagen;
         
         if (file_exists($ruta_archivo)) {

@@ -106,7 +106,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
       </div>
     </div>
     <script>
-    // RUTAS: Ajustamos para que apunte a la carpeta Explorar que ya funciona
     const RUTA_BASE = '../Explorar/Procesamiento/'; 
 
     let pollingInterval = null;
@@ -153,7 +152,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
             const headerDiv = document.getElementById('modalHeaderContainer');
             const fotoUser = data.foto_perfil ? data.foto_perfil : '/Media/foto_default.png';
             
-            // CAMBIO: Estructura Flex para separar usuario (izquierda) y basura (derecha)
             headerDiv.innerHTML = `
                 <div style="display:flex; justify-content: space-between; align-items: center; width: 100%; padding-right: 15px;">
                     
@@ -178,7 +176,6 @@ $biografia   = $_SESSION['biografia'] ?? '';
             const comentariosDiv = document.getElementById('modalComentarios');
             comentariosDiv.innerHTML = '';
 
-            // [LÓGICA PIE DE FOTO] -> Lo mostramos como el PRIMER comentario
             if (data.pie_foto && data.pie_foto.trim() !== "") {
                 const pieObj = {
                     id: 'caption', // ID ficticio

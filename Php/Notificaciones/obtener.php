@@ -41,7 +41,6 @@ try {
     $stmt->execute(['mi_id' => $mi_id]);
     $notificaciones = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // --- NUEVO: Asignar textos según el tipo de notificación ---
     foreach ($notificaciones as &$notif) {
         // Inicializamos una variable para el texto
         $notif['mensaje_texto'] = '';
@@ -63,7 +62,6 @@ try {
     }
     unset($notif); // Romper la referencia del foreach
 
-    // 3. SUGERENCIAS (CORREGIDO EL ERROR DE PARÁMETRO DOBLE)
     $sugerencias = [];
     if (count($notificaciones) < 5) {
         $sql_sug = "

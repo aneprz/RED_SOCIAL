@@ -19,7 +19,6 @@ if (empty($nombreUsu) || empty($pass)) {
     volverConError("Por favor, rellena todos los campos.");
 }
 
-// 2. Consulta SEGURA (Prepared Statement)
 // Pedimos también la columna 'confirmado' y 'privacidad'
 $sql = "SELECT id, username, email, password_hash, privacidad, confirmado FROM usuarios WHERE username = ?";
 $stmt = $conexion->prepare($sql);
@@ -40,11 +39,9 @@ if ($stmt->num_rows > 0) {
     // 4. Verificar Contraseña
     if (password_verify($pass, $hash)) {
         
-        // --- AQUÍ ESTÁ LA MAGIA DE LA CONFIRMACIÓN ---
         if ($confirmado == 0) {
             volverConError("Tu cuenta no ha sido activada. Por favor, revisa tu correo electrónico (mira en Spam si no lo ves).");
         }
-        // ---------------------------------------------
 
         // Si todo está bien, creamos la sesión
         $_SESSION['id'] = $id; // ID simple
