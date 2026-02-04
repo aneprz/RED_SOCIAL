@@ -9,15 +9,14 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    align-items: center; /* centra los posts horizontalmente */
-    width: 100%; /* que ocupe todo el ancho del contenedor */
+    align-items: center;
+    width: 100%;
     box-sizing: border-box;
 }
 
 body{
     margin-left: 0 !important;
     background-color: #f6dcf0;
-
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -28,16 +27,23 @@ body{
     display: flex;
     gap: 20px;
     padding: 20px;
-
-    justify-content: flex-start; /* no es necesario centrar main+sidebar, solo centramos posts dentro de main */
+    justify-content: flex-start;
     align-items: flex-start;
 }
 
-.sidebar { flex: 1; }
+.sidebar { 
+    flex: 1; 
+}
 
-.suggestion { margin-bottom: 10px; }
+.suggestion {
+    margin-bottom: 10px; 
+}
 
-.container { display: flex; gap: 20px; padding: 20px; }
+.container { 
+    display: flex; 
+    gap: 20px; 
+    padding: 20px; 
+}
 
 .sugerencias { 
     color: #FFF8F5;
@@ -62,15 +68,17 @@ body{
     margin-bottom: 10px;
     border-radius: 8px;
 
-    width: 100%;       /* ocupa todo lo que le permita el parent */
+    width: 100%;
     min-height: 400px;
-    max-width: 600px;  /* tamaño máximo */
+    max-width: 600px;
     display: flex;
     flex-direction: column;
     box-sizing: border-box;
 }
 
-.suggestion { margin-bottom: 10px; }
+.suggestion { 
+    margin-bottom: 10px; 
+}
 
 .post img,
 .post video {
@@ -79,7 +87,7 @@ body{
     max-height: 400px;
     object-fit: cover;
     border-radius: 8px;
-    margin: auto 0; /* 'auto' arriba y abajo centra el elemento en el espacio disponible */
+    margin: auto 0;
 }
 
 .pieFoto{
@@ -101,7 +109,7 @@ body{
 .btnMeGusta{
     background-color: #FFF8F5;
     border: none;
-    all: unset;          /* 💣 elimina TODOS los estilos del botón */
+    all: unset;          /*elimina los estilos del botón */
     cursor: pointer;
     display: inline-flex;
 }
@@ -121,9 +129,8 @@ body{
     display: flex;
     margin-top: 5px;
 }
-/* MODAL */
-/* ================= MODAL INDEX (igual a explorar) ================= */
 
+/* MODAL */
 .explore-modal {
     position: fixed;
     inset: 0;
@@ -145,7 +152,6 @@ body{
     overflow: hidden;
 }
 
-/* Media izquierda */
 .modal-left {
     flex: 2;
     background: black;
@@ -161,7 +167,6 @@ body{
     object-fit: contain;
 }
 
-/* Columna derecha */
 .modal-right {
     flex: 1;
     display: flex;
@@ -172,10 +177,9 @@ body{
 }
 
 .modalAbajo{
-    margin-top: auto; /* EL TRUCO MÁGICO */
+    margin-top: auto;
 }
 
-/* Info superior */
 .modal-right .info {
     border-top: 1px solid #ddd;
     padding-bottom: 10px;
@@ -185,7 +189,7 @@ body{
     font-size: 14px;
 }
 
-/* Comentarios (único scroll vertical) */
+/* Comentarios*/
 #modalComentarios {
     flex: 1;
     overflow-y: auto;
@@ -196,22 +200,18 @@ body{
     gap: 5px;
 }
 
-/* Comentario */
 .comment {
     border-bottom: 1px solid #ddd;
     font-size: 14px;
-
-    /* Forzar salto de línea en comentarios largos */
     white-space: normal;
     overflow-wrap: break-word;
-    word-break: break-word; /* opcional para compatibilidad */
+    word-break: break-word;
 }
 
 .comment-user {
     font-weight: bold;
 }
 
-/* Formulario abajo */
 #commentForm {
     display: flex;
     gap: 8px;
@@ -236,7 +236,6 @@ body{
     cursor: pointer;
 }
 
-/* Botón cerrar */
 .close-modal {
     position: fixed;
     top: 20px;
@@ -247,7 +246,7 @@ body{
     z-index: 4000;
 }
 
-/* Previsualización de comentarios debajo del pie de foto */
+/* Previsualización de comentarios*/
 .preview-comentarios {
     margin-bottom: 5px;
     font-size: 13px;
@@ -271,8 +270,8 @@ body{
 
 .comentarioUsuario{
     display: flex;
-    align-items: flex-start; /* que la imagen se alinee arriba, no al centro */
-    gap: 5px; /* espacio entre foto y texto */
+    align-items: flex-start;
+    gap: 5px;
 }
 
 .fotoPerfilComentarios{
@@ -280,8 +279,8 @@ body{
     width: 30px;
     border-radius: 50%;
     margin-right: 5px;
-    flex-shrink: 0;       /* evita que se reduzca al crecer el texto */
-    object-fit: cover;    /* mantiene proporción y recorta si hace falta */
+    flex-shrink: 0;
+    object-fit: cover; /* mantiene proporción y recorta si hace falta */
 }
 
 .no-sigues{
@@ -322,13 +321,12 @@ body{
 }
 
 .username-link{
-    max-width: 90px;         /* 1. Define aquí el ancho máximo (en píxeles) */
-    white-space: nowrap;      /* 2. Prohíbe que el texto salte de línea */
-    overflow: hidden;         /* 3. Esconde lo que se pase del ancho */
-    text-overflow: ellipsis;  /* 4. Pone los puntos suspensivos (...) automáticamente */
+    max-width: 90px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* Estilos de los botones igual que usuarioAjeno */
 .btnSeguir[data-estado="Seguir"] {
     background-color: #28a745;
     color: white; 
@@ -347,8 +345,8 @@ body{
 
 /* Cabecera del usuario en el modal */
 .modal-user-header button {
-    background-color: #fff; /* IMPORTANTE: Fondo blanco para que no sea transparente */
-    z-index: 100;           /* Para que esté siempre encima de los comentarios */
+    background-color: #fff;
+    z-index: 100;
     border: none !important;
     display: flex;
     align-items: center;
@@ -363,7 +361,7 @@ body{
     top: 0;
     z-index: 10;
     border-bottom: 1px solid #999;
-    background-color: #fff; /* IMPORTANTE: Fondo blanco para que no sea transparente */
+    background-color: #fff;
     padding-bottom: 5px;
     padding-top: 5px;
     margin-bottom: 10px;
@@ -386,13 +384,13 @@ body{
     border-top: 1px solid #eee;
 }
 
-/* Asegurar que el contenedor de comentarios permita el sticky */
 #modalComentarios {
     overflow-y: auto;
     position: relative;
-    max-height: 600px; /* Ajusta según tu diseño */
+    max-height: 600px;
 }
-/* === FOOTER EN INDEX === */
+
+/*FOOTER*/
 .site-footer {
     background: #222;
     color: #c1c1c1;
@@ -404,9 +402,9 @@ body{
 
 .container-footer {
     display: flex;
-    flex-direction: column; /* <--- ESTO PONE UNO DEBAJO DE OTRO */
+    flex-direction: column;
     justify-content: center;
-    gap: 10px;              /* Espacio entre el texto de arriba y los enlaces */
+    gap: 10px;
     align-items: center;
     font-size: 16px;
 }
@@ -419,7 +417,7 @@ body{
 .footer-nav a {
     color: #c1c1c1;
     text-decoration: none;
-    margin: 0 10px; /* Separación horizontal entre 'Sobre' y 'Contacto' */
+    margin: 0 10px;
 }
 
 /* --- MEDIA QUERIES--- */
@@ -429,7 +427,7 @@ body{
 
 @media (min-width: 2001px){
     .post{
-        zoom: 1.6; /* Esto hará que el div crezca y empuje al que tiene debajo */
+        zoom: 1.6;
     }
 
     .sugerencias{
@@ -444,8 +442,6 @@ body{
         zoom: 0.8;
     }
 }
-
-/*Laptop L predeterminado*/
 
 @media (max-width: 1200px){
     .post{
@@ -463,40 +459,35 @@ body{
 }
 
 @media (max-width: 1100px){
-    /* 1. Cambiamos la dirección a columna (uno encima de otro) */
     .explore-modal-content {
         flex-direction: column;
-        width: 95%;      /* Un poco más ancho en móviles */
-        height: 90vh;    /* Aprovechamos más altura */
+        width: 95%;
+        height: 90vh;
         max-height: 90vh;
     }
 
-    /* 2. Ajustamos la caja de la imagen/video */
     .modal-left {
-        flex: 0 0 40%;   /* Ocupa el 40% de la altura del modal (fijo) */
-        width: 100%;     /* Ancho completo */
+        flex: 0 0 40%;
+        width: 100%;
         background: #000;
     }
 
-    /* 3. Ajustamos la columna derecha (comentarios) */
     .modal-right {
-        flex: 1;         /* Ocupa el resto del espacio (60%) */
-        width: 100%;     /* Ancho completo */
-        overflow-y: hidden; /* Para que el scroll lo tenga solo #modalComentarios */
+        flex: 1;
+        width: 100%;
+        overflow-y: hidden;
         display: flex;
         flex-direction: column;
     }
 
-    /* 4. Aseguramos que la imagen/video se contenga bien */
     .modal-left img, 
     .modal-left video {
         max-height: 100%;
         max-width: 100%;
-        width: auto;     /* Auto para mantener proporción */
+        width: auto;
         height: auto;
     }
     
-    /* 5. Ajustes estéticos para móvil */
     .modal-user-header {
         padding-top: 0 !important;
         margin-top: 0 !important;
@@ -504,28 +495,25 @@ body{
 }
 
 @media (max-width: 992px)and (min-width: 769px){
-    /* 1. Evita que la sidebar y las sugerencias "empujen" demasiado hacia el centro */
     .sidebar, .sugerencias {
-        flex: 0 0 180px;   /* Forzamos un ancho fijo y pequeño para los laterales */
-        margin: 0;         /* Quitamos márgenes que puedan estar empujando */
+        flex: 0 0 180px;
+        margin: 0;
     }
 
-    /* 2. Quitamos el espacio sobrante del contenedor principal */
     .content {
-        gap: 10px;         /* Reducimos el espacio entre columnas al mínimo */
-        justify-content: center; /* Centramos el conjunto para que los huecos sean iguales */
+        gap: 10px;
+        justify-content: center;
     }
 
-    /* 3. El post ahora ocupará el espacio que dejan los laterales sin separarse */
     .main {
-        flex: 2;           /* El post se estira para llenar el hueco */
+        flex: 2;
         width: auto;
     }
 
     .post {
-        zoom: 1.0;         /* El zoom 1.2 era el que creaba el espacio fantasma */
-        max-width: 100%;   /* Que use todo el ancho del .main */
-        margin-left: 0;    /* Aseguramos que no haya margen izquierdo */
+        zoom: 1.0;
+        max-width: 100%;
+        margin-left: 0;
     }
 
     .sugerencias{
@@ -538,15 +526,13 @@ body{
 }
 
 @media(max-width: 769px) {
-    /* Ajustamos el post para que no se deforme sin zoom */
     .post {
         zoom: 1.0; 
-        height: auto; /* Para que el contenido no se corte */
+        height: auto;
     }
 
-    /* Ajustamos la columna de sugerencias */
     .sugerencias {
-        zoom: 0.6;       /* Un poco más pequeño para que quepa bien en tablet */
+        zoom: 0.6;
     }
 
     .content{
@@ -575,7 +561,7 @@ body{
 
     .post {
         zoom: 0.7; 
-        height: auto; /* Para que el contenido no se corte */
+        height: auto;
     }
 
     .modalAbajo{
@@ -598,6 +584,6 @@ body{
 
     .post {
         zoom: 0.6; 
-        height: auto; /* Para que el contenido no se corte */
+        height: auto;
     }
 }

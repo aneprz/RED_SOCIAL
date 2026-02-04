@@ -4,7 +4,7 @@ html, body {
 }
 
 main{
-    flex: 1; /* Esto empuja el footer hacia abajo si hay poco contenido */
+    flex: 1;
     width: 100%;
     display: flex;
     justify-content: center;
@@ -15,8 +15,7 @@ body {
     background-color: #fafafa;
     margin: 0;
     padding: 0;
-    min-height: 100vh; /* O '100vh' para pantalla completa */
-    /* Ajusta este margen si tu navbar es fixed-left, si es top, quítalo */
+    min-height: 100vh;
     margin-left: 300px; 
     background: linear-gradient(180deg, #e65a36, #c13722);
     display: flex;
@@ -28,18 +27,16 @@ a {
     color: inherit !important; 
 }
 
-/* ================= CONTENEDOR PERFIL ================= */
-
+/*CONTENEDOR PERFIL*/
 .profile-container {
     max-width: 1200px;
-    width: 100%;      /* NUEVO: Para que intente llenar el hueco */
-    margin: 0;        /* CAMBIO: Quitamos '20px auto', el main y el padding ya se encargan */
+    width: 100%;
+    margin: 0;
     background-color: #FFF8F5;
     padding: 20px;
     border-radius: 8px;
     box-shadow: 5px 5px 30px rgb(40, 40, 40);
     position: relative;
-
     margin-top: 50px;
     margin-bottom: 50px;
     margin-left: 250px;
@@ -105,10 +102,10 @@ a {
 .formCerrarSesion {
     justify-content: right;
     margin: 20px;
-    position: absolute; /* Esto lo saca del flujo normal y lo permite mover libremente */
-    top: 30px;          /* Distancia desde el techo */
-    right: 30px;        /* Distancia desde la derecha */
-    z-index: 100;       /* Nos aseguramos de que esté por encima de otros elementos */
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    z-index: 100;
 }
 
 .botonEditarPerfil {
@@ -135,52 +132,47 @@ a {
     font-weight: bold;
 }
 
-/* ================= GRID DE PUBLICACIONES ================= */
-
+/*PUBLICACIONES*/
 .profile-posts {
     display: grid;
-    /* Ajusta el minmax según prefieras el tamaño de las miniaturas */
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px; /* Espacio entre fotos */
+    gap: 10px;
     margin-top: 20px;
 }
 
 .post {
     position: relative; 
     width: 100%;
-    aspect-ratio: 1 / 1; /* Hace que sean cuadrados perfectos */
+    aspect-ratio: 1 / 1;
     background-color: #000;
     cursor: pointer;
     border-radius: 4px;
     overflow: hidden;
 }
 
-/* Imagen/Video dentro del grid del perfil */
 .post .media, 
 .post img, 
 .post video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* IMPORTANTE: 'cover' para que rellene el cuadrado sin bordes negros */
+    object-fit: cover;
     display: block;
     transition: filter 0.3s, transform 0.3s;
 }
 
-/* Efecto Hover (Oscurecer) */
 .post:hover .media,
 .post:hover img,
 .post:hover video {
     filter: brightness(0.7);
 }
 
-/* Overlay con info de likes/comentarios */
 .overlay {
     position: absolute;
-    inset: 0; /* Ocupa todo el espacio */
+    inset: 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0; /* Invisible por defecto */
+    opacity: 0;
     transition: opacity 0.3s;
     background-color: rgba(0, 0, 0, 0.2);
     pointer-events: none; /* Permite hacer click en la foto */
@@ -200,27 +192,22 @@ a {
 }
 
 footer {
-    background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
+    background-color: rgb(34, 34, 34);
     color: rgb(226, 226, 226);
-    padding: 20px; /* Un poco de espacio */
-    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
-    width: calc(100% - 250px); /* Ajustar ancho */
-    flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
-    box-sizing: border-box; /* Para que el padding no rompa el ancho */
-
-    /* ESTA ES LA CLAVE PARA QUE BAJE */
+    padding: 20px;
+    margin-left: 250px; 
+    width: calc(100% - 250px);
+    flex-shrink: 0;
+    box-sizing: border-box;
     margin-top: auto;
 }
 
-/* ========================================================= */
-/* MODAL (Estilo Instagram) */
-/* ========================================================= */
-
+/* MODAL*/
 .explore-modal {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85); /* Fondo oscuro */
-    display: none; /* JS lo cambia a flex */
+    background: rgba(0,0,0,0.85);
+    display: none;
     justify-content: center;
     align-items: center;
     z-index: 3000;
@@ -230,7 +217,7 @@ footer {
 .explore-modal-content {
     width: 90%;
     max-width: 1100px;
-    height: 85vh; /* Altura fija */
+    height: 85vh;
     background: white;
     display: flex;
     border-radius: 4px;
@@ -238,9 +225,8 @@ footer {
     box-shadow: 0 10px 25px rgba(0,0,0,0.5);
 }
 
-/* --- Lado Izquierdo (Multimedia Grande) --- */
 .modal-left {
-    flex: 1.5; /* Ocupa el 60% del ancho */
+    flex: 1.5;
     background: black;
     display: flex;
     justify-content: center;
@@ -252,27 +238,25 @@ footer {
 .modal-left video {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* IMPORTANTE: 'contain' aquí para ver la foto entera sin recortes */
+    object-fit: contain;
     display: block;
 }
 
-/* --- Lado Derecho (Info y Chat) --- */
 .modal-right {
-    flex: 1; /* Ocupa el 40% restante */
+    flex: 1;
     display: flex;
     flex-direction: column;
     background: #fff;
     border-left: 1px solid #efefef;
-    min-width: 300px; /* Ancho mínimo para que no se aplaste */
+    min-width: 300px;
 }
 
-/* Cabecera del usuario (Fija arriba) */
 .modal-user-header {
     padding: 15px;
     border-bottom: 1px solid #efefef;
     display: flex;
     align-items: center;
-    flex-shrink: 0; /* No encoger */
+    flex-shrink: 0;
 }
 
 .modal-profile-img {
@@ -288,7 +272,7 @@ footer {
     background:none; border:none; padding:0; cursor:pointer; display:flex; align-items:center; 
 }
 
-/* Área de Comentarios (Centro con Scroll) */
+/*Comentarios*/
 #modalComentarios {
     flex: 1; 
     overflow-y: auto; 
@@ -298,7 +282,6 @@ footer {
     gap: 12px;
 }
 
-/* Estilo de cada comentario (incluido el pie de foto) */
 .comment {
     display: flex;
     align-items: flex-start;
@@ -330,10 +313,9 @@ footer {
     color: #333; 
     line-height: 1.4; 
     margin: 0;
-    word-break: break-word; /* Evita que palabras largas rompan el diseño */
+    word-break: break-word;
 }
 
-/* Footer del modal (Likes, Fecha, Input) */
 .post-meta {
     padding: 10px 15px;
     border-top: 1px solid #efefef;
@@ -346,13 +328,21 @@ footer {
 
 .like-btn svg, 
 .like-btn img {
-    width: 26px;  /* Tamaño estándar estilo Instagram */
+    width: 26px;
     height: 26px;
-    display: block; /* Elimina espacios extraños debajo */
+    display: block;
 }
 
-#modalLikes { font-weight: bold; font-size: 14px; margin-bottom: 5px; }
-#modalFecha { font-size: 10px; color: #8e8e8e; text-transform: uppercase; }
+#modalLikes { 
+    font-weight: bold; 
+    font-size: 14px; 
+    margin-bottom: 5px; 
+}
+#modalFecha { 
+    font-size: 10px; 
+    color: #8e8e8e; 
+    text-transform: uppercase; 
+}
 
 #commentForm {
     display: flex;
@@ -374,15 +364,16 @@ footer {
 #commentForm button {
     background: none;
     border: none;
-    color: #0095f6; /* Azul estilo link */
+    color: #0095f6;
     font-weight: bold;
     cursor: pointer;
     font-size: 14px;
 }
 
-#commentForm button:disabled { opacity: 0.3; }
+#commentForm button:disabled { 
+    opacity: 0.3; 
+}
 
-/* Botón cerrar (X) */
 .close-modal {
     position: absolute;
     top: 20px;
@@ -395,7 +386,6 @@ footer {
 }
 
 /*MEDIA QUERYS*/
-/* Responsive para móviles */
 @media (max-width: 768px) {
     .explore-modal-content {
         flex-direction: column;
@@ -472,8 +462,8 @@ footer {
     }
 
     footer{
-        margin-left: 200px; /* Para que se alinee con el contenido, no con el borde izq */
-        width: calc(100% - 200px); /* Ajustar ancho */ 
+        margin-left: 200px;
+        width: calc(100% - 200px);
     }
 }
 
@@ -492,8 +482,8 @@ footer {
     }
 
     footer{
-        margin-left: 0px; /* Para que se alinee con el contenido, no con el borde izq */
-        width: calc(100% - 0px); /* Ajustar ancho */
+        margin-left: 0px;
+        width: calc(100% - 0px);
     }
 }
 

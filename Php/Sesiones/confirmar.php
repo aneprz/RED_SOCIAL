@@ -1,5 +1,4 @@
 <?php
-// Php/Login/confirmar.php
 require '../../BD/conexiones.php';
 
 $mensaje = "";

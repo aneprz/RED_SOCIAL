@@ -111,14 +111,12 @@ if ($stmt->execute()) {
 
         $mail->send();
 
-        // ÉXITO
         $_SESSION['success'] = "¡Registro correcto! Hemos enviado un correo a $email. Por favor, revísalo para activar tu cuenta.";
         header("Location: ../registro_sesion.php"); // Volvemos al registro para mostrar el mensaje
         exit();
 
     } catch (Exception $e) {
         // Si falla el correo pero se guardó en BD, podríamos borrarlo o avisar al admin.
-        // Por ahora mostramos error.
         volverConError("Usuario registrado pero no se pudo enviar el email. Error: " . $mail->ErrorInfo);
     }
 

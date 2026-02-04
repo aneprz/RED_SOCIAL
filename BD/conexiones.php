@@ -1,5 +1,4 @@
 <?php
-// Evitar múltiples inclusiones
 if (!isset($pdo) && !isset($conexion)) {
 
     $host = "18.209.250.204";
@@ -14,9 +13,7 @@ if (!isset($pdo) && !isset($conexion)) {
     // $pass = "";
     // $charset = "utf8mb4";
 
-    // ----------------------
     // Conexión PDO
-    // ----------------------
     $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
     try {
@@ -29,9 +26,7 @@ if (!isset($pdo) && !isset($conexion)) {
         die("Error de conexión PDO a la base de datos");
     }
 
-    // ----------------------
     // Conexión MySQLi
-    // ----------------------
     $conexion = mysqli_connect($host, $user, $pass, $db);
 
     if (!$conexion) {
@@ -39,9 +34,7 @@ if (!isset($pdo) && !isset($conexion)) {
     }
 }
 
-// ----------------------
-// Función utilitaria
-// ----------------------
+// Función 
 if (!function_exists('obtenerFotoPerfil')) {
     function obtenerFotoPerfil($usuarioId) {
         global $pdo;
@@ -53,7 +46,7 @@ if (!function_exists('obtenerFotoPerfil')) {
         if ($row && !empty($row['foto_perfil'])) {
             return $row['foto_perfil'];
         } else {
-            return '/Media/foto_default.png'; // ruta por defecto
+            return '/Media/foto_default.png';
         }
     }
 }

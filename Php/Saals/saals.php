@@ -15,7 +15,6 @@ if (!isset($_SESSION['reel_index'])) $_SESSION['reel_index'] = -1;
 
 $accion = $_GET['accion'] ?? 'siguiente';
 
-// ACCIÓN: siguiente
 if ($accion === 'siguiente') {
     // Si vamos a un nuevo reel, fuera del historial
     if ($_SESSION['reel_index'] === count($_SESSION['reels_vistos']) - 1) {
@@ -68,7 +67,6 @@ if ($accion === 'siguiente') {
     }
 }
 
-// ACCIÓN: anterior
 if ($accion === 'anterior') {
     if ($_SESSION['reel_index'] > 0) {
         $_SESSION['reel_index']--;

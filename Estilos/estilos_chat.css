@@ -16,13 +16,13 @@ main h2{
 
 main{
     display: flex;
-    flex-direction: column; /* Alinea los hijos en columna */
-    flex: 1; /* Esto empuja el footer hacia abajo */
+    flex-direction: column;
+    flex: 1; 
     flex-direction: column;
     background-color: rgb(21, 21, 21);
-    margin-left: 250px; /* <--- Cambia 250px por el ancho real de tu navbar */
-    height: 100vh; /* Ocupa el 100% de la ventana del navegador */
-    overflow: hidden;       /* Evita que el main tenga scroll propio */
+    margin-left: 250px;
+    height: 100vh;
+    overflow: hidden;/* Evita que el main tenga scroll propio */
 }
 
 .volver{
@@ -34,7 +34,7 @@ main{
     display: flex;
     padding: 15px;
     background-color: rgb(21, 21, 21);
-    position: relative; /* necesario para que el botón se posicione relativo al encabezado */
+    position: relative;
 }
 
 .encabezado h2{
@@ -67,11 +67,11 @@ main{
 }
 
 #chat-mensajes{
-    flex: 1; /* Ocupa todo el espacio disponible */
-    overflow-y: auto; /* Scroll si hay muchos mensajes */
+    flex: 1;
+    overflow-y: auto;
     padding: 10px;
     margin-bottom: 10px;
-    overflow-y: auto;    /* permite scroll vertical */
+    overflow-y: auto;
     height: 80vh;
 }
 
@@ -95,7 +95,7 @@ main{
 }
 
 .mensaje.tuyo { 
-    margin-left: auto;         /* empuja el div a la derecha */
+    margin-left: auto;
 }
 
 .escribirMensaje{
@@ -139,9 +139,9 @@ form button:hover{
     width: 60px;
     text-align: center;
     font-size: 11px;
-    word-wrap: break-word;   /* rompe palabras largas */
-    word-break: break-word;  /* soporte adicional */
-    white-space: normal;     /* permite saltos de línea */
+    word-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
 }
 
 .fotoUsuario {
@@ -161,9 +161,9 @@ form button:hover{
     background-color: #c13722;
     padding: 8px 12px;
     border-radius: 12px;
-    word-wrap: break-word;   /* rompe palabras largas */
-    word-break: break-word;  /* soporte adicional */
-    white-space: normal;     /* permite saltos de línea */
+    word-wrap: break-word; /* rompe palabras largas */
+    word-break: break-word;
+    white-space: normal; /* permite saltos de línea */
 }
 .mensaje.tuyo .textoMensaje {
     background-color: #732115;
@@ -189,9 +189,9 @@ form button:hover{
     border: none;
     cursor: pointer;
 
-    position: absolute; /* sacamos el botón del flujo normal */
-    top: 50%;           /* centrado vertical */
-    right: 50px;        /* a 20px del borde derecho */
+    position: absolute;
+    top: 50%;
+    right: 50px;
     transform: translateY(-50%); /* para centrar verticalmente exacto */
 }
 
@@ -200,7 +200,7 @@ form button:hover{
 }
 
 .modal {
-    display: none; /* oculto por defecto */
+    display: none;
     position: fixed;
     z-index: 1000;
     left: 0;
@@ -273,6 +273,7 @@ form button:hover{
     cursor: pointer;
 }
 
+/*MEDIA QUERYS*/
 @media (min-width: 2000px){
     #chat-mensajes{
         height: 55vh;

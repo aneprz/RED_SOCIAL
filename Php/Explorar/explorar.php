@@ -173,7 +173,6 @@ function openModal(postId){
         const comentariosDiv = document.getElementById('modalComentarios');
         comentariosDiv.innerHTML = '';
 
-        // --- NUEVA LÓGICA: EL PIE DE FOTO COMO PRIMER COMENTARIO ---
         if (data.pie_foto && data.pie_foto.trim() !== "") {
             // Creamos un objeto falso simulando ser un comentario
             // Usamos los datos del dueño del post (data.usuario, data.foto_perfil)

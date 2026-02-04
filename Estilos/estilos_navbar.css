@@ -9,7 +9,7 @@ body {
   color: #222;
 }
 
-/* ---- SIDEBAR FIJO DESKTOP ---- */
+/*SIDEBAR*/
 .sidebar {
   width: var(--sidebar-width);
   height: 100vh;
@@ -77,18 +77,18 @@ body {
   flex-shrink: 0;
 }
 
-/* ---- MAIN CONTENT ---- */
+/* MAIN CONTENT */
 .main {
   margin-left: var(--sidebar-width);
   padding: 30px;
 }
 
-/* ---- RESPONSIVE ---- */
+/* RESPONSIVE */
 @media (max-width: 768px) {
   .sidebar { display:none; }
 }
 
-/* Topbar for mobile */
+/* Topbar moviles*/
 .topbar {
   position: fixed;
   top:0;
@@ -99,12 +99,10 @@ body {
   background-color: #B9372A;
   backdrop-filter: blur(5px);
   border-bottom: 6px solid #802015;
-
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 8px 16px;
-
   z-index: 1040;
 }
 
@@ -119,17 +117,14 @@ body {
   .topbar { display:none; }
 }
 
-/* =======================
-   Estilos del modal subir
-   ======================= */
-
+/*Estilos del modal subir*/
 .modal {
   position:fixed;
   inset:0;
-  display:none; /* se muestra con JS */
+  display:none;
   align-items:center;
   justify-content:center;
-  z-index:1200; /* por encima del sidebar/bootstap */
+  z-index:1200;
 }
 
 .modal-overlay {
@@ -146,7 +141,7 @@ body {
   max-height:85vh;
   background:#1f2937;
   border-radius:14px;
-  padding: 28px 28px 48px 28px; /* bottom extra para botones */
+  padding: 28px 28px 48px 28px;
   box-shadow:0 10px 30px rgba(0,0,0,0.5);
   color:#e5e7eb;
   display:flex;
@@ -156,7 +151,6 @@ body {
   overflow:auto;
 }
 
-/* Close button (X) */
 .modal-close {
   position:absolute;
   right:12px;
@@ -169,14 +163,12 @@ body {
   cursor:pointer;
 }
 
-/* Título */
 .modal-title {
   margin:0;
   font-size:16px;
   font-weight:600;
 }
 
-/* Zona de subida (sin drag & drop) */
 .upload-area {
   width:100%;
   min-height:320px;
@@ -186,16 +178,14 @@ body {
   justify-content:center;
   gap:12px;
   border-radius:10px;
-  background: #111827; /* CORREGIDO: Añadido el # */
+  background: #111827;
   padding:28px;
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.03);
 }
 
-/* Icono/imagen central */
 .upload-graphics svg { color:#9ca3af; }
 
-/* Texto */
 .upload-text {
   margin:0;
   font-size:18px;
@@ -216,10 +206,8 @@ body {
   text-decoration:none;
 }
 
-/* Hint pequeño */
 .upload-hint { font-size:12px; color:#9aa3b2; }
 
-/* Lista de archivos seleccionados (previews simples) */
 .file-list {
   width:100%;
   display:flex;
@@ -229,7 +217,6 @@ body {
   margin-top:12px;
 }
 
-/* Mini-previews */
 .file-item {
   width:92px;
   height:92px;
@@ -262,7 +249,6 @@ body {
   cursor:pointer; 
 }
 
-/* marcador visible sobre la imagen */
 .tag-marker {
   position:absolute;
   width:26px;
@@ -279,7 +265,6 @@ body {
   font-size:12px;
 }
 
-/* fila de tag en la lista */
 .tag-row {
   display:flex;
   gap:8px;
@@ -295,13 +280,11 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  max-height: 180px; /* Ajusta según tu modal */
+  max-height: 180px;
   overflow-y: auto;
 }
 
-/* ----------------------------
-   Botones dentro del modal
-   ---------------------------- */
+/* Botones dentro del modal*/
 
 /* Todos los botones del formulario */
 #formFields .btn {
@@ -313,9 +296,8 @@ body {
   transition: background 0.2s, color 0.2s;
 }
 
-/* Botón principal: Subir Archivo / Subir Publicación */
 #formFields .btn.primary {
-  background-color: #5255ff; /* azul llamativo */
+  background-color: #5255ff;
   color: #fff;
 }
 
@@ -323,9 +305,8 @@ body {
   background-color: #4143cc;
 }
 
-/* Botón secundario: Cancelar */
 #formFields .btn.btn-ghost {
-  background-color: #e5e7eb; /* claro */
+  background-color: #e5e7eb;
   color: #1f2937;
 }
 
@@ -333,9 +314,8 @@ body {
   background-color: #d1d5db;
 }
 
-/* Botón pequeño: Añadir etiqueta */
 #formFields .btn.small {
-  background-color: #34d399; /* verde suave */
+  background-color: #34d399;
   color: #fff;
   padding: 6px 10px;
   font-size: 0.875rem;
@@ -373,15 +353,12 @@ body {
   object-fit:cover;
 }
 
-/* =========================================================
-   ESTILOS DE NOTIFICACIONES (CORREGIDO Y MODO OSCURO)
-   ========================================================= */
+/*ESTILOS DE NOTIFICACIONES*/
 
-/* Fondo oscuro que cubre toda la pantalla */
 .modal-notificaciones {
     display: none; 
     position: fixed; 
-    z-index: 2000; /* Mayor que el sidebar (1030) y topbar (1040) */
+    z-index: 2000;
     left: 0;
     top: 0;
     width: 100%; 
@@ -391,9 +368,8 @@ body {
     backdrop-filter: blur(2px);
 }
 
-/* Contenido del modal (Estilo Oscuro consistente) */
 .modal-content-notif {
-    background-color: #1f2937; /* Igual que el modal de subida */
+    background-color: #1f2937;
     color: #e5e7eb;
     margin: 5% auto; 
     padding: 20px;
@@ -403,13 +379,12 @@ body {
     border-radius: 14px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 
-    max-height: 85vh;       /* Nunca ocupará más del 85% de la altura de la pantalla */
-    display: flex;          /* Usamos flex para organizar título y lista */
+    max-height: 85vh;
+    display: flex;
     flex-direction: column; /* Uno debajo del otro */
-    position: relative;     /* Para posicionar elementos si hace falta */
+    position: relative;
 }
 
-/* Botón cerrar (X) */
 .close-notif {
     color: #9ca3af;
     float: right;
@@ -456,15 +431,14 @@ body {
     color: #fff;
 }
 
-/* NUEVO: Esto hace que solo la lista de notificaciones tenga scroll */
 .notificaciones-list {
-    overflow-y: auto;       /* Scroll vertical si hace falta */
-    padding-right: 5px;     /* Espacio para que la barra de scroll no tape texto */
-    margin-top: 10px;       /* Separación con el título */
-    flex-grow: 1;           /* Ocupa el espacio restante */
+    overflow-y: auto;
+    padding-right: 5px;
+    margin-top: 10px;
+    flex-grow: 1;
 }
 
-/* Botones de acción dentro de notificaciones */
+/* Botones dentro de notificaciones */
 .btn-accion {
     padding: 6px 12px;
     border: none;
@@ -480,7 +454,7 @@ body {
 }
 
 .btn-aceptar { 
-    background-color: #e2ab06; /* Verde moderno */
+    background-color: #e2ab06;
     color: white; 
 }
 
@@ -495,8 +469,8 @@ body {
 
 .btn-gris {
     background-color: transparent !important;
-    border: 1px solid #4b5563 !important; /* Gris oscuro del borde */
-    color: #9ca3af !important; /* Texto gris claro */
+    border: 1px solid #4b5563 !important;
+    color: #9ca3af !important;
     cursor: default;
 }
 
@@ -510,42 +484,37 @@ body {
     flex-grow: 1;
     font-size: 14px;
     line-height: 1.4;
-    padding-right: 10px; /* Un poco de aire entre texto y botón */
-
-    /* NUEVO: La magia para evitar desbordamientos en Flexbox */
-    min-width: 0;           /* Permite al contenedor encogerse más allá del contenido */
-    word-wrap: break-word;  /* Rompe palabras largas si es necesario */
+    padding-right: 10px;
+    min-width: 0;
+    word-wrap: break-word; /* Rompe palabras largas*/
     overflow-wrap: break-word;
 }
 
-/* CAMBIO CLAVE: Forzar al botón a irse a la derecha */
 .btn-accion {
-    margin-left: auto; /* Esto es la "magia" que alinea el botón a la derecha siempre */
+    margin-left: auto;
     padding: 6px 12px;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 12px;
     font-weight: 600;
-    flex-shrink: 0; /* Evita que el botón se aplaste si el texto es muy largo */
+    flex-shrink: 0;
 }
 
 /* --- MEDIA QUERIES--- */
-/*4K*/
 @media (min-width: 2001px) {
   *{
     zoom: 1.1;
   }
 } 
 
-/*Laptop L*/
 @media (max-width: 992px){
   :root {
-      --sidebar-width: 200px; /* Reducimos el ancho automáticamente */
+      --sidebar-width: 200px;
     }
     
     .nav-item-custom {
-      padding: 8px 10px; /* Achicamos los botones para que quepan */
+      padding: 8px 10px;
       font-size: 0.9rem;
     }
 
@@ -554,7 +523,7 @@ body {
     }
 
     .sidebar{
-      flex: 0 0 180px;   /* Forzamos un ancho fijo y pequeño para los laterales */
+      flex: 0 0 180px;
     }
 }
  

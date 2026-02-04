@@ -7,7 +7,6 @@ include __DIR__ . '/../../BD/conexiones.php';
 $user_id = (int)$_SESSION['id'];
 $post_id = (int)$_POST['post_id'];
 
-// ¿ya dio like?
 $stmt = $pdo->prepare("SELECT 1 FROM likes WHERE post_id = :p AND usuario_id = :u");
 $stmt->execute(['p'=>$post_id,'u'=>$user_id]);
 
@@ -21,7 +20,6 @@ if($stmt->fetch()){
     $liked = true;
 }
 
-// total likes
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM likes WHERE post_id = :p");
 $stmt->execute(['p'=>$post_id]);
 $total = $stmt->fetchColumn();
