@@ -1,14 +1,14 @@
 *,
 *::before,
 *::after {
-    box-sizing: border-box; /* incluye padding y border en el ancho total */
+    box-sizing: border-box;
 }
 
 html,body{
     height: 100%;
     margin: 0;
     overflow-x: hidden; /* evita scroll horizontal */
-    background-color: rgb(21, 21, 21); /* Pon el mismo color que tu main */
+    background-color: rgb(21, 21, 21);
 }
 
 body { 
@@ -64,11 +64,11 @@ main h2{
 }
 .mensaje {
     color: #c9c9c9;
-    max-width: 55%;        /* o el ancho que quieras */
-    white-space: nowrap;    /* una línea */
-    overflow: hidden;       /* corta lo que sobre */
+    max-width: 55%;
+    white-space: nowrap; /* una línea */
+    overflow: hidden; /* corta lo que sobre */
     text-overflow: ellipsis; /* muestra "..." */
-    display: block;         /* necesario para que funcione */
+    display: block;
 }
 
 .fecha{
@@ -76,9 +76,9 @@ main h2{
 }
 
 main{
-    flex: 1; /* Esto empuja el footer hacia abajo */
+    flex: 1;
     background-color: rgb(21, 21, 21);
-    margin-left: 250px; /* <--- Cambia 250px por el ancho real de tu navbar */
+    margin-left: 250px;
 }
 
 #listaChats {
@@ -158,12 +158,12 @@ form{
 }
 
 footer {
-    background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
+    background-color: rgb(34, 34, 34);
     color: rgb(226, 226, 226);
-    padding: 20px; /* Un poco de espacio */
-    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
-    width: calc(100% - 250px); /* Ajustar ancho */
-    flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
+    padding: 20px; 
+    margin-left: 250px;
+    width: calc(100% - 250px); /* Ajustar ancho*/
+    flex-shrink: 0; /*Evita que el footer se aplaste si falta espacio*/
 }
 
 /*MEDIA QUERYSs*/
@@ -174,7 +174,7 @@ footer {
 
     footer{
         margin-left: 200px;
-        width: calc(100% - 200px); /* Ajustar ancho */
+        width: calc(100% - 200px);
     }
 }
 
@@ -186,7 +186,7 @@ footer {
 
     footer{
         margin-left: 0px;
-        width: calc(100% - 0px); /* Ajustar ancho */
+        width: calc(100% - 0px);
     }
 }
 

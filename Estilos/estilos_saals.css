@@ -1,4 +1,3 @@
-/* Reset y body */
 body {
     font-family: Arial, sans-serif;
     margin: 0 !important;
@@ -7,12 +6,12 @@ body {
 }
 
 footer {
-    background-color: rgb(34, 34, 34); /* O el color que uses en tu tema oscuro */
+    background-color: rgb(34, 34, 34);
     color: rgb(226, 226, 226);
-    padding: 20px; /* Un poco de espacio */
-    margin-left: 250px; /* Para que se alinee con el contenido, no con el borde izq */
-    width: calc(100% - 250px); /* Ajustar ancho */
-    flex-shrink: 0; /* Evita que el footer se aplaste si falta espacio */
+    padding: 20px;
+    margin-left: 250px;
+    width: calc(100% - 250px);
+    flex-shrink: 0;
 }
 
 .main{
@@ -20,36 +19,31 @@ footer {
     justify-content: center;
 }
 
-/* Contenedor que ocupa toda la pantalla y centra el contenido */
 .reels-screen {
-    min-height: calc(100vh - 70px); /* Resta altura del navbar si es fijo */
+    min-height: calc(100vh - 70px); /* Resta altura del navbar*/
     margin-top: 50px;
 }
 
-/* Contenedor del video + controles */
 .reel-container {
     display: flex;
-    align-items: center; /* Centra verticalmente */
-    gap: 20px; /* Espacio entre video y controles */
+    align-items: center;
+    gap: 20px;
 }
 
-/* Contenedor del video */
 .reel-video-wrapper {
     width: 400px;
-    height: 700px; /* Vertical */
+    height: 700px;
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
 }
 
-/* Video vertical centrado */
 .reel-video-wrapper video {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Mantiene proporción vertical */
+    object-fit: cover;
 }
 
-/* Flechas a la derecha del video */
 .reel-controls {
     display: flex;
     flex-direction: column;
@@ -73,7 +67,6 @@ footer {
 }
 
 /*MEDIA QUERYS*/
-/* Responsive para móviles */
 @media (max-width: 900px) {
     .reel-container {
         flex-direction: column;
@@ -117,7 +110,7 @@ footer {
 @media (max-width: 992px){
     footer{
         margin-left: 200px;
-        width: calc(100% - 200px); /* Ajustar ancho */
+        width: calc(100% - 200px);
     }
 }
 
@@ -135,7 +128,7 @@ footer {
 
     footer{
         margin-left: 0px;
-        width: calc(100% - 0px); /* Ajustar ancho */
+        width: calc(100% - 0px);
     }
 }
 
