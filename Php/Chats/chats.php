@@ -5,7 +5,7 @@ session_start();
 
 $idUsu = $_SESSION['id'];
 
-// Consulta corregida con parámetros únicos
+// Recuperamos la lista de conversaciones y el último mensaje, agrupando para evitar duplicados en grupos
 $sql = $pdo->prepare("
     SELECT 
         c.id AS chat_id,

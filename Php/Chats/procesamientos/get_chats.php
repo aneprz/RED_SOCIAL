@@ -3,7 +3,7 @@ require "../../../BD/conexiones.php";
 session_start();
 
 $idUsu = $_SESSION['id'];
-
+// Consulta para obtener la lista de chats, info del otro usuario, último mensaje y contador de no leídos
 $sql = $pdo->prepare("
 SELECT
     c.id AS chat_id,

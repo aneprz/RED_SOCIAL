@@ -22,7 +22,7 @@ if (!$chat) {
     die("Chat no encontrado o no es un grupo");
 }
 
-// 1️⃣ Actualizar nombre del grupo
+// 1️.Actualizar nombre del grupo
 $nombre_grupo = trim($_POST['nombre_grupo'] ?? $chat['nombre_grupo']);
 if ($nombre_grupo !== '') {
     $sql = $pdo->prepare("UPDATE chats SET nombre_grupo = :nombre WHERE id = :chat_id");
@@ -32,11 +32,11 @@ if ($nombre_grupo !== '') {
     ]);
 }
 
-// 3️⃣ Editar participantes si vienen en el POST
+// 2.Editar participantes si vienen en el POST
 if (isset($_POST['participantes']) && is_array($_POST['participantes'])) {
     $nuevos = $_POST['participantes'];
 
-    // Borrar participantes existentes (excepto tú mismo para que no te saques)
+    // Borrar participantes existentes 
     $sql = $pdo->prepare("DELETE FROM usuarios_chat WHERE chat_id = :chat_id AND usuario_id != :yo");
     $sql->execute([
         'chat_id' => $chat_id,
@@ -55,7 +55,7 @@ if (isset($_POST['participantes']) && is_array($_POST['participantes'])) {
     }
 }
 
-// 4️⃣ Redirigir al chat
+// Redirigir al chat
 header("Location: ../chat.php?chat_id=$chat_id");
 exit;
 ?>

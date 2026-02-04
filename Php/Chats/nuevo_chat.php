@@ -4,7 +4,7 @@ session_start();
 
 $idUsu = $_SESSION['id'];
 
-// Traer todos los usuarios excepto el actual
+// Traer todos los usuarios 
 $sql = $pdo->prepare("
     SELECT u.id, u.username
     FROM usuarios u
@@ -71,7 +71,10 @@ $token = $_SESSION['nuevo_chat_token'];
 </form>
 </main>
 <script>
+// Datos desde PHP
 const usuarios = <?= json_encode($usuarios) ?>;
+
+// Referencias del DOM
 const tipoChatSelect = document.getElementById('tipoChat');
 const nombreGrupoDiv = document.getElementById('nombreGrupoDiv');
 const buscadorUsuariosDiv = document.getElementById('buscadorUsuariosDiv');
@@ -83,6 +86,7 @@ const btnSubmit = form.querySelector('button[type="submit"]');
 
 let seleccionados = [];
 
+// Cambio de tipo de chat: resetea la vista
 tipoChatSelect.addEventListener('change', () => {
     seleccionados = [];
     usuariosSeleccionados.innerHTML = '';
@@ -101,11 +105,13 @@ tipoChatSelect.addEventListener('change', () => {
     }
 });
 
+// Buscador predictivo
 buscadorUsuarios.addEventListener('input', () => {
     const texto = buscadorUsuarios.value.toLowerCase();
     resultadosUsuarios.innerHTML = '';
     if(texto === '') return;
 
+    // Filtra excluyendo los ya seleccionados
     const filtrados = usuarios.filter(u => 
         u.username.toLowerCase().includes(texto) && !seleccionados.find(s => s.id === u.id)
     );
@@ -123,11 +129,11 @@ function agregarUsuario(usuario) {
     if(seleccionados.find(u => u.id === usuario.id)) return;
 
     if(tipoChatSelect.value === 'individual') {
-        // Para chat individual solo 1 usuario
+        // Individual: reemplaza selección
         seleccionados = [usuario];
         renderSeleccionados();
     } else {
-        // Para chat grupal máximo 15 usuarios
+        // Grupo: añade selección 
         if(seleccionados.length >= 15) {
             alert("No puedes agregar más de 15 usuarios a un chat grupal.");
             return;
@@ -140,6 +146,7 @@ function agregarUsuario(usuario) {
     buscadorUsuarios.value = '';
 }
 
+// Muestra las etiquetas de usuarios elegidos
 function renderSeleccionados() {
     usuariosSeleccionados.innerHTML = '';
     seleccionados.forEach(u => {
@@ -157,7 +164,7 @@ function renderSeleccionados() {
     });
 }
 
-// Enviar formulario
+// Envío del form
 form.addEventListener('submit', e => {
     if(seleccionados.length === 0) {
         e.preventDefault();
@@ -165,7 +172,7 @@ form.addEventListener('submit', e => {
         return;
     }
 
-    // Validar mínimo y máximo según tipo de chat
+    // Validaciones de cantidad
     if(tipoChatSelect.value === 'grupo') {
         if(seleccionados.length < 2) {
             e.preventDefault();
@@ -187,13 +194,13 @@ form.addEventListener('submit', e => {
 
     btnSubmit.disabled = true;
 
-    // Evitar duplicados
+    // Eliminar posibles duplicados
     seleccionados = [...new Map(seleccionados.map(u => [u.id, u])).values()];
 
-    // Limpiar antiguos inputs
+    // Limpiar inputs previos
     document.querySelectorAll('input[name="usuarios[]"]').forEach(i => i.remove());
 
-    // Crear inputs ocultos
+    // Crear inputs hidden para el POST
     seleccionados.forEach(u => {
         const input = document.createElement('input');
         input.type = 'hidden';

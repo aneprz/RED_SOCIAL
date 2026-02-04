@@ -2,8 +2,6 @@ const modalNotif = document.getElementById("modalNotificaciones");
 const badge = document.getElementById("badgeNotificaciones");
 
 // --- 1. DETECCIÓN INTELIGENTE DE RUTA ---
-// Si la URL contiene "/Php/", significa que estamos dentro de una subcarpeta (Explorar, Perfil, etc.)
-// y necesitamos salir con "../". Si no, estamos en el index y entramos con "Php/".
 const inSubFolder = window.location.href.includes("/Php/");
 const rutaBase = inSubFolder ? "../" : "Php/"; 
 
@@ -42,7 +40,6 @@ function cargarContenidoNotificaciones() {
 
     lista.innerHTML = '<p style="text-align:center; padding:10px; color:#666;">Cargando...</p>';
 
-    // CORREGIDO: Usamos rutaBase
     fetch(rutaBase + 'Notificaciones/obtener.php') 
         .then(res => res.json())
         .then(data => {
@@ -143,7 +140,6 @@ function cargarContenidoNotificaciones() {
 // --- ACCIONES (Seguir y Aceptar) ---
 
 function aceptarSolicitud(idUsuario) {
-    // CORREGIDO: Usamos rutaBase
     fetch(rutaBase + 'Usuarios/aceptar_seguimiento.php', {
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -165,7 +161,6 @@ function seguirDeVuelta(idUsuario, btnElement) {
     const textoOriginal = btnElement.innerText;
     btnElement.innerText = "..."; 
 
-    // CORREGIDO: Usamos rutaBase
     fetch(rutaBase + 'Usuarios/seguir_usuario.php', { 
         method: 'POST',
         headers: {'Content-Type': 'application/x-www-form-urlencoded'},
@@ -203,11 +198,7 @@ function seguirDeVuelta(idUsuario, btnElement) {
     });
 }
 
-// --- ACTUALIZACIÓN DE LIKES EN TIEMPO REAL (SOLO EN INDEX) ---
-
 setInterval(() => {
-    // Solo ejecutamos esto si estamos en el index (donde rutaBase es 'Php/')
-    // O si decides tener likes en tiempo real en subpáginas, usa rutaBase también.
     
     const contadores = document.querySelectorAll("[id^='likes-count-']");
     if(contadores.length === 0) return;
@@ -219,7 +210,6 @@ setInterval(() => {
     });
 
     if(ids.length > 0) {
-        // CORREGIDO: Usamos rutaBase
         fetch(rutaBase + 'Index/get_likes_updates.php?ids=' + ids.join(','))
             .then(res => res.json())
             .then(data => {

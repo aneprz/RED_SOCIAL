@@ -36,14 +36,12 @@ if (isset($_POST['id_usuario']) && isset($_POST['accion'])) {
     } elseif ($accion === 'seguir') {
         // --- INTENTAR SEGUIR ---
 
-        // 1. Verificar privacidad (Asumimos que usuarios SI tiene columna id)
+        // 1. Verificar privacidad
         $consulta_priv = mysqli_query($conexion, "SELECT privacidad FROM usuarios WHERE id = $id_destino");
         $row_priv = mysqli_fetch_assoc($consulta_priv);
         $es_privada = isset($row_priv['privacidad']) ? $row_priv['privacidad'] : 0;
 
         // 2. Verificar existencia
-        // CAMBIO: Usamos SELECT * para evitar el error "Unknown column 'id'" si la tabla no tiene ID primario
-        
         // A. ¿Ya lo sigo?
         $check_seg = mysqli_query($conexion, "SELECT * FROM seguidores WHERE seguidor_id = $mi_id AND seguido_id = $id_destino");
         

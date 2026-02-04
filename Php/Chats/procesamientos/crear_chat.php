@@ -32,9 +32,7 @@ try {
     $pdo->beginTransaction();
 
     if ($es_grupo === 0) {
-        // -------------------
         // Chat individual
-        // -------------------
         $otroUsuario = $usuariosSeleccionados[0];
 
         // Verificar si ya existe chat individual
@@ -66,9 +64,7 @@ try {
         $stmt->execute([$chat_id, $otroUsuario]);
 
     } else {
-        // -------------------
         // Chat grupal
-        // -------------------
         // Quitar al creador si estaba incluido
         $usuariosSeleccionados = array_filter($usuariosSeleccionados, fn($u) => $u != $idUsu);
 

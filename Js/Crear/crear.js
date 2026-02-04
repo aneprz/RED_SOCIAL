@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // 1. CAMBIO PRINCIPAL: Seleccionamos AMBOS botones
+  // 1. Selecionamos todos los inputs y botones
   const openBtnDesktop = document.getElementById("abrirCrear");
   const openBtnMobile = document.getElementById("abrirCrearMovil");
   
@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Lógica extra: Cerrar el menú lateral de móvil si está abierto
     const menuMovil = document.getElementById('menuMovil');
     if (menuMovil && menuMovil.classList.contains('show')) {
-        // Como usas Bootstrap 5, obtenemos la instancia y la ocultamos
+        // Como usamos Bootstrap 5, obtenemos la instancia y la ocultamos
         const bsOffcanvas = bootstrap.Offcanvas.getInstance(menuMovil);
         if (bsOffcanvas) bsOffcanvas.hide();
     }

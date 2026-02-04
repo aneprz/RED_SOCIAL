@@ -24,7 +24,7 @@ try {
     $sql->execute(['chat_id' => $chat_id]);
     $mensajes = $sql->fetchAll(PDO::FETCH_ASSOC);
 
-    // 2. Marcar como leídos (opcional, para que se actualice en tiempo real)
+    // 2. Marcar como leídos 
     $pdo->prepare("
         UPDATE mensajes SET leido = 1
         WHERE chat_id = :chat_id AND usuario_id != :yo AND leido = 0

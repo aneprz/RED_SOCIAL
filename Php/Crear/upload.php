@@ -50,7 +50,7 @@ if ($file['size'] > $maxSize) {
 $filename = uniqid('post_', true) . '.' . $ext;
 $filepath = $uploadDir . $filename;
 
-/*Guardar archivo (SIN GD) */
+/*Guardar archivo */
 if (!move_uploaded_file($file['tmp_name'], $filepath)) {
     die("Error al guardar el archivo.");
 }
@@ -85,14 +85,13 @@ foreach ($tags_usernames as $username) {
     if ($res->fetch()) {
         $res->close(); // Importante cerrar para poder hacer otro INSERT
 
-        // 2. Insertar en la tabla de etiquetas (Asumo que se llama 'etiquetas')
-        // Si tu tabla tiene otro nombre (ej: publicaciones_etiquetas), cámbialo aquí.
+        // 2. Insertar en la tabla de etiquetas
         $stmtTag = $conexion->prepare("INSERT INTO etiquetas_publicacion (post_id, usuario_etiquetado_id) VALUES (?, ?)");
         $stmtTag->bind_param("ii", $post_id, $etiquetado_id);
         $stmtTag->execute();
         $stmtTag->close();
 
-        // 3. INSERTAR NOTIFICACIÓN (Lo que pediste)
+        // 3. INSERTAR NOTIFICACIÓN
         // Verificamos que no se notifique a sí mismo
         if ($etiquetado_id != $usuario_id) {
             $tipoNotif = 'etiqueta';
@@ -109,6 +108,5 @@ foreach ($tags_usernames as $username) {
     }
 }
 
-/* 🚀 Redirigir */
 header("Location: ../../Php/Explorar/explorar.php");
 exit;

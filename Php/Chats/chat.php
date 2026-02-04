@@ -9,14 +9,14 @@ if (!isset($_GET['chat_id'])) {
 $chat_id = intval($_GET['chat_id']);
 $idUsu = $_SESSION['id'];
 
-// 1️⃣ Información del chat
+// 1️.Información del chat
 $sql = $pdo->prepare("SELECT c.id, c.es_grupo, c.nombre_grupo FROM chats c WHERE c.id = :chat_id");
 $sql->execute(['chat_id' => $chat_id]);
 $chat = $sql->fetch(PDO::FETCH_ASSOC);
 
 if (!$chat) die("Chat no encontrado");
 
-// 2️⃣ Participantes y mensajes
+// 2️.Participantes y mensajes
 $sql = $pdo->prepare("
     SELECT m.id, m.usuario_id, u.username, u.foto_perfil, m.texto, m.fecha, m.leido
     FROM mensajes m
@@ -33,7 +33,7 @@ $pdo->prepare("
     WHERE chat_id = :chat_id AND usuario_id != :yo
 ")->execute(['chat_id' => $chat_id, 'yo' => $idUsu]);
 
-// 1️⃣ Obtener participantes del chat (grupo o privado)
+// 3.Obtener participantes del chat (grupo o privado)
 $stmt = $pdo->prepare("
     SELECT u.id, u.username, u.foto_perfil
     FROM usuarios_chat uc
@@ -43,7 +43,7 @@ $stmt = $pdo->prepare("
 $stmt->execute(['chat_id' => $chat_id]);
 $participantes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Todos los usuarios que sigues (para búsqueda)
+// Todos los usuarios que sigues
 $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
@@ -66,7 +66,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
             $fotoPerfil = '../../../Media/foto_grupo_default.png';
             $otroUsuario = null; // no hay otro usuario, es grupo
         } else {
-            // Chat privado → buscar al otro usuario
+            // Chat privado buscar al otro usuario
             $otroUsuario = null;
             foreach ($participantes as $p) {
                 if ($p['id'] != $idUsu) {
@@ -114,7 +114,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
                                         </form>';
                         }
                     }
-                    echo implode(", ", $nombres); // Separados por comas en la misma línea
+                    echo implode(", ", $nombres);
                     ?>
                 </i>
             <?php endif; ?>
@@ -156,7 +156,7 @@ $todosUsuarios = $pdo->query("SELECT id, username FROM usuarios")->fetchAll(PDO:
         <?php endforeach; ?>
     </div>
 
-    <!-- Formulario para enviar mensajes -->
+    <!-- Formulario para enviar mensajes  -->
     <form class="formularioMensajes" action="procesamientos/guardarMensajes.php" method="post">
         <input type="hidden" name="chat_id" value="<?= $chat_id ?>">
         <input type="hidden" name="usuario_id" value="<?= $idUsu ?>">

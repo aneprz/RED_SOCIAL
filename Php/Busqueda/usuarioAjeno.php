@@ -17,18 +17,15 @@ $stmt = $pdo->prepare("SELECT foto_perfil, username, bio, privacidad FROM usuari
 $stmt->execute([$id]);
 $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$usuario) die("Usuario no encontrado.");
-
-// --- LÓGICA INFALIBLE PARA FOTOS ---
-
 $foto_db = $usuario['foto_perfil'];
 
 // A) Rutas para el navegador (HTML)
 $ruta_web_default = '/Media/foto_default.png'; 
-// Asegúrate de que esta es la carpeta donde se guardan las subidas:
+// nos aseguramos de que esta es la carpeta donde se guardan las subidas:
 $ruta_web_uploads = '/Php/Crear/uploads/'; 
 
 // B) Rutas para el servidor (Disco Duro) para comprobar si existe
-$root = $_SERVER['DOCUMENT_ROOT']; // Esto suele ser C:/xampp/htdocs o /var/www/html
+$root = $_SERVER['DOCUMENT_ROOT'];
 
 // Limpiamos el nombre de la foto de la BD
 $nombre_foto = trim($foto_db ?? '');
@@ -37,9 +34,6 @@ $usar_default = true; // Asumimos que usaremos la default por seguridad
 
 if (!empty($nombre_foto)) {
     // Construimos la ruta física donde DEBERÍA estar la imagen
-    // Si en la BD guardas "imagen.png", buscamos en ".../uploads/imagen.png"
-    // Si en la BD guardas "/Php/Crear/uploads/imagen.png", úsala tal cual.
-    
     if (strpos($nombre_foto, '/') === false) {
         // Caso normal: solo nombre de archivo en BD
         $ruta_fisica_chequeo = $root . $ruta_web_uploads . $nombre_foto;
@@ -50,7 +44,6 @@ if (!empty($nombre_foto)) {
         $ruta_final_web = $nombre_foto;
     }
 
-    // EL GRAN TRUCO: Preguntamos al servidor si el archivo existe
     if (file_exists($ruta_fisica_chequeo)) {
         $foto_perfil = $ruta_final_web;
         $usar_default = false;
@@ -63,7 +56,7 @@ if ($usar_default) {
 
 $nombreusu = $usuario['username'];
 $biografia = $usuario['bio'];
-$esPrivada = $usuario['privacidad']; // Asumo que 1 = Privada, 0 = Pública
+$esPrivada = $usuario['privacidad']; // Privada = 1 Publica = 0
 
 // 2. Estadísticas
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM seguidores WHERE seguido_id = ?");
@@ -111,8 +104,6 @@ if ($miId == $id) {
 } elseif ($esPrivada == 1 && $yaSigo > 0) {
     $mostrarPublicaciones = true; // Es privada pero lo sigo
 }
-// Si es privada (1) y no sigo ($yaSigo == 0), se queda en false.
-
 
 // 5. Cargar Publicaciones (Solo si $mostrarPublicaciones es TRUE)
 $publicacionesArray = [];
@@ -267,9 +258,6 @@ if ($mostrarPublicaciones) {
     <?php include __DIR__ . '/../Templates/footer.php'; ?>
 
     <script>
-    // ... (Mantén todo tu código JavaScript aquí intacto) ...
-    // Solo copia el script que ya tenías en tu mensaje original
-    // 1. SCRIPT BOTÓN SEGUIR
     document.addEventListener('DOMContentLoaded', () => {
         const btn = document.getElementById('btnSeguir');
         if (btn) {
@@ -306,7 +294,7 @@ if ($mostrarPublicaciones) {
         }
     });
 
-    // 2. SCRIPT MODAL (El mismo que tenías)
+    // 2. SCRIPT MODAL 
     const RUTA_PROCESAMIENTO = '../Explorar/Procesamiento/';
     let pollingInterval = null;
     let likesInterval = null;
