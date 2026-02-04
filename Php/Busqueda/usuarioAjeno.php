@@ -201,7 +201,15 @@ if ($mostrarPublicaciones) {
                         
                         <div class="post" onclick="openModal(<?= $idPost ?>)">
                             <?php if (in_array($ext, ['mp4', 'webm'])): ?>
-                                <video class="media" src="<?= $ruta ?>" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>
+                            <video 
+                                class="media" 
+                                src="<?= $ruta ?>" 
+                                muted 
+                                loop 
+                                onmouseover="this.play()" 
+                                onmouseout="this.pause()" 
+                                onloadedmetadata="this.volume=0.2">
+                            </video>
                             <?php else: ?>
                                 <img class="media" src="<?= $ruta ?>" alt="Post">
                             <?php endif; ?>

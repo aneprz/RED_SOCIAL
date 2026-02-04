@@ -92,9 +92,6 @@
           <label>Pie de foto
             <textarea name="caption" id="caption" rows="3" style="width:100%;padding:8px;border-radius:8px;"></textarea>
           </label>
-          <label>Ubicación
-            <input type="text" name="ubicacion" placeholder="Ciudad, país..." />
-          </label>
           <div id="tagsArea">
              <input id="manualTagInput" type="text" placeholder="Etiquetar..." style="width:100%;padding:8px;border-radius:6px; margin-bottom:5px;" />
              <div id="tagSuggestions" class="tag-suggestions"></div>

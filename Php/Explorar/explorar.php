@@ -42,7 +42,7 @@ $result = $conexion->query($sql);
         <div class="grid-item" onclick="openModal(<?= $post['id'] ?>)">
             <div class="media-wrapper">
                 <?php if(in_array($ext,['mp4','webm'])): ?>
-                    <video class="media hover-video" src="<?= $ruta ?>" loop></video>
+                    <video class="media hover-video" src="<?= $ruta ?>" loop onloadedmetadata="this.volume=0.2"></video>
                 <?php else: ?>
                     <img class="media" src="<?= $ruta ?>" alt="post">
                 <?php endif; ?>
